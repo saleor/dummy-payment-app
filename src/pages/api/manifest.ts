@@ -19,7 +19,7 @@ export default createManifestHandler({
     const apiBaseURL = process.env.APP_API_BASE_URL ?? appBaseUrl;
 
     const manifest: AppManifest = {
-      name: 'Saleor App Template',
+      name: "Dummy Payment App",
       tokenTargetUrl: `${apiBaseURL}/api/register`,
       appUrl: iframeBaseUrl,
       /**
@@ -32,7 +32,8 @@ export default createManifestHandler({
          *
          * This can be removed
          */
-        "MANAGE_ORDERS",
+        "MANAGE_CHECKOUTS",
+        "HANDLE_PAYMENTS",
       ],
       id: "saleor.app",
       version: packageJson.version,
