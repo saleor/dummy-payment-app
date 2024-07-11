@@ -11,6 +11,8 @@ export const transactionEventTypeSchema = z.enum([
   "AUTHORIZATION_SUCCESS",
 ]);
 
+export type TransactionEventType = z.infer<typeof transactionEventTypeSchema>;
+
 export const transactionActionsSchema = z.array(
   z.union([z.literal("CHARGE"), z.literal("REFUND"), z.literal("CANCEL")])
 );

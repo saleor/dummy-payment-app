@@ -24,9 +24,9 @@ export default createManifestHandler({
     const apiBaseURL = process.env.APP_API_BASE_URL ?? appBaseUrl;
 
     const manifest: AppManifest = {
-      name: "Dummy Payment App",
+      name: "Hackathon Payment App",
       tokenTargetUrl: `${apiBaseURL}/api/register`,
-      appUrl: iframeBaseUrl,
+      appUrl: iframeBaseUrl + "/dashboard",
       /**
        * Set permissions for app if needed
        * https://docs.saleor.io/docs/3.x/developer/permissions
@@ -39,8 +39,9 @@ export default createManifestHandler({
          */
         "MANAGE_CHECKOUTS",
         "HANDLE_PAYMENTS",
+        "MANAGE_ORDERS",
       ],
-      id: "saleor.app.dummy-payment-app",
+      id: "saleor.io.hackathon-payment-app",
       version: packageJson.version,
       /**
        * Configure webhooks here. They will be created in Saleor during installation
