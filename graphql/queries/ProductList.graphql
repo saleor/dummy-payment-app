@@ -1,6 +1,6 @@
 query ProductList {
   products(
-    first: 1
+    first: 10
     channel: "default-channel"
     where: { isAvailable: true, isPublished: true, giftCard: false, isVisibleInListing: true }
     sortBy: { field: PRICE, direction: DESC }

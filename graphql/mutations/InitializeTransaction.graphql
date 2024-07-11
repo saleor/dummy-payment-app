@@ -1,0 +1,32 @@
+mutation InitializeTransaction($id: ID!) {
+  transactionInitialize(
+    id: $id
+    paymentGateway: {
+      id: "saleor.io.hackathon-payment-app"
+      data: { event: { type: "CHARGE_SUCCESS" } }
+    }
+    amount: 2137
+  ) {
+    errors {
+      code
+      field
+      message
+    }
+    transaction {
+      id
+      pspReference
+    }
+    transactionEvent {
+      id
+      pspReference
+      message
+      externalUrl
+      amount {
+        currency
+        amount
+      }
+      type
+      idempotencyKey
+    }
+  }
+}
