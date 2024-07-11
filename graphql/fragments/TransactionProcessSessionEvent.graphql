@@ -1,0 +1,19 @@
+fragment TransactionProcessSessionEvent on TransactionProcessSession {
+  ...BasicWebhookMetadata
+  __typename
+  recipient {
+    ...PaymentGatewayRecipient
+  }
+  data
+  merchantReference
+  action {
+    amount
+    currency
+    actionType
+  }
+  transaction {
+    id
+    token
+    pspReference
+  }
+}
