@@ -1,5 +1,4 @@
 import { SaleorSyncWebhook } from "@saleor/app-sdk/handlers/next";
-import { createClient } from "../../../lib/create-graphq-client";
 import { saleorApp } from "../../../saleor-app";
 import {
   TransactionEventTypeEnum,
@@ -7,9 +6,11 @@ import {
   TransactionInitializeSessionDocument,
   TransactionInitializeSessionEventFragment,
 } from "../../../../generated/graphql";
-import { z } from "zod";
 import { v7 as uuidv7 } from "uuid";
 import { getTransactionActions } from "../../../lib/transaction-actions";
+import { createLogger } from "../../logger";
+import { getZodErrorMessage } from "../../../lib/zod-error";
+import { dataSchema, ResponseType } from "../../../modules/validation/sync-transaction";
 
 export const transactionInitializeSessionWebhook =
   new SaleorSyncWebhook<TransactionInitializeSessionEventFragment>({
@@ -20,71 +21,52 @@ export const transactionInitializeSessionWebhook =
     query: TransactionInitializeSessionDocument,
   });
 
-const transactionEventTypeSchema = z.enum([
-  "CHARGE_REQUEST",
-  "CHARGE_ACTION_REQUIRED",
-  "CHARGE_FAILURE",
-  "CHARGE_SUCCESS",
-  "AUTHORIZATION_REQUEST",
-  "AUTHORIZATION_ACTION_REQUIRED",
-  "AUTHORIZATION_FAILURE",
-  "AUTHORIZATION_SUCCESS",
-]);
-
-const dataSchema = z.object({
-  event: z.object({
-    type: transactionEventTypeSchema,
-  }),
-});
-
-const responseSchema = z.object({
-  pspReference: z.string(),
-  result: transactionEventTypeSchema,
-  amount: z.number(),
-  data: z.record(z.union([z.string(), z.number()])).optional(),
-  time: z.string().optional(),
-  externalUrl: z.string().url().optional(),
-  message: z.string().optional(),
-  actions: z.array(z.union([z.literal("CHARGE"), z.literal("REFUND"), z.literal("CANCEL")])),
-});
-
-type ResponseType = z.infer<typeof responseSchema>;
-
 export default transactionInitializeSessionWebhook.createHandler((req, res, ctx) => {
-  const {
-    /**
-     * Access payload from Saleor - defined above
-     */
-    payload,
-  } = ctx;
+  const logger = createLogger("transaction-initialize-session");
+  const { payload } = ctx;
   const { actionType, amount } = payload.action;
+
+  logger.debug("Received webhook", { payload });
 
   const rawEventData = payload.data;
   const dataResult = dataSchema.safeParse(rawEventData);
 
   if (dataResult.error) {
-    return res.status(200).json({
+    logger.warn("Invalid data field received in notification", { error: dataResult.error });
+
+    const errorResponse: ResponseType = {
       pspReference: uuidv7(),
       result:
         actionType === TransactionFlowStrategyEnum.Charge
           ? "CHARGE_FAILURE"
           : "AUTHORIZATION_FAILURE",
-      message: dataResult.error.message,
+      message: getZodErrorMessage(dataResult.error),
       amount,
-    } as ResponseType);
+      actions: [],
+    };
+
+    logger.info("Returning error response to Saleor", { response: errorResponse });
+
+    return res.status(200).json(errorResponse);
   }
 
   const data = dataResult.data;
 
-  return res.status(200).json({
+  logger.info("Parsed data field from notification", { data });
+
+  const successResponse: ResponseType = {
     pspReference: uuidv7(),
     result: data.event.type,
-    message: "Success!",
+    message: "Great success!",
     actions: getTransactionActions(data.event.type as TransactionEventTypeEnum),
     amount,
     // TODO: Link to the app's details page
     // externalUrl
-  } as ResponseType);
+  };
+
+  logger.info("Returning response to Saleor", { response: successResponse });
+
+  return res.status(200).json(successResponse);
 });
 
 /**
