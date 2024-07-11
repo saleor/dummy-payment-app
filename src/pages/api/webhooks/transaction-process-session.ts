@@ -14,9 +14,9 @@ import { getTransactionActions } from "../../../lib/transaction-actions";
 
 export const transactionProcessSessionWebhook =
   new SaleorSyncWebhook<TransactionProcessSessionEventFragment>({
-    name: "Payment Gateway Initialize Session",
+    name: "Transaction Process Session",
     webhookPath: "api/webhooks/transaction-process-session",
-    event: "PAYMENT_GATEWAY_INITIALIZE_SESSION",
+    event: "TRANSACTION_PROCESS_SESSION",
     apl: saleorApp.apl,
     query: TransactionProcessSessionDocument,
   });

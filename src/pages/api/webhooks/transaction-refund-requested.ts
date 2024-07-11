@@ -15,7 +15,7 @@ import { getZodErrorMessage } from "../../../lib/zod-error";
 
 export const transactionRefundRequestedWebhook =
   new SaleorSyncWebhook<TransactionRefundRequestedEventFragment>({
-    name: "Payment Gateway Initialize Session",
+    name: "Transaction Refund Requested",
     webhookPath: "api/webhooks/transaction-refund-requested",
     event: "TRANSACTION_REFUND_REQUESTED",
     apl: saleorApp.apl,
