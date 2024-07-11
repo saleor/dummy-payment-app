@@ -12,6 +12,15 @@ export const chargeRequestedInputSchema = z
         }),
       currency: z.string(),
     }),
+    authorizedAmount: z.object({
+      amount: z
+        .number()
+        .positive()
+        .refine((n) => n > 0, {
+          message: "Transaction cannot be charged when there is no authorizedAmount",
+        }),
+      currency: z.string(),
+    }),
   })
   .passthrough();
 

@@ -12,6 +12,15 @@ export const refundRequestedInputSchema = z
         }),
       currency: z.string(),
     }),
+    chargedAmount: z.object({
+      amount: z
+        .number()
+        .positive()
+        .refine((n) => n > 0, {
+          message: "Transaction cannot be refunded when there is no chargedAmount",
+        }),
+      currency: z.string(),
+    }),
   })
   .passthrough();
 
