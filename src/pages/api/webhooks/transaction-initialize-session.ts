@@ -11,7 +11,7 @@ import {
  *
  * transactionInitializeWebhook.getWebhookManifest() must be called in api/manifest too!
  */
-export const transactionInitializeWebhook =
+export const transactionInitializeSessionWebhook =
   new SaleorSyncWebhook<TransactionInitializeSessionEventFragment>({
     name: "Transaction Initialize Session",
     webhookPath: "api/webhooks/transaction-initialize-session",
@@ -23,7 +23,7 @@ export const transactionInitializeWebhook =
 /**
  * Export decorated Next.js handler, which adds extra context
  */
-export default transactionInitializeWebhook.createHandler((req, res, ctx) => {
+export default transactionInitializeSessionWebhook.createHandler((req, res, ctx) => {
   const {
     /**
      * Access payload from Saleor - defined above
@@ -58,7 +58,7 @@ export default transactionInitializeWebhook.createHandler((req, res, ctx) => {
   /**
    * Inform Saleor that webhook was delivered properly.
    */
-  return res.status(200).end();
+  return res.status(200).json();
 });
 
 /**
