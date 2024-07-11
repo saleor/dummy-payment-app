@@ -23,7 +23,7 @@
     "@saleor/macaw-ui": "1.0.0",
     "@urql/exchange-auth": "^1.0.0",
     "@vitejs/plugin-react": "4.2.1",
-    "graphql": "^16.8.1",
+    "graphql": "^16.9.0",
     "graphql-tag": "^2.12.6",
     "jsdom": "^20.0.3",
     "modern-errors": "^7.0.1",
