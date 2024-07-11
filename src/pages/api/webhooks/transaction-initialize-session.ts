@@ -1,34 +1,10 @@
 import { SaleorSyncWebhook } from "@saleor/app-sdk/handlers/next";
-import { gql } from "urql";
-import { TransactionInitializeWebhookPayloadFragment } from "../../../../generated/graphql";
 import { createClient } from "../../../lib/create-graphq-client";
 import { saleorApp } from "../../../saleor-app";
-
-/**
- * Example payload of the webhook. It will be transformed with graphql-codegen to Typescript type: TransactionInitializeWebhookPayloadFragment
- */
-const TransactionInitializeWebhookPayload = gql`
-  fragment TransactionInitializeWebhookPayload on TransactionInitializeSession {
-    action {
-      amount
-      currency
-    }
-  }
-`;
-
-/**
- * Top-level webhook subscription query, that will be attached to the Manifest.
- * Saleor will use it to register webhook.
- */
-const TransactionInitializeSession = gql`
-  # Payload fragment must be included in the root query
-  ${TransactionInitializeWebhookPayload}
-  subscription TransactionInitializeSession {
-    event {
-      ...TransactionInitializeWebhookPayload
-    }
-  }
-`;
+import {
+  TransactionInitializeSessionDocument,
+  TransactionInitializeSessionEventFragment,
+} from "../../../../generated/graphql";
 
 /**
  * Create abstract Webhook. It decorates handler and performs security checks under the hood.
@@ -36,12 +12,12 @@ const TransactionInitializeSession = gql`
  * transactionInitializeWebhook.getWebhookManifest() must be called in api/manifest too!
  */
 export const transactionInitializeWebhook =
-  new SaleorSyncWebhook<TransactionInitializeWebhookPayloadFragment>({
+  new SaleorSyncWebhook<TransactionInitializeSessionEventFragment>({
     name: "Transaction Initialize Session",
     webhookPath: "api/webhooks/transaction-initialize-session",
     event: "TRANSACTION_INITIALIZE_SESSION",
     apl: saleorApp.apl,
-    query: TransactionInitializeSession,
+    query: TransactionInitializeSessionDocument,
   });
 
 /**

@@ -2,28 +2,28 @@ import { SaleorSyncWebhook } from "@saleor/app-sdk/handlers/next";
 import { createClient } from "../../../lib/create-graphq-client";
 import { saleorApp } from "../../../saleor-app";
 import {
-  PaymentGatewayInitializeSessionDocument,
-  PaymentGatewayInitializeSessionEventFragment,
+  TransactionProcessSessionDocument,
+  TransactionProcessSessionEventFragment,
 } from "../../../../generated/graphql";
 
 /**
  * Create abstract Webhook. It decorates handler and performs security checks under the hood.
  *
- * paymentGatewayInitializeSessionWebhook.getWebhookManifest() must be called in api/manifest too!
+ * transactionProcessSession.getWebhookManifest() must be called in api/manifest too!
  */
-export const paymentGatewayInitializeSessionWebhook =
-  new SaleorSyncWebhook<PaymentGatewayInitializeSessionEventFragment>({
+export const transactionProcessSession =
+  new SaleorSyncWebhook<TransactionProcessSessionEventFragment>({
     name: "Payment Gateway Initialize Session",
     webhookPath: "api/webhooks/payment-gateway-initialize-session",
     event: "PAYMENT_GATEWAY_INITIALIZE_SESSION",
     apl: saleorApp.apl,
-    query: PaymentGatewayInitializeSessionDocument,
+    query: TransactionProcessSessionDocument,
   });
 
 /**
  * Export decorated Next.js handler, which adds extra context
  */
-export default paymentGatewayInitializeSessionWebhook.createHandler((req, res, ctx) => {
+export default transactionProcessSession.createHandler((req, res, ctx) => {
   const {
     /**
      * Access payload from Saleor - defined above
