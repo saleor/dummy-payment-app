@@ -1,10 +1,7 @@
-mutation InitializeTransaction($id: ID!) {
+mutation InitializeTransaction($id: ID!, $data: JSON!) {
   transactionInitialize(
     id: $id
-    paymentGateway: {
-      id: "saleor.io.hackathon-payment-app"
-      data: { event: { type: "CHARGE_SUCCESS" } }
-    }
+    paymentGateway: { id: "saleor.io.hackathon-payment-app", data: $data }
     amount: 2137
   ) {
     errors {

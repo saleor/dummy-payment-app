@@ -1,6 +1,14 @@
 // pages/checkout.tsx
 import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
-import { ArrowRightIcon, Box, Button, ExternalLinkIcon, Switch, Text } from "@saleor/macaw-ui";
+import {
+  ArrowRightIcon,
+  Box,
+  Button,
+  Combobox,
+  ExternalLinkIcon,
+  Switch,
+  Text,
+} from "@saleor/macaw-ui";
 import {
   useCompleteCheckoutMutation,
   useCreateCheckoutMutation,
@@ -8,9 +16,20 @@ import {
   useProductListQuery,
   useUpdateDeliveryMutation,
 } from "../../generated/graphql";
+import { TransactionEventType, transactionEventTypeSchema } from "../modules/validation/common";
+import React from "react";
+
+interface TransactionResponseOptions {
+  value: TransactionEventType;
+  label: TransactionEventType;
+}
 
 const CheckoutPage = () => {
   const { appBridge, appBridgeState } = useAppBridge();
+  const [response, setResponse] = React.useState<TransactionResponseOptions>({
+    value: "CHARGE_SUCCESS",
+    label: "CHARGE_SUCCESS",
+  });
 
   console.log(appBridgeState?.saleorApiUrl);
 
@@ -43,6 +62,11 @@ const CheckoutPage = () => {
   const handleExecuteInitializeTransaction = () => {
     transactionInitializeExecute({
       id: checkoutCreateResult.data?.checkoutCreate?.checkout?.id ?? "",
+      data: {
+        event: {
+          type: response.value,
+        },
+      },
     });
   };
 
@@ -63,9 +87,13 @@ const CheckoutPage = () => {
     );
   };
 
+  console.log(response);
+
   return (
     <Box display="flex" flexDirection="column" alignItems="center" gap={4}>
-      <Text size={8}>Quick checkout tool</Text>
+      <Text size={8} marginTop={4}>
+        Quick checkout tool
+      </Text>
       <Box display="flex" gap={4} marginTop={2} alignItems="center">
         <Button onClick={() => handleExecuteCheckoutCreate()}>Create checkout</Button>
         <ArrowRightIcon />
@@ -86,6 +114,20 @@ const CheckoutPage = () => {
         >
           Complete checkout
         </Button>
+      </Box>
+      <Box display="flex" gap={2} alignItems="center">
+        <Text>Select transaction response:</Text>
+        <Combobox
+          // label="Transaction response"
+          options={transactionEventTypeSchema.options.map((value) => ({
+            label: value,
+            value,
+          }))}
+          value={response}
+          onChange={(value) => setResponse(value as TransactionResponseOptions)}
+          size="small"
+          __width="250px"
+        />
       </Box>
       {checkoutCreateResult.data && (
         <Box display="flex" flexDirection="column" gap={4}>
