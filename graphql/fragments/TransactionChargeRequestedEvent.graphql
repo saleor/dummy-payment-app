@@ -1,0 +1,19 @@
+fragment TransactionChargeRequestedEvent on TransactionChargeRequested {
+  ...BasicWebhookMetadata
+  __typename
+  recipient {
+    ...PaymentGatewayRecipient
+  }
+  action {
+    amount
+    actionType
+  }
+  transaction {
+    id
+    token
+    pspReference
+    chargedAmount {
+      ...Money
+    }
+  }
+}

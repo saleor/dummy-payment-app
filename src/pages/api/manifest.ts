@@ -6,6 +6,7 @@ import { paymentGatewayInitializeSessionWebhook } from "./webhooks/payment-gatew
 import { transactionInitializeSessionWebhook } from "./webhooks/transaction-initialize-session";
 import { transactionProcessSessionWebhook } from "./webhooks/transaction-process-session";
 import { transactionRefundRequestedWebhook } from "./webhooks/transaction-refund-requested";
+import { transactionChargeRequestedWebhook } from "./webhooks/transaction-charge-requested";
 
 /**
  * App SDK helps with the valid Saleor App Manifest creation. Read more:
@@ -53,6 +54,7 @@ export default createManifestHandler({
         transactionInitializeSessionWebhook.getWebhookManifest(apiBaseURL),
         transactionProcessSessionWebhook.getWebhookManifest(apiBaseURL),
         transactionRefundRequestedWebhook.getWebhookManifest(apiBaseURL),
+        transactionChargeRequestedWebhook.getWebhookManifest(apiBaseURL),
       ],
       /**
        * Optionally, extend Dashboard with custom UIs
