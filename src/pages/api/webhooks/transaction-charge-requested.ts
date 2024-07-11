@@ -5,7 +5,7 @@ import {
   TransactionChargeRequestedDocument,
   TransactionChargeRequestedEventFragment,
 } from "../../../../generated/graphql";
-import { createLogger } from "../../logger";
+import { createLogger } from "../../../logger";
 import {
   ChargeRequestedResponse,
   chargeRequestedInputSchema,
