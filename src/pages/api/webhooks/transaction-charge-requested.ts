@@ -2,43 +2,40 @@ import { SaleorSyncWebhook } from "@saleor/app-sdk/handlers/next";
 import { v7 as uuidv7 } from "uuid";
 import { saleorApp } from "../../../saleor-app";
 import {
-  TransactionRefundRequestedDocument,
-  TransactionRefundRequestedEventFragment,
+  TransactionChargeRequestedDocument,
+  TransactionChargeRequestedEventFragment,
 } from "../../../../generated/graphql";
 import { createLogger } from "../../../logger";
 import {
-  RefundRequestedResponse,
-  refundRequestedInputSchema,
-} from "../../../modules/validation/refund-webhook";
-import { TransactionRefundChecker } from "../../../modules/transaction/transaction-refund-checker";
+  ChargeRequestedResponse,
+  chargeRequestedInputSchema,
+} from "../../../modules/validation/charge-webhook";
 import { getZodErrorMessage } from "../../../lib/zod-error";
 
-export const transactionRefundRequestedWebhook =
-  new SaleorSyncWebhook<TransactionRefundRequestedEventFragment>({
-    name: "Transaction Refund Requested",
-    webhookPath: "api/webhooks/transaction-refund-requested",
-    event: "TRANSACTION_REFUND_REQUESTED",
+export const transactionChargeRequestedWebhook =
+  new SaleorSyncWebhook<TransactionChargeRequestedEventFragment>({
+    name: "Transaction Charge Requested",
+    webhookPath: "api/webhooks/transaction-charge-requested",
+    event: "TRANSACTION_CHARGE_REQUESTED",
     apl: saleorApp.apl,
-    query: TransactionRefundRequestedDocument,
+    query: TransactionChargeRequestedDocument,
   });
 
-export default transactionRefundRequestedWebhook.createHandler((req, res, ctx) => {
-  const logger = createLogger("transaction-refund-requested");
+export default transactionChargeRequestedWebhook.createHandler((req, res, ctx) => {
+  const logger = createLogger("transaction-charge-requested");
   const { payload } = ctx;
   const { amount } = payload.action;
 
-  const transactionRefundChecker = new TransactionRefundChecker();
-
   logger.debug("Received webhook", { payload });
 
-  const payloadResult = refundRequestedInputSchema.safeParse(payload);
+  const payloadResult = chargeRequestedInputSchema.safeParse(payload);
 
   if (payloadResult.error) {
     logger.warn("Data received from Saleor didn't pass validation", { error: payloadResult.error });
 
-    const failureResponse: RefundRequestedResponse = {
+    const failureResponse: ChargeRequestedResponse = {
       pspReference: uuidv7(),
-      result: "REFUND_FAILURE",
+      result: "CHARGE_FAILURE",
       message: getZodErrorMessage(payloadResult.error),
       actions: [],
       amount,
@@ -49,17 +46,12 @@ export default transactionRefundRequestedWebhook.createHandler((req, res, ctx) =
     return res.status(200).json(failureResponse);
   }
 
-  const successResponse: RefundRequestedResponse = {
+  const successResponse: ChargeRequestedResponse = {
     pspReference: uuidv7(),
     // TODO: Add result customization
-    result: "REFUND_SUCCESS",
+    result: "CHARGE_SUCCESS",
     message: "Great success!",
-    actions: transactionRefundChecker.checkIfAnotherRefundIsPossible(
-      amount,
-      payload.transaction?.chargedAmount
-    )
-      ? ["REFUND"]
-      : [],
+    actions: [],
     amount,
     // TODO: Link to the app's details page
     // externalUrl

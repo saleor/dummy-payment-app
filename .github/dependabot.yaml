@@ -2,10 +2,10 @@ version: 2
 updates:
   - package-ecosystem: "npm"
     directory: "/"
-    schedule:
-      interval: "daily"
     commit-message:
       prefix: "[skip ci]"
+    schedule:
+      interval: "monthly"
     groups:
       codegen:
         patterns:
@@ -15,3 +15,8 @@ updates:
           - "vite"
           - "vitest"
           - "@vitejs/*"
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+

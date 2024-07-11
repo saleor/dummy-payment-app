@@ -1,0 +1,15 @@
+fragment TransactionCancelRequestedEvent on TransactionCancelationRequested {
+  ...BasicWebhookMetadata
+  __typename
+  recipient {
+    ...PaymentGatewayRecipient
+  }
+  transaction {
+    id
+    token
+    pspReference
+    authorizedAmount {
+      ...Money
+    }
+  }
+}

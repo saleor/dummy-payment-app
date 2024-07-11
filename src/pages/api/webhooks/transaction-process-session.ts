@@ -7,16 +7,16 @@ import {
   TransactionProcessSessionDocument,
   TransactionProcessSessionEventFragment,
 } from "../../../../generated/graphql";
-import { createLogger } from "../../logger";
+import { createLogger } from "../../../logger";
 import { dataSchema, ResponseType } from "../../../modules/validation/sync-transaction";
 import { getZodErrorMessage } from "../../../lib/zod-error";
 import { getTransactionActions } from "../../../lib/transaction-actions";
 
 export const transactionProcessSessionWebhook =
   new SaleorSyncWebhook<TransactionProcessSessionEventFragment>({
-    name: "Payment Gateway Initialize Session",
+    name: "Transaction Process Session",
     webhookPath: "api/webhooks/transaction-process-session",
-    event: "PAYMENT_GATEWAY_INITIALIZE_SESSION",
+    event: "TRANSACTION_PROCESS_SESSION",
     apl: saleorApp.apl,
     query: TransactionProcessSessionDocument,
   });
@@ -43,6 +43,9 @@ export default transactionProcessSessionWebhook.createHandler((req, res, ctx) =>
       message: getZodErrorMessage(dataResult.error),
       amount,
       actions: [],
+      data: {
+        exception: true,
+      },
     };
 
     logger.info("Returning error response to Saleor", { response: errorResponse });

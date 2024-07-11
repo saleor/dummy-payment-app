@@ -8,7 +8,7 @@ import {
 } from "../../../../generated/graphql";
 import { v7 as uuidv7 } from "uuid";
 import { getTransactionActions } from "../../../lib/transaction-actions";
-import { createLogger } from "../../logger";
+import { createLogger } from "../../../logger";
 import { getZodErrorMessage } from "../../../lib/zod-error";
 import { dataSchema, ResponseType } from "../../../modules/validation/sync-transaction";
 
@@ -43,6 +43,9 @@ export default transactionInitializeSessionWebhook.createHandler((req, res, ctx)
       message: getZodErrorMessage(dataResult.error),
       amount,
       actions: [],
+      data: {
+        exception: true,
+      },
     };
 
     logger.info("Returning error response to Saleor", { response: errorResponse });

@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { transactionActionsSchema } from "./common";
 
-export const refundRequestedInputSchema = z
+export const chargeRequestedInputSchema = z
   .object({
     action: z.object({
       amount: z
@@ -12,25 +12,25 @@ export const refundRequestedInputSchema = z
         }),
       currency: z.string(),
     }),
-    chargedAmount: z.object({
+    authorizedAmount: z.object({
       amount: z
         .number()
         .positive()
         .refine((n) => n > 0, {
-          message: "Transaction cannot be refunded when there is no chargedAmount",
+          message: "Transaction cannot be charged when there is no authorizedAmount",
         }),
       currency: z.string(),
     }),
   })
   .passthrough();
 
-export const refundRequestedSyncResponseSchema = z.object({
+export const chargeRequestedSyncResponseSchema = z.object({
   pspReference: z.string(),
 });
 
-export const refundRequestedAsyncResponseSchema = z.object({
+export const chargeRequestedAsyncResponseSchema = z.object({
   pspReference: z.string(),
-  result: z.enum(["REFUND_SUCCESS", "REFUND_FAILURE"]),
+  result: z.enum(["CHARGE_SUCCESS", "CHARGE_FAILURE"]),
   amount: z.number(),
   time: z.string().optional(),
   externalUrl: z.string().url().optional(),
@@ -38,9 +38,9 @@ export const refundRequestedAsyncResponseSchema = z.object({
   actions: transactionActionsSchema,
 });
 
-export const refundRequestedResponseSchema = z.union([
-  refundRequestedSyncResponseSchema,
-  refundRequestedAsyncResponseSchema,
+export const chargeRequestedResponseSchema = z.union([
+  chargeRequestedSyncResponseSchema,
+  chargeRequestedAsyncResponseSchema,
 ]);
 
-export type RefundRequestedResponse = z.infer<typeof refundRequestedResponseSchema>;
+export type ChargeRequestedResponse = z.infer<typeof chargeRequestedResponseSchema>;
