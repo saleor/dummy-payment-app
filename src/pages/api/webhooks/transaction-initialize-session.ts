@@ -58,7 +58,7 @@ export default transactionInitializeSessionWebhook.createHandler((req, res, ctx)
   /**
    * Inform Saleor that webhook was delivered properly.
    */
-  return res.status(200).json();
+  return res.status(200).end();
 });
 
 /**
