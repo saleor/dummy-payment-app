@@ -6,8 +6,12 @@ import {
   TransactionRefundRequestedEventFragment,
 } from "../../../../generated/graphql";
 import { createLogger } from "../../logger";
-import { RefundRequestedResponse } from "../../../modules/validation/refund-webhook";
+import {
+  RefundRequestedResponse,
+  refundRequestedInputSchema,
+} from "../../../modules/validation/refund-webhook";
 import { TransactionRefundChecker } from "../../../modules/transaction/transaction-refund-checker";
+import { getZodErrorMessage } from "../../../lib/zod-error";
 
 export const transactionRefundRequestedWebhook =
   new SaleorSyncWebhook<TransactionRefundRequestedEventFragment>({
@@ -26,6 +30,24 @@ export default transactionRefundRequestedWebhook.createHandler((req, res, ctx) =
   const transactionRefundChecker = new TransactionRefundChecker();
 
   logger.debug("Received webhook", { payload });
+
+  const payloadResult = refundRequestedInputSchema.safeParse(payload);
+
+  if (payloadResult.error) {
+    logger.warn("Data received from Saleor didn't pass validation", { error: payloadResult.error });
+
+    const failureResponse: RefundRequestedResponse = {
+      pspReference: uuidv7(),
+      result: "REFUND_FAILURE",
+      message: getZodErrorMessage(payloadResult.error),
+      actions: [],
+      amount,
+    };
+
+    logger.info("Returning error response from Saleor", { response: failureResponse });
+
+    return res.status(200).json(failureResponse);
+  }
 
   const successResponse: RefundRequestedResponse = {
     pspReference: uuidv7(),
