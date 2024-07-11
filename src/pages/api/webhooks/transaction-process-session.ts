@@ -11,7 +11,7 @@ import {
  *
  * transactionProcessSession.getWebhookManifest() must be called in api/manifest too!
  */
-export const transactionProcessSession =
+export const transactionProcessSessionWebhook =
   new SaleorSyncWebhook<TransactionProcessSessionEventFragment>({
     name: "Payment Gateway Initialize Session",
     webhookPath: "api/webhooks/payment-gateway-initialize-session",
@@ -23,7 +23,7 @@ export const transactionProcessSession =
 /**
  * Export decorated Next.js handler, which adds extra context
  */
-export default transactionProcessSession.createHandler((req, res, ctx) => {
+export default transactionProcessSessionWebhook.createHandler((req, res, ctx) => {
   const {
     /**
      * Access payload from Saleor - defined above

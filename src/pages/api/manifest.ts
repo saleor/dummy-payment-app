@@ -2,9 +2,9 @@ import { createManifestHandler } from "@saleor/app-sdk/handlers/next";
 import { AppManifest } from "@saleor/app-sdk/types";
 
 import packageJson from "../../../package.json";
-import { transactionInitializeWebhook } from "./webhooks/transaction-initialize-session";
 import { paymentGatewayInitializeSessionWebhook } from "./webhooks/payment-gateway-initialize-session";
-import { transactionProcessSession } from "./webhooks/transaction-process-session";
+import { transactionInitializeSessionWebhook } from "./webhooks/transaction-initialize-session";
+import { transactionProcessSessionWebhook } from "./webhooks/transaction-process-session";
 
 /**
  * App SDK helps with the valid Saleor App Manifest creation. Read more:
@@ -49,9 +49,9 @@ export default createManifestHandler({
        * https://github.com/saleor/saleor-app-sdk/blob/main/docs/saleor-webhook.md
        */
       webhooks: [
-        transactionInitializeWebhook.getWebhookManifest(apiBaseURL),
         paymentGatewayInitializeSessionWebhook.getWebhookManifest(apiBaseURL),
-        transactionProcessSession.getWebhookManifest(apiBaseURL),
+        transactionInitializeSessionWebhook.getWebhookManifest(apiBaseURL),
+        transactionProcessSessionWebhook.getWebhookManifest(apiBaseURL),
       ],
       /**
        * Optionally, extend Dashboard with custom UIs

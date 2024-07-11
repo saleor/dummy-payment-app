@@ -58,7 +58,11 @@ export default paymentGatewayInitializeSessionWebhook.createHandler((req, res, c
   /**
    * Inform Saleor that webhook was delivered properly.
    */
-  return res.status(200).end();
+  return res.status(200).json({
+    data: {
+      ok: true,
+    },
+  });
 });
 
 /**

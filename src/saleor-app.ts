@@ -1,5 +1,6 @@
 import { SaleorApp } from "@saleor/app-sdk/saleor-app";
-import { APL, FileAPL, UpstashAPL } from "@saleor/app-sdk/APL";
+import { APL, FileAPL, SaleorCloudAPL, UpstashAPL } from "@saleor/app-sdk/APL";
+import { invariant } from "./lib/invariant";
 
 /**
  * By default auth data are stored in the `.auth-data.json` (FileAPL).
@@ -10,6 +11,15 @@ import { APL, FileAPL, UpstashAPL } from "@saleor/app-sdk/APL";
  */
 export let apl: APL;
 switch (process.env.APL) {
+  case "saleor-cloud":
+    const token = process.env.REST_APL_TOKEN;
+    const endpoint = process.env.REST_APL_ENDPOINT;
+
+    invariant(token);
+    invariant(endpoint);
+
+    apl = new SaleorCloudAPL({ token, resourceUrl: endpoint });
+    break;
   case "upstash":
     // Require `UPSTASH_URL` and `UPSTASH_TOKEN` environment variables
     apl = new UpstashAPL();
