@@ -6,11 +6,11 @@ import {
   TransactionInitializeSessionDocument,
   TransactionInitializeSessionEventFragment,
 } from "../../../../generated/graphql";
-import { z } from "zod";
 import { v7 as uuidv7 } from "uuid";
 import { getTransactionActions } from "../../../lib/transaction-actions";
 import { createLogger } from "../../logger";
 import { getZodErrorMessage } from "../../../lib/zod-error";
+import { dataSchema, ResponseType } from "../../../modules/validation/transaction";
 
 export const transactionInitializeSessionWebhook =
   new SaleorSyncWebhook<TransactionInitializeSessionEventFragment>({
@@ -20,36 +20,6 @@ export const transactionInitializeSessionWebhook =
     apl: saleorApp.apl,
     query: TransactionInitializeSessionDocument,
   });
-
-const transactionEventTypeSchema = z.enum([
-  "CHARGE_REQUEST",
-  "CHARGE_ACTION_REQUIRED",
-  "CHARGE_FAILURE",
-  "CHARGE_SUCCESS",
-  "AUTHORIZATION_REQUEST",
-  "AUTHORIZATION_ACTION_REQUIRED",
-  "AUTHORIZATION_FAILURE",
-  "AUTHORIZATION_SUCCESS",
-]);
-
-const dataSchema = z.object({
-  event: z.object({
-    type: transactionEventTypeSchema,
-  }),
-});
-
-const responseSchema = z.object({
-  pspReference: z.string(),
-  result: transactionEventTypeSchema,
-  amount: z.number(),
-  data: z.record(z.union([z.string(), z.number()])).optional(),
-  time: z.string().optional(),
-  externalUrl: z.string().url().optional(),
-  message: z.string().optional(),
-  actions: z.array(z.union([z.literal("CHARGE"), z.literal("REFUND"), z.literal("CANCEL")])),
-});
-
-type ResponseType = z.infer<typeof responseSchema>;
 
 export default transactionInitializeSessionWebhook.createHandler((req, res, ctx) => {
   const logger = createLogger("transaction-initialize-session");
@@ -64,7 +34,7 @@ export default transactionInitializeSessionWebhook.createHandler((req, res, ctx)
   if (dataResult.error) {
     logger.warn("Invalid data field received in notification", { error: dataResult.error });
 
-    const response: ResponseType = {
+    const errorResponse: ResponseType = {
       pspReference: uuidv7(),
       result:
         actionType === TransactionFlowStrategyEnum.Charge
@@ -75,28 +45,28 @@ export default transactionInitializeSessionWebhook.createHandler((req, res, ctx)
       actions: [],
     };
 
-    logger.info("Returning error response to Saleor", { response });
+    logger.info("Returning error response to Saleor", { response: errorResponse });
 
-    return res.status(200).json(response);
+    return res.status(200).json(errorResponse);
   }
 
   const data = dataResult.data;
 
   logger.info("Parsed data field from notification", { data });
 
-  const response: ResponseType = {
+  const successResponse: ResponseType = {
     pspReference: uuidv7(),
     result: data.event.type,
-    message: "Success!",
+    message: "Great success!",
     actions: getTransactionActions(data.event.type as TransactionEventTypeEnum),
     amount,
     // TODO: Link to the app's details page
     // externalUrl
   };
 
-  logger.info("Returning response to Saleor", { response });
+  logger.info("Returning response to Saleor", { response: successResponse });
 
-  return res.status(200).json(response);
+  return res.status(200).json(successResponse);
 });
 
 /**
