@@ -12,7 +12,7 @@ import {
 } from "../../../modules/validation/cancel-webhook";
 import { getZodErrorMessage } from "../../../lib/zod-error";
 
-export const transactionChargeRequestedWebhook =
+export const transactionCancelationRequestedWebhook =
   new SaleorSyncWebhook<TransactionChargeRequestedEventFragment>({
     name: "Transaction cancelation Requested",
     webhookPath: "api/webhooks/transaction-cancelation-requested",
@@ -21,7 +21,7 @@ export const transactionChargeRequestedWebhook =
     query: TransactionChargeRequestedDocument,
   });
 
-export default transactionChargeRequestedWebhook.createHandler((req, res, ctx) => {
+export default transactionCancelationRequestedWebhook.createHandler((req, res, ctx) => {
   const logger = createLogger("transaction-cancelation-requested");
   const { payload } = ctx;
   const { amount } = payload.action;
