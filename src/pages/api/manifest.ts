@@ -2,7 +2,9 @@ import { createManifestHandler } from "@saleor/app-sdk/handlers/next";
 import { AppManifest } from "@saleor/app-sdk/types";
 
 import packageJson from "../../../package.json";
-import { orderCreatedWebhook } from "./webhooks/order-created";
+import { transactionInitializeWebhook } from "./webhooks/transaction-initialize-session";
+import { paymentGatewayInitializeSessionWebhook } from "./webhooks/payment-gateway-initialize-session";
+import { transactionProcessSession } from "./webhooks/transaction-process-session";
 
 /**
  * App SDK helps with the valid Saleor App Manifest creation. Read more:
@@ -19,9 +21,9 @@ export default createManifestHandler({
     const apiBaseURL = process.env.APP_API_BASE_URL ?? appBaseUrl;
 
     const manifest: AppManifest = {
-      name: "Dummy Payment App",
+      name: "Hackathon Payment App",
       tokenTargetUrl: `${apiBaseURL}/api/register`,
-      appUrl: iframeBaseUrl,
+      appUrl: iframeBaseUrl + "/dashboard",
       /**
        * Set permissions for app if needed
        * https://docs.saleor.io/docs/3.x/developer/permissions
@@ -34,8 +36,9 @@ export default createManifestHandler({
          */
         "MANAGE_CHECKOUTS",
         "HANDLE_PAYMENTS",
+        "MANAGE_ORDERS",
       ],
-      id: "saleor.app",
+      id: "saleor.io.hackathon-payment-app",
       version: packageJson.version,
       /**
        * Configure webhooks here. They will be created in Saleor during installation
@@ -45,7 +48,11 @@ export default createManifestHandler({
        * Easiest way to create webhook is to use app-sdk
        * https://github.com/saleor/saleor-app-sdk/blob/main/docs/saleor-webhook.md
        */
-      webhooks: [orderCreatedWebhook.getWebhookManifest(apiBaseURL)],
+      webhooks: [
+        transactionInitializeWebhook.getWebhookManifest(apiBaseURL),
+        paymentGatewayInitializeSessionWebhook.getWebhookManifest(apiBaseURL),
+        transactionProcessSession.getWebhookManifest(apiBaseURL),
+      ],
       /**
        * Optionally, extend Dashboard with custom UIs
        * https://docs.saleor.io/docs/3.x/developer/extending/apps/extending-dashboard-with-apps

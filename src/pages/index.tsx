@@ -199,6 +199,7 @@ const IndexPage: NextPage = () => {
             Install this app in your Dashboard and get extra powers!
           </Text>
           <AddToSaleorForm />
+          <a href="/dashboard">Go to App Dashboard</a>
         </>
       )}
     </Box>
