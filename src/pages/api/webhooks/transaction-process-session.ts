@@ -43,6 +43,9 @@ export default transactionProcessSessionWebhook.createHandler((req, res, ctx) =>
       message: getZodErrorMessage(dataResult.error),
       amount,
       actions: [],
+      data: {
+        exception: true,
+      },
     };
 
     logger.info("Returning error response to Saleor", { response: errorResponse });

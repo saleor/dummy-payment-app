@@ -11,7 +11,7 @@ export const responseSchema = z.object({
   pspReference: z.string(),
   result: transactionEventTypeSchema,
   amount: z.number(),
-  data: z.record(z.union([z.string(), z.number()])).optional(),
+  data: z.record(z.union([z.string(), z.number(), z.boolean()])).optional(),
   time: z.string().optional(),
   externalUrl: z.string().url().optional(),
   message: z.string().optional(),
