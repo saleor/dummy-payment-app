@@ -10,16 +10,17 @@ export const refundRequestedInputSchema = z
         .refine((n) => n > 0, {
           message: "Number must be greater than zero",
         }),
-      currency: z.string(),
     }),
-    chargedAmount: z.object({
-      amount: z
-        .number()
-        .positive()
-        .refine((n) => n > 0, {
-          message: "Transaction cannot be refunded when there is no chargedAmount",
-        }),
-      currency: z.string(),
+    transaction: z.object({
+      chargedAmount: z.object({
+        amount: z
+          .number()
+          .positive()
+          .refine((n) => n > 0, {
+            message: "Transaction cannot be refunded when there is no chargedAmount",
+          }),
+        currency: z.string(),
+      }),
     }),
   })
   .passthrough();

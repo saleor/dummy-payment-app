@@ -12,6 +12,7 @@ import {
 } from "../../../modules/validation/refund-webhook";
 import { TransactionRefundChecker } from "../../../modules/transaction/transaction-refund-checker";
 import { getZodErrorMessage } from "../../../lib/zod-error";
+import { getTransactionActions } from "../../../lib/transaction-actions";
 
 export const transactionRefundRequestedWebhook =
   new SaleorSyncWebhook<TransactionRefundRequestedEventFragment>({
@@ -40,7 +41,7 @@ export default transactionRefundRequestedWebhook.createHandler((req, res, ctx) =
       pspReference: uuidv7(),
       result: "REFUND_FAILURE",
       message: getZodErrorMessage(payloadResult.error),
-      actions: [],
+      actions: getTransactionActions("REFUND_FAILURE"),
       amount,
     };
 

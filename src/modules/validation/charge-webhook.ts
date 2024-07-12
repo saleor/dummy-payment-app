@@ -10,16 +10,17 @@ export const chargeRequestedInputSchema = z
         .refine((n) => n > 0, {
           message: "Number must be greater than zero",
         }),
-      currency: z.string(),
     }),
-    authorizedAmount: z.object({
-      amount: z
-        .number()
-        .positive()
-        .refine((n) => n > 0, {
-          message: "Transaction cannot be charged when there is no authorizedAmount",
-        }),
-      currency: z.string(),
+    transaction: z.object({
+      authorizedAmount: z.object({
+        amount: z
+          .number()
+          .positive()
+          .refine((n) => n > 0, {
+            message: "Transaction cannot be charged when there is no authorizedAmount",
+          }),
+        currency: z.string(),
+      }),
     }),
   })
   .passthrough();

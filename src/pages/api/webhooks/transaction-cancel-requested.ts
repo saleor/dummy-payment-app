@@ -2,8 +2,8 @@ import { SaleorSyncWebhook } from "@saleor/app-sdk/handlers/next";
 import { v7 as uuidv7 } from "uuid";
 import { saleorApp } from "../../../saleor-app";
 import {
-  TransactionChargeRequestedDocument,
-  TransactionChargeRequestedEventFragment,
+  TransactionCancelRequestedDocument,
+  TransactionCancelRequestedEventFragment,
 } from "../../../../generated/graphql";
 import { createLogger } from "../../../logger";
 import {
@@ -11,20 +11,20 @@ import {
   cancelationRequestedInputSchema,
 } from "../../../modules/validation/cancel-webhook";
 import { getZodErrorMessage } from "../../../lib/zod-error";
+import { getTransactionActions } from "../../../lib/transaction-actions";
 
 export const transactionCancelationRequestedWebhook =
-  new SaleorSyncWebhook<TransactionChargeRequestedEventFragment>({
+  new SaleorSyncWebhook<TransactionCancelRequestedEventFragment>({
     name: "Transaction cancelation Requested",
-    webhookPath: "api/webhooks/transaction-cancelation-requested",
-    event: "TRANSACTION_CHARGE_REQUESTED",
+    webhookPath: "api/webhooks/transaction-cancel-requested",
+    event: "TRANSACTION_CANCELATION_REQUESTED",
     apl: saleorApp.apl,
-    query: TransactionChargeRequestedDocument,
+    query: TransactionCancelRequestedDocument,
   });
 
 export default transactionCancelationRequestedWebhook.createHandler((req, res, ctx) => {
   const logger = createLogger("transaction-cancelation-requested");
   const { payload } = ctx;
-  const { amount } = payload.action;
 
   logger.debug("Received webhook", { payload });
 
@@ -37,8 +37,8 @@ export default transactionCancelationRequestedWebhook.createHandler((req, res, c
       pspReference: uuidv7(),
       result: "CANCEL_FAILURE",
       message: getZodErrorMessage(payloadResult.error),
-      actions: [],
-      amount,
+      actions: getTransactionActions("CANCEL_FAILURE"),
+      amount: 0,
     };
 
     logger.info("Returning error response from Saleor", { response: failureResponse });
@@ -46,12 +46,15 @@ export default transactionCancelationRequestedWebhook.createHandler((req, res, c
     return res.status(200).json(failureResponse);
   }
 
+  const data = payloadResult.data;
+  const amount = data.transaction.authorizedAmount.amount;
+
   const successResponse: CancelationRequestedResponse = {
     pspReference: uuidv7(),
     // TODO: Add result customization
     result: "CANCEL_SUCCESS",
     message: "Great success!",
-    actions: [],
+    actions: getTransactionActions("CANCEL_SUCCESS"),
     amount,
     // TODO: Link to the app's details page
     // externalUrl
