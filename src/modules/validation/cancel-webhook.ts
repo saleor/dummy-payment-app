@@ -4,10 +4,11 @@ import { transactionActionsSchema } from "./common";
 export const cancelationRequestedInputSchema = z
   .object({
     transaction: z.object({
+      id: z.string(),
       authorizedAmount: z.object({
         amount: z
           .number()
-          .positive()
+          .positive("Transaction cannot be charged when authorizedAmount is negative")
           .refine((n) => n > 0, {
             message: "Transaction cannot be cancelled when there is no authorizedAmount",
           }),

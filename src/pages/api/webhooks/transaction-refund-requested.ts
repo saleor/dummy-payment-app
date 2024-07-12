@@ -13,6 +13,7 @@ import {
 import { TransactionRefundChecker } from "../../../modules/transaction/transaction-refund-checker";
 import { getZodErrorMessage } from "../../../lib/zod-error";
 import { getTransactionActions } from "../../../lib/transaction-actions";
+import { AppUrlGenerator } from "@/modules/url/app-url-generator";
 
 export const transactionRefundRequestedWebhook =
   new SaleorSyncWebhook<TransactionRefundRequestedEventFragment>({
@@ -50,6 +51,9 @@ export default transactionRefundRequestedWebhook.createHandler((req, res, ctx) =
     return res.status(200).json(failureResponse);
   }
 
+  const parsedPayload = payloadResult.data;
+  const urlGenerator = new AppUrlGenerator(ctx.authData);
+
   const successResponse: RefundRequestedResponse = {
     pspReference: uuidv7(),
     // TODO: Add result customization
@@ -62,8 +66,7 @@ export default transactionRefundRequestedWebhook.createHandler((req, res, ctx) =
       ? ["REFUND"]
       : [],
     amount,
-    // TODO: Link to the app's details page
-    // externalUrl
+    externalUrl: urlGenerator.getTransactionDetailsUrl(parsedPayload.transaction.id),
   };
 
   logger.info("Returning response to Saleor", { response: successResponse });
