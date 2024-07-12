@@ -10,6 +10,8 @@ import { ThemeProvider } from "@saleor/macaw-ui";
 import { NoSSRWrapper } from "../lib/no-ssr-wrapper";
 import { ThemeSynchronizer } from "../lib/theme-synchronizer";
 import { GraphQLProvider } from "../providers/GraphQLProvider";
+import { Navigation } from "../components/Navigation";
+import { AppContent } from "../components/AppContent";
 
 /**
  * Ensure instance is a singleton.
@@ -32,10 +34,13 @@ function NextApp({ Component, pageProps }: AppProps) {
     <NoSSRWrapper>
       <AppBridgeProvider appBridgeInstance={appBridgeInstance}>
         <GraphQLProvider>
-          <ThemeProvider >
+          <ThemeProvider>
             <ThemeSynchronizer />
             <RoutePropagator />
-            <Component {...pageProps} />
+            <Navigation />
+            <AppContent>
+              <Component {...pageProps} />
+            </AppContent>
           </ThemeProvider>
         </GraphQLProvider>
       </AppBridgeProvider>

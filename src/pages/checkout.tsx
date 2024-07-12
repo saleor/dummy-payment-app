@@ -1,14 +1,6 @@
 // pages/checkout.tsx
 import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
-import {
-  ArrowRightIcon,
-  Box,
-  Button,
-  Combobox,
-  ExternalLinkIcon,
-  Switch,
-  Text,
-} from "@saleor/macaw-ui";
+import { ArrowRightIcon, Box, Button, Combobox, ExternalLinkIcon, Text } from "@saleor/macaw-ui";
 import {
   useCompleteCheckoutMutation,
   useCreateCheckoutMutation,
@@ -90,104 +82,109 @@ const CheckoutPage = () => {
   console.log(response);
 
   return (
-    <Box display="flex" flexDirection="column" alignItems="center" gap={4}>
-      <Text size={8} marginTop={4}>
-        Quick checkout tool
-      </Text>
-      <Box display="flex" gap={4} marginTop={2} alignItems="center">
-        <Button onClick={() => handleExecuteCheckoutCreate()}>Create checkout</Button>
-        <ArrowRightIcon />
-        <Button onClick={() => handleExecuteDeliveryUpdate()} disabled={!checkoutCreateResult.data}>
-          Set delivery
-        </Button>
-        <ArrowRightIcon />
-        <Button
-          disabled={!checkoutCreateResult.data}
-          onClick={() => handleExecuteInitializeTransaction()}
-        >
-          Initialize transaction
-        </Button>
-        <ArrowRightIcon />
-        <Button
-          disabled={!checkoutCreateResult.data || !deliveryUpdateResult.data}
-          onClick={() => handleExecuteCompleteCheckout()}
-        >
-          Complete checkout
-        </Button>
-      </Box>
-      <Box display="flex" gap={2} alignItems="center">
-        <Text>Select transaction response:</Text>
-        <Combobox
-          // label="Transaction response"
-          options={transactionEventTypeSchema.options.map((value) => ({
-            label: value,
-            value,
-          }))}
-          value={response}
-          onChange={(value) => setResponse(value as TransactionResponseOptions)}
-          size="small"
-          __width="250px"
-        />
-      </Box>
-      {checkoutCreateResult.data && (
-        <Box display="flex" flexDirection="column" gap={4}>
-          <Box display="flex" flexDirection="column" gap={2}>
-            <Text fontWeight="bold">Checkout created: </Text>
-            <Text>
-              Checkout ID: {checkoutCreateResult.data.checkoutCreate?.checkout?.id ?? "Error"}
-            </Text>
-            <Text>
-              Available gateways:{" "}
-              {checkoutCreateResult.data.checkoutCreate?.checkout?.availablePaymentGateways?.map(
-                (gateway) => <Text key={gateway?.id}>{gateway?.name} </Text>
-              ) ?? "Error "}
-            </Text>
-          </Box>
-          {deliveryUpdateResult.data &&
-            (!!deliveryUpdateResult.error ? (
-              <Text color="critical1" fontWeight="bold">
-                Error setting shipping method
+    <>
+      <Box display="flex" flexDirection="column" alignItems="center" gap={4}>
+        <Text size={8} marginTop={4}>
+          Quick checkout tool
+        </Text>
+        <Box display="flex" gap={4} marginTop={2} alignItems="center">
+          <Button onClick={() => handleExecuteCheckoutCreate()}>Create checkout</Button>
+          <ArrowRightIcon />
+          <Button
+            onClick={() => handleExecuteDeliveryUpdate()}
+            disabled={!checkoutCreateResult.data}
+          >
+            Set delivery
+          </Button>
+          <ArrowRightIcon />
+          <Button
+            disabled={!checkoutCreateResult.data}
+            onClick={() => handleExecuteInitializeTransaction()}
+          >
+            Initialize transaction
+          </Button>
+          <ArrowRightIcon />
+          <Button
+            disabled={!checkoutCreateResult.data || !deliveryUpdateResult.data}
+            onClick={() => handleExecuteCompleteCheckout()}
+          >
+            Complete checkout
+          </Button>
+        </Box>
+        <Box display="flex" gap={2} alignItems="center">
+          <Text>Select transaction response:</Text>
+          <Combobox
+            // label="Transaction response"
+            options={transactionEventTypeSchema.options.map((value) => ({
+              label: value,
+              value,
+            }))}
+            value={response}
+            onChange={(value) => setResponse(value as TransactionResponseOptions)}
+            size="small"
+            __width="250px"
+          />
+        </Box>
+        {checkoutCreateResult.data && (
+          <Box display="flex" flexDirection="column" gap={4}>
+            <Box display="flex" flexDirection="column" gap={2}>
+              <Text fontWeight="bold">Checkout created: </Text>
+              <Text>
+                Checkout ID: {checkoutCreateResult.data.checkoutCreate?.checkout?.id ?? "Error"}
               </Text>
-            ) : (
-              <Text fontWeight="bold">Shipping method set!</Text>
-            ))}
-          <Box display="flex" flexDirection="column" gap={2}>
-            {transactionInitializeResult.data && (
-              <>
-                <Text fontWeight="bold">Transaction initialized: </Text>
-                <Text>
-                  {transactionInitializeResult.data.transactionInitialize?.transactionEvent
-                    ?.pspReference ?? "Error PSP Reference"}
-                </Text>
-                <Text>
-                  {transactionInitializeResult.data.transactionInitialize?.transactionEvent?.type ??
-                    "Error type"}
-                </Text>
-              </>
-            )}
-          </Box>
-
-          {completeCheckoutResult.data && (
-            <Box
-              onClick={() =>
-                navigateToOrder(completeCheckoutResult.data?.checkoutComplete?.order?.id ?? "")
-              }
-              cursor="pointer"
-              color="accent1"
-              display="flex"
-              gap={2}
-              alignItems="center"
-            >
-              <ExternalLinkIcon />
-              <Text fontWeight="bold" color="accent1">
-                Created order{" "}
-                {completeCheckoutResult.data.checkoutComplete?.order?.number ?? "Error"}
+              <Text>
+                Available gateways:{" "}
+                {checkoutCreateResult.data.checkoutCreate?.checkout?.availablePaymentGateways?.map(
+                  (gateway) => <Text key={gateway?.id}>{gateway?.name} </Text>
+                ) ?? "Error "}
               </Text>
             </Box>
-          )}
-        </Box>
-      )}
-    </Box>
+            {deliveryUpdateResult.data &&
+              (!!deliveryUpdateResult.error ? (
+                <Text color="critical1" fontWeight="bold">
+                  Error setting shipping method
+                </Text>
+              ) : (
+                <Text fontWeight="bold">Shipping method set!</Text>
+              ))}
+            <Box display="flex" flexDirection="column" gap={2}>
+              {transactionInitializeResult.data && (
+                <>
+                  <Text fontWeight="bold">Transaction initialized: </Text>
+                  <Text>
+                    {transactionInitializeResult.data.transactionInitialize?.transactionEvent
+                      ?.pspReference ?? "Error PSP Reference"}
+                  </Text>
+                  <Text>
+                    {transactionInitializeResult.data.transactionInitialize?.transactionEvent
+                      ?.type ?? "Error type"}
+                  </Text>
+                </>
+              )}
+            </Box>
+
+            {completeCheckoutResult.data && (
+              <Box
+                onClick={() =>
+                  navigateToOrder(completeCheckoutResult.data?.checkoutComplete?.order?.id ?? "")
+                }
+                cursor="pointer"
+                color="accent1"
+                display="flex"
+                gap={2}
+                alignItems="center"
+              >
+                <ExternalLinkIcon />
+                <Text fontWeight="bold" color="accent1">
+                  Created order{" "}
+                  {completeCheckoutResult.data.checkoutComplete?.order?.number ?? "Error"}
+                </Text>
+              </Box>
+            )}
+          </Box>
+        )}
+      </Box>
+    </>
   );
 };
 
