@@ -65,11 +65,13 @@ const EventReporterPage = () => {
   });
 
   const mutation = trpcClient.transactionReporter.reportEvent.useMutation();
+
   const handleReportEvent = async () => {
     try {
       const result = await mutation.mutateAsync({
         id: pspReference,
-        amount: 100,
+        // TODO: error handling
+        amount: parseFloat(amount),
         type: eventType.value,
       });
       console.log("Mutation result:", result);
@@ -151,7 +153,7 @@ const EventReporterPage = () => {
           endAdornment={<Text size={1}>{transaction?.chargedAmount.currency}</Text>}
         />
       </Box>
-      <Button>Fire event!</Button>
+      <Button onClick={handleReportEvent}>Fire event!</Button>
     </Box>
   );
 };
