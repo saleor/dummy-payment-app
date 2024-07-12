@@ -12,6 +12,7 @@ import { ThemeSynchronizer } from "../lib/theme-synchronizer";
 import { GraphQLProvider } from "../providers/GraphQLProvider";
 import { Navigation } from "../components/Navigation";
 import { AppContent } from "../components/AppContent";
+import { trpcClient } from "@/trpc-client";
 
 /**
  * Ensure instance is a singleton.
@@ -48,4 +49,4 @@ function NextApp({ Component, pageProps }: AppProps) {
   );
 }
 
-export default NextApp;
+export default trpcClient.withTRPC(NextApp);
