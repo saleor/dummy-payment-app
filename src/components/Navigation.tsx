@@ -2,10 +2,10 @@ import { Box, ConfigurationIcon, HomeIcon, OrdersIcon, SellsIcon } from "@saleor
 import { NavigationTile } from "./NavigationTile";
 
 export const ROUTES = {
-  dashboard: "/dashboard",
-  checkout: "/checkout",
-  transactions: "/transactions",
-  configuration: "/configuration",
+  dashboard: "/app/dashboard",
+  checkout: "/app/checkout",
+  transactions: "/app/transactions",
+  configuration: "/app/configuration",
 } as const;
 
 export const Navigation = () => {
