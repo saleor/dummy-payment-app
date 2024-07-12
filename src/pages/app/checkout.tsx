@@ -23,11 +23,8 @@ const CheckoutPage = () => {
     label: "CHARGE_SUCCESS",
   });
 
-  console.log(appBridgeState?.saleorApiUrl);
-
   const [{ data, fetching }] = useProductListQuery();
   const [checkoutCreateResult, checkoutCreateExecute] = useCreateCheckoutMutation();
-  console.log(checkoutCreateResult);
 
   const handleExecuteCheckoutCreate = () => {
     checkoutCreateExecute({
@@ -78,8 +75,6 @@ const CheckoutPage = () => {
       })
     );
   };
-
-  console.log(response);
 
   return (
     <>

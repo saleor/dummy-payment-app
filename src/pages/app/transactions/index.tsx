@@ -34,7 +34,7 @@ const TransactionsPage = () => {
         <Button variant="secondary" onClick={() => setPspReference("")}>
           Clear
         </Button>
-        <Link href={`/transactions/${pspReference}`}>
+        <Link href={`/app/transactions/${pspReference}`}>
           <Button disabled={!pspReference} variant={error ? "error" : "primary"}>
             Go to transaction
           </Button>
