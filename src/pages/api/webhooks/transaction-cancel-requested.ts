@@ -16,8 +16,8 @@ import { getTransactionActions } from "../../../lib/transaction-actions";
 export const transactionCancelationRequestedWebhook =
   new SaleorSyncWebhook<TransactionCancelRequestedEventFragment>({
     name: "Transaction cancelation Requested",
-    webhookPath: "api/webhooks/transaction-cancelation-requested",
-    event: "TRANSACTION_CHARGE_REQUESTED",
+    webhookPath: "api/webhooks/transaction-cancel-requested",
+    event: "TRANSACTION_CANCELATION_REQUESTED",
     apl: saleorApp.apl,
     query: TransactionCancelRequestedDocument,
   });
@@ -38,6 +38,7 @@ export default transactionCancelationRequestedWebhook.createHandler((req, res, c
       result: "CANCEL_FAILURE",
       message: getZodErrorMessage(payloadResult.error),
       actions: getTransactionActions("CANCEL_FAILURE"),
+      amount: 0,
     };
 
     logger.info("Returning error response from Saleor", { response: failureResponse });
@@ -45,12 +46,16 @@ export default transactionCancelationRequestedWebhook.createHandler((req, res, c
     return res.status(200).json(failureResponse);
   }
 
+  const data = payloadResult.data;
+  const amount = data.transaction.authorizedAmount.amount;
+
   const successResponse: CancelationRequestedResponse = {
     pspReference: uuidv7(),
     // TODO: Add result customization
     result: "CANCEL_SUCCESS",
     message: "Great success!",
     actions: getTransactionActions("CANCEL_SUCCESS"),
+    amount,
     // TODO: Link to the app's details page
     // externalUrl
   };
