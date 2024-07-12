@@ -5,17 +5,21 @@ export const chargeRequestedInputSchema = z
   .object({
     action: z.object({
       amount: z
-        .number()
-        .positive()
+        .number({
+          required_error: "Charge amount cannot be missing",
+          invalid_type_error: "Charge amount is not a valid number",
+        })
+        .positive("Charge amount cannot be negative")
         .refine((n) => n > 0, {
-          message: "Number must be greater than zero",
+          message: "Charge amount must be greater than zero",
         }),
     }),
     transaction: z.object({
+      id: z.string(),
       authorizedAmount: z.object({
         amount: z
           .number()
-          .positive()
+          .positive("Transaction cannot be charged when authorizedAmount is negative")
           .refine((n) => n > 0, {
             message: "Transaction cannot be charged when there is no authorizedAmount",
           }),

@@ -11,6 +11,7 @@ import { getTransactionActions } from "../../../lib/transaction-actions";
 import { createLogger } from "../../../logger";
 import { getZodErrorMessage } from "../../../lib/zod-error";
 import { dataSchema, ResponseType } from "../../../modules/validation/sync-transaction";
+import { AppUrlGenerator } from "@/modules/url/app-url-generator";
 
 export const transactionInitializeSessionWebhook =
   new SaleorSyncWebhook<TransactionInitializeSessionEventFragment>({
@@ -57,14 +58,15 @@ export default transactionInitializeSessionWebhook.createHandler((req, res, ctx)
 
   logger.info("Parsed data field from notification", { data });
 
+  const urlGenerator = new AppUrlGenerator(ctx.authData);
+
   const successResponse: ResponseType = {
     pspReference: uuidv7(),
     result: data.event.type,
     message: "Great success!",
     actions: getTransactionActions(data.event.type as TransactionEventTypeEnum),
     amount,
-    // TODO: Link to the app's details page
-    // externalUrl
+    externalUrl: urlGenerator.getTransactionDetailsUrl(payload.transaction.id),
   };
 
   logger.info("Returning response to Saleor", { response: successResponse });

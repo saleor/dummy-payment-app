@@ -12,6 +12,7 @@ import {
 } from "../../../modules/validation/cancel-webhook";
 import { getZodErrorMessage } from "../../../lib/zod-error";
 import { getTransactionActions } from "../../../lib/transaction-actions";
+import { AppUrlGenerator } from "@/modules/url/app-url-generator";
 
 export const transactionCancelationRequestedWebhook =
   new SaleorSyncWebhook<TransactionCancelRequestedEventFragment>({
@@ -46,8 +47,9 @@ export default transactionCancelationRequestedWebhook.createHandler((req, res, c
     return res.status(200).json(failureResponse);
   }
 
-  const data = payloadResult.data;
-  const amount = data.transaction.authorizedAmount.amount;
+  const parsedPayload = payloadResult.data;
+  const amount = parsedPayload.transaction.authorizedAmount.amount;
+  const urlGenerator = new AppUrlGenerator(ctx.authData);
 
   const successResponse: CancelationRequestedResponse = {
     pspReference: uuidv7(),
@@ -56,8 +58,7 @@ export default transactionCancelationRequestedWebhook.createHandler((req, res, c
     message: "Great success!",
     actions: getTransactionActions("CANCEL_SUCCESS"),
     amount,
-    // TODO: Link to the app's details page
-    // externalUrl
+    externalUrl: urlGenerator.getTransactionDetailsUrl(parsedPayload.transaction.id),
   };
 
   logger.info("Returning response to Saleor", { response: successResponse });

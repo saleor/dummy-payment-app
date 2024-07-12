@@ -5,17 +5,21 @@ export const refundRequestedInputSchema = z
   .object({
     action: z.object({
       amount: z
-        .number()
-        .positive()
+        .number({
+          required_error: "Charge amount cannot be missing",
+          invalid_type_error: "Charge amount is not a valid number",
+        })
+        .positive("Charge amount cannot be negative")
         .refine((n) => n > 0, {
-          message: "Number must be greater than zero",
+          message: "Charge amount must be greater than zero",
         }),
     }),
     transaction: z.object({
+      id: z.string(),
       chargedAmount: z.object({
         amount: z
           .number()
-          .positive()
+          .positive("Transaction cannot be refunded when chargedAmount is negative")
           .refine((n) => n > 0, {
             message: "Transaction cannot be refunded when there is no chargedAmount",
           }),
