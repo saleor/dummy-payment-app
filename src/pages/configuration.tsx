@@ -1,7 +1,6 @@
-// pages/dashboard.tsx
 import { Box, Text } from "@saleor/macaw-ui";
 
-const DashboardPage = () => {
+const ConfigurationPage = () => {
   return (
     <>
       <Box
@@ -19,4 +18,4 @@ const DashboardPage = () => {
   );
 };
 
-export default DashboardPage;
+export default ConfigurationPage;
