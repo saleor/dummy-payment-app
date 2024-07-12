@@ -7,8 +7,8 @@ import {
   useInitializeTransactionMutation,
   useProductListQuery,
   useUpdateDeliveryMutation,
-} from "../../generated/graphql";
-import { TransactionEventType, transactionEventTypeSchema } from "../modules/validation/common";
+} from "@/generated/graphqlhql";
+import { TransactionEventType, transactionEventTypeSchema } from "@/modules/validation/commonmonon";
 import React from "react";
 
 interface TransactionResponseOptions {
