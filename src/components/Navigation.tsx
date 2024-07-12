@@ -2,7 +2,7 @@ import { Box, ConfigurationIcon, HomeIcon, OrdersIcon, SellsIcon } from "@saleor
 import { NavigationTile } from "./NavigationTile";
 
 export const ROUTES = {
-  dashboard: "/app/dashboard",
+  dashboard: "/app/",
   checkout: "/app/checkout",
   transactions: "/app/transactions",
   configuration: "/app/configuration",
