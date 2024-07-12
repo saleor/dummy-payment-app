@@ -3,14 +3,16 @@ import { transactionActionsSchema } from "./common";
 
 export const cancelationRequestedInputSchema = z
   .object({
-    authorizedAmount: z.object({
-      amount: z
-        .number()
-        .positive()
-        .refine((n) => n > 0, {
-          message: "Transaction cannot be cancelled when there is no authorizedAmount",
-        }),
-      currency: z.string(),
+    transaction: z.object({
+      authorizedAmount: z.object({
+        amount: z
+          .number()
+          .positive()
+          .refine((n) => n > 0, {
+            message: "Transaction cannot be cancelled when there is no authorizedAmount",
+          }),
+        currency: z.string(),
+      }),
     }),
   })
   .passthrough();

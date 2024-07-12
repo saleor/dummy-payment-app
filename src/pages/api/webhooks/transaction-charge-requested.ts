@@ -11,6 +11,7 @@ import {
   chargeRequestedInputSchema,
 } from "../../../modules/validation/charge-webhook";
 import { getZodErrorMessage } from "../../../lib/zod-error";
+import { getTransactionActions } from "../../../lib/transaction-actions";
 
 export const transactionChargeRequestedWebhook =
   new SaleorSyncWebhook<TransactionChargeRequestedEventFragment>({
@@ -37,7 +38,7 @@ export default transactionChargeRequestedWebhook.createHandler((req, res, ctx) =
       pspReference: uuidv7(),
       result: "CHARGE_FAILURE",
       message: getZodErrorMessage(payloadResult.error),
-      actions: [],
+      actions: getTransactionActions("CHARGE_FAILURE"),
       amount,
     };
 
@@ -51,7 +52,7 @@ export default transactionChargeRequestedWebhook.createHandler((req, res, ctx) =
     // TODO: Add result customization
     result: "CHARGE_SUCCESS",
     message: "Great success!",
-    actions: [],
+    actions: getTransactionActions("CHARGE_SUCCESS"),
     amount,
     // TODO: Link to the app's details page
     // externalUrl

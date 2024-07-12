@@ -12,7 +12,7 @@ fragment TransactionChargeRequestedEvent on TransactionChargeRequested {
     id
     token
     pspReference
-    chargedAmount {
+    authorizedAmount {
       ...Money
     }
   }

@@ -1,7 +1,9 @@
 import { TransactionEventTypeEnum } from "../../generated/graphql";
 
+export type TransactionEventType = `${TransactionEventTypeEnum}`;
+
 export function getTransactionActions(
-  type: TransactionEventTypeEnum
+  type: TransactionEventType
 ): Array<"REFUND" | "CHARGE" | "CANCEL"> {
   switch (type) {
     case TransactionEventTypeEnum.Info:
