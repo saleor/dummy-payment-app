@@ -1,10 +1,8 @@
-import { productsRouter } from "./products.router";
 import { router } from "../server";
-import { channelsRouter } from "./channels.router";
+import { transactionReporterRouter } from "./transaction-reporter.router";
 
 export const appRouter = router({
-  products: productsRouter,
-  channels: channelsRouter,
+  transactionReporter: transactionReporterRouter,
 });
 
 export type AppRouter = typeof appRouter;
