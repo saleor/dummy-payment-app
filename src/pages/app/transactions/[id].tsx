@@ -1,8 +1,8 @@
-import { Box, Button, Chip, Combobox, Input, Spinner, Text } from "@saleor/macaw-ui";
+import { Box, Button, Combobox, Input, OrdersIcon, Spinner, Text } from "@saleor/macaw-ui";
 import { useRouter } from "next/router";
 import { StatusChip } from "@/components/StatusChip";
-import { useAppBridge } from "@saleor/app-sdk/app-bridge";
-import React, { useState } from "react";
+import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
+import React from "react";
 import { trpcClient } from "@/trpc-client";
 import { TransactionEventTypeEnum, useTransactionDetailsViaIdQuery } from "@/generated/graphql";
 
@@ -43,8 +43,8 @@ function formatDateTime(dateString: string, locale = "en-US") {
 
 const EventReporterPage = () => {
   const router = useRouter();
-  const { appBridgeState } = useAppBridge();
-  const [otherError, setOtherError] = useState<string | null>(null);
+  const { appBridgeState, appBridge } = useAppBridge();
+  const [otherError, setOtherError] = React.useState<string | null>(null);
 
   const transactionId = router.query.id as string;
 
@@ -55,7 +55,16 @@ const EventReporterPage = () => {
 
   const [amount, setAmount] = React.useState("");
 
-  const [{ data, fetching }, refetchDetails] = useTransactionDetailsViaIdQuery({
+  const navigateToOrder = (id: string) => {
+    appBridge?.dispatch(
+      actions.Redirect({
+        to: `/orders/${id}`,
+        newContext: true,
+      })
+    );
+  };
+
+  const [{ data, fetching }, refetch] = useTransactionDetailsViaIdQuery({
     variables: {
       id: transactionId,
     },
@@ -63,8 +72,11 @@ const EventReporterPage = () => {
 
   const transaction = data?.transaction;
 
+  const orderId = transaction?.order?.id;
+
   const mutation = trpcClient.transactionReporter.reportEvent.useMutation();
 
+  const isLoading = fetching || mutation.isLoading;
   const handleReportEvent = async () => {
     setOtherError(null);
     try {
@@ -72,18 +84,16 @@ const EventReporterPage = () => {
 
       if (Number.isNaN(parsedAmount)) {
         setOtherError("Invalid amount");
-        throw new Error("Invalid amount");
+        return;
       }
-
-      const result = await mutation.mutateAsync({
-        id: transactionId,
-        amount: parsedAmount,
+      await mutation.mutateAsync({
+        id: transaction?.id ?? "",
+        amount: parseFloat(amount),
         type: eventType.value,
       });
-      console.log("Mutation result:", result);
-      refetchDetails({ requestPolicy: "network-only" });
+      refetch({ requestPolicy: "network-only" });
     } catch (error) {
-      console.error("Error reporting event:", error);
+      console.error(error);
     }
   };
 
@@ -103,12 +113,18 @@ const EventReporterPage = () => {
         padding={4}
         borderRadius={4}
         borderStyle="solid"
-        borderColor="default2"
+        borderColor="default1"
         boxShadow="defaultFocused"
       >
         {data ? (
           <>
-            <Text size={6}>{transaction?.name.length ? transaction.name : "Transaction"}</Text>
+            <Box display="flex" justifyContent="space-between">
+              <Text size={6}>{transaction?.name.length ? transaction.name : "Transaction"}</Text>
+              <Button variant="secondary" onClick={() => navigateToOrder(orderId ?? "")}>
+                <OrdersIcon />
+                Open order
+              </Button>
+            </Box>
             <Text color="default2" marginBottom={4}>
               {transaction?.pspReference}
             </Text>
@@ -117,7 +133,7 @@ const EventReporterPage = () => {
                 gap={2}
                 key={event.id}
                 display="grid"
-                __gridTemplateColumns="80px 150px 150px 200px"
+                __gridTemplateColumns="auto 150px 150px 200px"
               >
                 <Box justifySelf="start">
                   <StatusChip eventType={event.type} />
@@ -160,8 +176,12 @@ const EventReporterPage = () => {
           endAdornment={<Text size={1}>{transaction?.chargedAmount.currency}</Text>}
         />
       </Box>
-      <Button onClick={handleReportEvent} disabled={mutation.isLoading}>
-        Fire event!
+      <Button
+        disabled={isLoading}
+        onClick={handleReportEvent}
+        variant={otherError || mutation.error ? "error" : "primary"}
+      >
+        {isLoading && <Spinner />}Fire event!
       </Button>
       {mutation.data && (
         <Text color="success1">
