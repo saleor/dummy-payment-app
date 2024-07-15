@@ -13,7 +13,7 @@ export const attachAppToken = middleware(async ({ ctx, next }) => {
     });
   }
 
-  const authData = await saleorApp.apl.get(ctx.domain);
+  const authData = await saleorApp.apl.get("https://" + ctx.domain + "/graphql/");
 
   if (!authData?.token) {
     throw new TRPCError({

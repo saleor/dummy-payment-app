@@ -36,6 +36,8 @@ export const transactionReporterRouter = router({
         // externalUrl: ""
       });
 
+      console.log(result.error);
+
       if (result.error) {
         throw new TRPCError({
           message: "There was an error while making transactionEventReport mutation",

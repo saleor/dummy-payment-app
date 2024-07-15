@@ -1,7 +1,7 @@
-import { Box, Button, Chip, Combobox, Input, Spinner, Text } from "@saleor/macaw-ui";
+import { Box, Button, Chip, Combobox, Input, OrdersIcon, Spinner, Text } from "@saleor/macaw-ui";
 import { useRouter } from "next/router";
 import { StatusChip } from "@/components/StatusChip";
-import { useAppBridge } from "@saleor/app-sdk/app-bridge";
+import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
 import React from "react";
 import { trpcClient } from "@/trpc-client";
 import { TransactionEventTypeEnum, useTransactionDetailsQuery } from "@/generated/graphql";
@@ -43,7 +43,7 @@ function formatDateTime(dateString: string, locale = "en-US") {
 
 const EventReporterPage = () => {
   const router = useRouter();
-  const { appBridgeState } = useAppBridge();
+  const { appBridgeState, appBridge } = useAppBridge();
 
   const pspReference = router.query.id as string;
 
@@ -54,7 +54,16 @@ const EventReporterPage = () => {
 
   const [amount, setAmount] = React.useState("");
 
-  const [{ data, fetching }] = useTransactionDetailsQuery({
+  const navigateToOrder = (id: string) => {
+    appBridge?.dispatch(
+      actions.Redirect({
+        to: `/orders/${id}`,
+        newContext: true,
+      })
+    );
+  };
+
+  const [{ data, fetching }, refetch] = useTransactionDetailsQuery({
     variables: {
       pspReference,
     },
@@ -64,17 +73,20 @@ const EventReporterPage = () => {
     return transaction?.pspReference === pspReference;
   });
 
+  const orderId = data?.orders?.edges[0]?.node?.id;
+
   const mutation = trpcClient.transactionReporter.reportEvent.useMutation();
 
+  const isLoading = fetching || mutation.isLoading;
   const handleReportEvent = async () => {
     try {
       const result = await mutation.mutateAsync({
-        id: pspReference,
+        id: transaction?.id ?? "",
         // TODO: error handling
         amount: parseFloat(amount),
         type: eventType.value,
       });
-      console.log("Mutation result:", result);
+      refetch({ requestPolicy: "network-only" });
     } catch (error) {
       console.error("Error reporting event:", error);
     }
@@ -96,12 +108,18 @@ const EventReporterPage = () => {
         padding={4}
         borderRadius={4}
         borderStyle="solid"
-        borderColor="default2"
+        borderColor="default1"
         boxShadow="defaultFocused"
       >
         {data ? (
           <>
-            <Text size={6}>{transaction?.name.length ? transaction.name : "Transaction"}</Text>
+            <Box display="flex" justifyContent="space-between">
+              <Text size={6}>{transaction?.name.length ? transaction.name : "Transaction"}</Text>
+              <Button variant="secondary" onClick={() => navigateToOrder(orderId ?? "")}>
+                <OrdersIcon />
+                Open order
+              </Button>
+            </Box>
             <Text color="default2" marginBottom={4}>
               {transaction?.pspReference}
             </Text>
@@ -110,7 +128,7 @@ const EventReporterPage = () => {
                 gap={2}
                 key={event.id}
                 display="grid"
-                __gridTemplateColumns="80px 150px 150px 200px"
+                __gridTemplateColumns="auto 150px 150px 200px"
               >
                 <Box justifySelf="start">
                   <StatusChip eventType={event.type} />
@@ -153,7 +171,9 @@ const EventReporterPage = () => {
           endAdornment={<Text size={1}>{transaction?.chargedAmount.currency}</Text>}
         />
       </Box>
-      <Button onClick={handleReportEvent}>Fire event!</Button>
+      <Button disabled={isLoading} onClick={handleReportEvent}>
+        {isLoading && <Spinner />}Fire event!
+      </Button>
     </Box>
   );
 };
