@@ -26,7 +26,7 @@
     "@trpc/next": "10.45.2",
     "@trpc/react-query": "^10.45.2",
     "@trpc/server": "10.45.2",
-    "@urql/exchange-auth": "1.0.0",
+    "@urql/exchange-auth": "2.1.6",
     "@vitejs/plugin-react": "4.2.1",
     "graphql": "16.8.1",
     "graphql-tag": "2.12.6",
