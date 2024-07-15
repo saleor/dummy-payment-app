@@ -1,10 +1,10 @@
-import { Box, Button, Chip, Combobox, Input, OrdersIcon, Spinner, Text } from "@saleor/macaw-ui";
+import { Box, Button, Combobox, Input, OrdersIcon, Spinner, Text } from "@saleor/macaw-ui";
 import { useRouter } from "next/router";
 import { StatusChip } from "@/components/StatusChip";
 import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
 import React from "react";
 import { trpcClient } from "@/trpc-client";
-import { TransactionEventTypeEnum, useTransactionDetailsQuery } from "@/generated/graphql";
+import { TransactionEventTypeEnum, useTransactionDetailsViaIdQuery } from "@/generated/graphql";
 
 interface EventReporterOptions {
   label: TransactionEventTypeEnum;
@@ -45,7 +45,7 @@ const EventReporterPage = () => {
   const router = useRouter();
   const { appBridgeState, appBridge } = useAppBridge();
 
-  const pspReference = router.query.id as string;
+  const transactionId = router.query.id as string;
 
   const [eventType, setEventType] = React.useState<EventReporterOptions>({
     label: TransactionEventTypeEnum.ChargeSuccess,
@@ -63,17 +63,15 @@ const EventReporterPage = () => {
     );
   };
 
-  const [{ data, fetching }, refetch] = useTransactionDetailsQuery({
+  const [{ data, fetching }, refetch] = useTransactionDetailsViaIdQuery({
     variables: {
-      pspReference,
+      id: transactionId,
     },
   });
 
-  const transaction = data?.orders?.edges[0]?.node?.transactions.find((transaction) => {
-    return transaction?.pspReference === pspReference;
-  });
+  const transaction = data?.transaction;
 
-  const orderId = data?.orders?.edges[0]?.node?.id;
+  const orderId = transaction?.order?.id;
 
   const mutation = trpcClient.transactionReporter.reportEvent.useMutation();
 
@@ -82,12 +80,12 @@ const EventReporterPage = () => {
     try {
       const result = await mutation.mutateAsync({
         id: transaction?.id ?? "",
-        // TODO: error handling
         amount: parseFloat(amount),
         type: eventType.value,
       });
       refetch({ requestPolicy: "network-only" });
     } catch (error) {
+      // TOOD: Error handling
       console.error("Error reporting event:", error);
     }
   };

@@ -38,4 +38,7 @@ fragment Transaction on TransactionItem {
     }
     type
   }
+  order {
+    id
+  }
 }

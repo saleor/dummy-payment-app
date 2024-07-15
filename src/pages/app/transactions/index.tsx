@@ -6,8 +6,9 @@ import React, { useEffect } from "react";
 const TransactionsPage = () => {
   const router = useRouter();
   const [pspReference, setPspReference] = React.useState<string>("");
+  const [notFoundError, setNotFoundError] = React.useState(false);
 
-  const [{ data, error }, fetchTransactions] = useTransactionDetailsViaPspQuery({
+  const [{ data, error: apiError }, fetchTransactions] = useTransactionDetailsViaPspQuery({
     variables: {
       pspReference,
     },
@@ -21,9 +22,13 @@ const TransactionsPage = () => {
       });
       if (transaction) {
         router.push(`/app/transactions/${transaction.id}`);
+      } else {
+        setNotFoundError(true);
       }
     }
   }, [data]);
+
+  const displayError = notFoundError || apiError;
 
   return (
     <Box
@@ -46,14 +51,18 @@ const TransactionsPage = () => {
           Clear
         </Button>
         <Button
-          onClick={() => fetchTransactions()}
+          onClick={() => {
+            setNotFoundError(false);
+            fetchTransactions();
+          }}
           disabled={!pspReference}
-          variant={error ? "error" : "primary"}
+          variant={displayError ? "error" : "primary"}
         >
           Go to transaction
         </Button>
       </Box>
-      {error && <Text color="critical1">Invalid PSP Reference</Text>}
+      {notFoundError && <Text color="critical1">Invalid PSP Reference</Text>}
+      {apiError && <Text color="critical1">Error fetching transaction</Text>}
     </Box>
   );
 };
