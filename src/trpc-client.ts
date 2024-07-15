@@ -18,7 +18,6 @@ export const trpcClient = createTRPCNext<AppRouter>({
         httpBatchLink({
           url: `${getBaseUrl()}/api/trpc`,
           headers() {
-            // console.log(appBridgeInstance?.getState().token);
             return {
               [SALEOR_API_URL_HEADER]: appBridgeInstance?.getState().saleorApiUrl,
               [SALEOR_AUTHORIZATION_BEARER_HEADER]: appBridgeInstance?.getState().token,
