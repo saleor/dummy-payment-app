@@ -21,10 +21,10 @@
   "dependencies": {
     "@saleor/app-sdk": "0.50.0",
     "@saleor/macaw-ui": "1.0.0",
-    "@tanstack/react-query": "^4.18.0",
+    "@tanstack/react-query": "^4.35.3",
     "@trpc/client": "10.45.2",
     "@trpc/next": "10.45.2",
-    "@trpc/react-query": "10.45.2",
+    "@trpc/react-query": "^10.45.2",
     "@trpc/server": "10.45.2",
     "@urql/exchange-auth": "1.0.0",
     "@vitejs/plugin-react": "4.2.1",
