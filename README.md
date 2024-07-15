@@ -1,21 +1,19 @@
 <div align="center">
-<img width="150" alt="saleor-app-template" src="https://user-images.githubusercontent.com/4006792/215185065-4ef2eda4-ca71-48cc-b14b-c776e0b491b6.png">
+<img width="150" alt="saleor-app-template" src="https://github.com/saleor/dummy-payment-app/blob/main/public/logo.png?raw=true">
 </div>
 
 <div align="center">
-  <h1>Saleor App Template</h1>
+  <h1>Dummy Payment App</h1>
 </div>
 
 <div align="center">
-  <p>Bare-bones boilerplate for writing Saleor Apps with Next.js.</p>
+  <p>Bare-bones app for testing Saleor's <a href="https://docs.saleor.io/docs/developer/payments#payment-app">Transactions API</a></p>
 </div>
 
 <div align="center">
   <a href="https://saleor.io/">Website</a>
   <span> | </span>
   <a href="https://docs.saleor.io/docs/3.x/">Docs</a>
-  <span> | </span>
-    <a href="https://githubbox.com/saleor/saleor-app-template">CodeSandbox</a>
 </div>
 
 ### What is Saleor App
@@ -111,7 +109,7 @@ pnpm dev
 ```
 
 3. Expose local environment using tunnel:
-Use tunneling tools like [localtunnel](https://github.com/localtunnel/localtunnel) or [ngrok](https://ngrok.com/).
+   Use tunneling tools like [localtunnel](https://github.com/localtunnel/localtunnel) or [ngrok](https://ngrok.com/).
 
 4. Install the application in your dashboard:
 
@@ -142,3 +140,7 @@ The choice of the APL is made using the `APL` environment variable. If the value
 - `upstash`: use [Upstash](https://upstash.com/) Redis as storage method. Free account required. It can be used for development and production and supports multi-tenancy. Requires `UPSTASH_URL` and `UPSTASH_TOKEN` environment variables to be set
 
 If you want to use your own database, you can implement your own APL. [Check the documentation to read more.](https://github.com/saleor/saleor-app-sdk/blob/main/docs/apl.md)
+
+## Credits
+
+- App logo: <a href="https://www.flaticon.com/free-icons/dummy" title="dummy icons">Dummy icons created by Flat Icons - Flaticon</a>
