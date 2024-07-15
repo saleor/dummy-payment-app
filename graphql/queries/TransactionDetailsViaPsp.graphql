@@ -1,4 +1,4 @@
-query TransactionDetails($pspReference: String!) {
+query TransactionDetailsViaPsp($pspReference: String!) {
   orders(first: 1, filter: { search: $pspReference }) {
     edges {
       node {

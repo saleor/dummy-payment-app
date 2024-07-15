@@ -1,18 +1,29 @@
+import { useTransactionDetailsViaPspQuery } from "@/generated/graphql";
 import { Box, Button, Input, Text } from "@saleor/macaw-ui";
-import Link from "next/link";
-import React from "react";
+import { useRouter } from "next/router";
+import React, { useEffect } from "react";
 
 const TransactionsPage = () => {
+  const router = useRouter();
   const [pspReference, setPspReference] = React.useState<string>("");
-  const [error, setError] = React.useState(false);
 
-  React.useEffect(() => {
-    if (error) {
-      setTimeout(() => {
-        setError(false);
-      }, 2000);
+  const [{ data, error }, fetchTransactions] = useTransactionDetailsViaPspQuery({
+    variables: {
+      pspReference,
+    },
+    pause: true,
+  });
+
+  useEffect(() => {
+    if (data) {
+      const transaction = data?.orders?.edges[0]?.node?.transactions.find((transaction) => {
+        return transaction?.pspReference === pspReference;
+      });
+      if (transaction) {
+        router.push(`/app/transactions/${transaction.id}`);
+      }
     }
-  }, [error]);
+  }, [data]);
 
   return (
     <Box
@@ -34,11 +45,13 @@ const TransactionsPage = () => {
         <Button variant="secondary" onClick={() => setPspReference("")}>
           Clear
         </Button>
-        <Link href={`/app/transactions/${pspReference}`}>
-          <Button disabled={!pspReference} variant={error ? "error" : "primary"}>
-            Go to transaction
-          </Button>
-        </Link>
+        <Button
+          onClick={() => fetchTransactions()}
+          disabled={!pspReference}
+          variant={error ? "error" : "primary"}
+        >
+          Go to transaction
+        </Button>
       </Box>
       {error && <Text color="critical1">Invalid PSP Reference</Text>}
     </Box>

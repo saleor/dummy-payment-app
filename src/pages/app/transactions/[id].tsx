@@ -2,9 +2,9 @@ import { Box, Button, Chip, Combobox, Input, Spinner, Text } from "@saleor/macaw
 import { useRouter } from "next/router";
 import { StatusChip } from "@/components/StatusChip";
 import { useAppBridge } from "@saleor/app-sdk/app-bridge";
-import React from "react";
+import React, { useState } from "react";
 import { trpcClient } from "@/trpc-client";
-import { TransactionEventTypeEnum, useTransactionDetailsQuery } from "@/generated/graphql";
+import { TransactionEventTypeEnum, useTransactionDetailsViaIdQuery } from "@/generated/graphql";
 
 interface EventReporterOptions {
   label: TransactionEventTypeEnum;
@@ -44,8 +44,9 @@ function formatDateTime(dateString: string, locale = "en-US") {
 const EventReporterPage = () => {
   const router = useRouter();
   const { appBridgeState } = useAppBridge();
+  const [otherError, setOtherError] = useState<string | null>(null);
 
-  const pspReference = router.query.id as string;
+  const transactionId = router.query.id as string;
 
   const [eventType, setEventType] = React.useState<EventReporterOptions>({
     label: TransactionEventTypeEnum.ChargeSuccess,
@@ -54,27 +55,33 @@ const EventReporterPage = () => {
 
   const [amount, setAmount] = React.useState("");
 
-  const [{ data, fetching }] = useTransactionDetailsQuery({
+  const [{ data, fetching }, refetchDetails] = useTransactionDetailsViaIdQuery({
     variables: {
-      pspReference,
+      id: transactionId,
     },
   });
 
-  const transaction = data?.orders?.edges[0]?.node?.transactions.find((transaction) => {
-    return transaction?.pspReference === pspReference;
-  });
+  const transaction = data?.transaction;
 
   const mutation = trpcClient.transactionReporter.reportEvent.useMutation();
 
   const handleReportEvent = async () => {
+    setOtherError(null);
     try {
+      const parsedAmount = parseFloat(amount);
+
+      if (Number.isNaN(parsedAmount)) {
+        setOtherError("Invalid amount");
+        throw new Error("Invalid amount");
+      }
+
       const result = await mutation.mutateAsync({
-        id: pspReference,
-        // TODO: error handling
-        amount: parseFloat(amount),
+        id: transactionId,
+        amount: parsedAmount,
         type: eventType.value,
       });
       console.log("Mutation result:", result);
+      refetchDetails({ requestPolicy: "network-only" });
     } catch (error) {
       console.error("Error reporting event:", error);
     }
@@ -153,7 +160,16 @@ const EventReporterPage = () => {
           endAdornment={<Text size={1}>{transaction?.chargedAmount.currency}</Text>}
         />
       </Box>
-      <Button onClick={handleReportEvent}>Fire event!</Button>
+      <Button onClick={handleReportEvent} disabled={mutation.isLoading}>
+        Fire event!
+      </Button>
+      {mutation.data && (
+        <Text color="success1">
+          Transaction reported: <pre>{JSON.stringify(mutation.data, null, 2)}</pre>
+        </Text>
+      )}
+      {mutation.error && <Text color="critical1">Error reporting event (check console)</Text>}
+      {otherError && <Text color="critical1">{otherError}</Text>}
     </Box>
   );
 };
