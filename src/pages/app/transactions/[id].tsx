@@ -44,6 +44,7 @@ function formatDateTime(dateString: string, locale = "en-US") {
 const EventReporterPage = () => {
   const router = useRouter();
   const { appBridgeState, appBridge } = useAppBridge();
+  const [otherError, setOtherError] = React.useState<string | null>(null);
 
   const transactionId = router.query.id as string;
 
@@ -77,16 +78,22 @@ const EventReporterPage = () => {
 
   const isLoading = fetching || mutation.isLoading;
   const handleReportEvent = async () => {
+    setOtherError(null);
     try {
-      const result = await mutation.mutateAsync({
+      const parsedAmount = parseFloat(amount);
+
+      if (Number.isNaN(parsedAmount)) {
+        setOtherError("Invalid amount");
+        return;
+      }
+      await mutation.mutateAsync({
         id: transaction?.id ?? "",
         amount: parseFloat(amount),
         type: eventType.value,
       });
       refetch({ requestPolicy: "network-only" });
     } catch (error) {
-      // TOOD: Error handling
-      console.error("Error reporting event:", error);
+      console.error(error);
     }
   };
 
@@ -169,9 +176,20 @@ const EventReporterPage = () => {
           endAdornment={<Text size={1}>{transaction?.chargedAmount.currency}</Text>}
         />
       </Box>
-      <Button disabled={isLoading} onClick={handleReportEvent}>
+      <Button
+        disabled={isLoading}
+        onClick={handleReportEvent}
+        variant={otherError || mutation.error ? "error" : "primary"}
+      >
         {isLoading && <Spinner />}Fire event!
       </Button>
+      {mutation.data && (
+        <Text color="success1">
+          Transaction reported: <pre>{JSON.stringify(mutation.data, null, 2)}</pre>
+        </Text>
+      )}
+      {mutation.error && <Text color="critical1">Error reporting event (check console)</Text>}
+      {otherError && <Text color="critical1">{otherError}</Text>}
     </Box>
   );
 };
