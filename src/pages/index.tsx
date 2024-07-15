@@ -1,8 +1,11 @@
+import { isInIframe } from "@/lib/is-in-iframe";
 import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { Box, Button, Input, Text } from "@saleor/macaw-ui";
 import { NextPage } from "next";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { MouseEventHandler, useEffect, useState } from "react";
+import { useIsMounted } from "usehooks-ts";
 
 const AddToSaleorForm = () => (
   <Box
@@ -33,12 +36,19 @@ const AddToSaleorForm = () => (
  * You should probably remove it.
  */
 const IndexPage: NextPage = () => {
+  const isMounted = useIsMounted();
+  const { replace } = useRouter();
   const { appBridgeState, appBridge } = useAppBridge();
-  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
-  }, []);
+    if (isMounted() && appBridgeState?.ready) {
+      replace("/app");
+    }
+  }, [isMounted, appBridgeState?.ready, replace]);
+
+  if (isInIframe()) {
+    return <span>Loading...</span>;
+  }
 
   const handleLinkClick: MouseEventHandler<HTMLAnchorElement> = (e) => {
     /**

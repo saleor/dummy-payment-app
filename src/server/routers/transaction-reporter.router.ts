@@ -8,8 +8,8 @@ import {
 } from "../../../generated/graphql";
 import { v7 as uuidv7 } from "uuid";
 import { getTransactionActions } from "@/lib/transaction-actions";
-import { TRPCClientError } from "@trpc/client";
 import { TRPCError } from "@trpc/server";
+import { createLogger } from "@/logger";
 
 export const transactionReporterRouter = router({
   reportEvent: procedureWithGraphqlClient
@@ -24,6 +24,7 @@ export const transactionReporterRouter = router({
     )
     .mutation(async ({ ctx, input }) => {
       const { id, amount, type, pspReference, message } = input;
+      const logger = createLogger("transactionReporterRouter.reportEvent", { input });
 
       const result = await ctx.apiClient.mutation(TransactionEventReportDocument, {
         id,
@@ -36,9 +37,10 @@ export const transactionReporterRouter = router({
         // externalUrl: ""
       });
 
-      console.log(result.error);
+      logger.info("Received result from Saleor", { result });
 
       if (result.error) {
+        logger.error("There was an error while making mutation call", { error: result.error });
         throw new TRPCError({
           message: "There was an error while making transactionEventReport mutation",
           cause: result.error,
@@ -48,6 +50,7 @@ export const transactionReporterRouter = router({
 
       const errors = result.data?.transactionEventReport?.errors;
       if (errors && errors.length > 0) {
+        logger.error("Error in mutation result", { errors });
         throw new TRPCError({
           message: "There was an error while making transactionEventReport mutation",
           cause: errors[0],
@@ -58,6 +61,7 @@ export const transactionReporterRouter = router({
       const data = result.data?.transactionEventReport;
 
       if (!data) {
+        logger.error("Missing data in response", { data: result.data });
         throw new TRPCError({
           message: "Saleor didn't return response from transactionEventReport mutation",
           code: "INTERNAL_SERVER_ERROR",

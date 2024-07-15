@@ -26,7 +26,7 @@ export default createManifestHandler({
     const manifest: AppManifest = {
       name: "Hackathon Payment App",
       tokenTargetUrl: `${apiBaseURL}/api/register`,
-      appUrl: iframeBaseUrl + "/app",
+      appUrl: iframeBaseUrl,
       /**
        * Set permissions for app if needed
        * https://docs.saleor.io/docs/3.x/developer/permissions
