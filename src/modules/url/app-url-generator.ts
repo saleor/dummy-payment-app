@@ -4,7 +4,7 @@ export class AppUrlGenerator {
   constructor(private authData: Pick<AuthData, "appId">) {}
 
   private getAppBaseUrl(appId: string) {
-    return `/dashboard/apps/${appId}/app`;
+    return `/dashboard/apps/${appId}/app/app`;
   }
 
   getTransactionDetailsUrl(transactionId: string) {
