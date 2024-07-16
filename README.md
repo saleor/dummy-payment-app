@@ -22,7 +22,7 @@ The Dummy Payment App allows you to test Saleor's payment and checkout features 
 
 ### App features
 
-- Create new checkouts from Saleor Dashboard and create orders:
+- Create new checkouts and orders from the Saleor Dashboard:
 
 ![Dummy Payment App has UI in Saleor dashboard for creating new orders from checkouts with Transactions](docs/1_checkout.jpeg)
 
@@ -31,7 +31,7 @@ The Dummy Payment App allows you to test Saleor's payment and checkout features 
 ![Dummy Payment App has UI in Saleor dashboard for updating Transactions](docs/2_event_reporter.jpeg)
 
 > [!TIP]
-> Each Transaction has `externalUrl` that links to this page from Order tails page in Saleor Dashboard:
+> Each Transaction has `externalUrl` that links to this page from Order details page in Saleor Dashboard:
 
 - Issue refunds, process charges and cancellations for Transactions
 
@@ -39,7 +39,7 @@ The Dummy Payment App allows you to test Saleor's payment and checkout features 
 
 The Dummy Payment App supports the following webhooks to enable payment flows:
 
-It implements webhooks to process payments initiated from your storefront:
+The app implements webhooks to process payments initiated from your storefront:
 
 - `PAYMENT_GATEWAY_INITIALIZE_SESSION`
 - `TRANSACTION_INITIALIZE_SESSION`
