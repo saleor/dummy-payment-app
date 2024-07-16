@@ -79,7 +79,7 @@ const IndexPage: NextPage = () => {
         Saleor App Template is a minimalistic boilerplate that provides a working example of a
         Saleor app.
       </Text>
-      {appBridgeState?.ready && mounted && (
+      {appBridgeState?.ready && isMounted && (
         <Link href="/actions">
           <Button variant="secondary">See what your app can do →</Button>
         </Link>
