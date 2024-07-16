@@ -16,25 +16,48 @@
   <a href="https://docs.saleor.io/docs/3.x/">Docs</a>
 </div>
 
-### What is Saleor App
+### What is Dummy Payment App?
 
-Saleor App is the fastest way of extending Saleor with custom logic using [asynchronous](https://docs.saleor.io/docs/3.x/developer/extending/apps/asynchronous-webhooks) and [synchronous](https://docs.saleor.io/docs/3.x/developer/extending/apps/synchronous-webhooks/key-concepts) webhooks (and vast Saleor's API). In most cases, creating an App consists of two tasks:
+Dummy payment app is a simple Saleor app that allows you to test Saleor's Transactions API
+before you dive deep into implementing real payment provider integration.
 
-- Writing webhook's code executing your custom logic.
-- Developing configuration UI to be displayed in Saleor Dashboard via specialized view (designated in the App's manifest).
+You can make new checkouts and add Transactions with any status directly in Saleor Dashboard.
+
+![Dummy Payment App has UI in Saleor dashboard for creating new orders from checkouts with Transactions](docs/1_checkout.jpeg)
+
+All Transactions created by the app can be updated via UI.
+You can choose use all available statuses for Transactions and app will report changes to Saleor.
+
+![Dummy Payment App has UI in Saleor dashboard for updating Transactions](docs/2_event_reporter.jpeg)
+
+Each Transaction has `externalUrl` that links to this page from Order tails page in Saleor Dashboard:
 
 ### What's included?
 
-- 🚀 Communication between Saleor instance and Saleor App
-- 📖 Manifest with webhooks using custom query
+Dummy Payment App implements following webhooks so that you can complete payments in your storefront:
 
-### Why Next.js
+- `PAYMENT_GATEWAY_INITIALIZE_SESSION`
+- `TRANSACTION_INITIALIZE_SESSION`
+- `TRANSACTION_PROCESS_SESSION`
 
-You can use any preferred technology to create Saleor Apps, but Next.js is among the most efficient for two reasons. The first is the simplicity of maintaining your API endpoints/webhooks and your apps' configuration React front-end in a single, well-organized project. The second reason is the ease and quality of local development and deployment.
+It also implements webhooks that allow making changes on your Transaction from Saleor dashboard, just like a real payment provider app would do:
 
-### Learn more about Apps
+- `TRANSACTION_REFUND_REQUESTED`
+- `TRANSACTION_CHARGE_REQUESTED`
+- `TRANSACTION_CANCELATION_REQUESTED`
 
-[Apps guide](https://docs.saleor.io/docs/3.x/developer/extending/apps/key-concepts)
+### Learn more
+
+#### Docs
+
+- [**Apps guide**](https://docs.saleor.io/docs/developer/extending/apps/overview) - learn more how to build your own Saleor app
+- [**Transactions API**](https://docs.saleor.io/docs/developer/payments) - learn how to use Transactions API in your store
+- [**Payment App webhooks**](https://docs.saleor.io/docs/developer/extending/webhooks/synchronous-events/transaction) - learn how to build your own Payment App
+
+#### Examples
+
+- [**Stripe Payment App**](https://github.com/saleor/saleor-app-payment-stripe)
+- [**Stripe Example Storefront**](https://github.com/saleor/example-nextjs-stripe)
 
 ## Development
 
