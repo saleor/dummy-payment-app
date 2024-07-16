@@ -1,7 +1,7 @@
-query ProductList {
+query ProductList($channelSlug: String!) {
   products(
     first: 10
-    channel: "default-channel"
+    channel: $channelSlug
     where: { isAvailable: true, isPublished: true, giftCard: false, isVisibleInListing: true }
     sortBy: { field: PRICE, direction: DESC }
   ) {

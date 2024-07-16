@@ -2,6 +2,7 @@
 import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
 import { ArrowRightIcon, Box, Button, Combobox, ExternalLinkIcon, Text } from "@saleor/macaw-ui";
 import {
+  useChannelsListQuery,
   useCompleteCheckoutMutation,
   useCreateCheckoutMutation,
   useInitializeTransactionMutation,
@@ -22,20 +23,14 @@ const CheckoutPage = () => {
     value: "CHARGE_SUCCESS",
     label: "CHARGE_SUCCESS",
   });
+  const [channelSlug, setChannelSlug] = React.useState<string>("");
 
-  const [{ data, fetching }] = useProductListQuery();
+  const [{ data: channelsData, fetching: fetchingChannels }] = useChannelsListQuery();
+  const [{ data: productsData, fetching: fetchingProducts }] = useProductListQuery({
+    pause: channelSlug === "",
+    variables: { channelSlug },
+  });
   const [checkoutCreateResult, checkoutCreateExecute] = useCreateCheckoutMutation();
-
-  const handleExecuteCheckoutCreate = () => {
-    checkoutCreateExecute({
-      variants: [
-        {
-          quantity: 1,
-          variantId: data?.products?.edges[0]?.node.defaultVariant?.id ?? "",
-        },
-      ],
-    });
-  };
 
   const [deliveryUpdateResult, deliveryUpdateExecute] = useUpdateDeliveryMutation();
   const handleExecuteDeliveryUpdate = () => {
@@ -48,6 +43,8 @@ const CheckoutPage = () => {
   const [transactionInitializeResult, transactionInitializeExecute] =
     useInitializeTransactionMutation();
 
+  const [completeCheckoutResult, completeCheckoutExecute] = useCompleteCheckoutMutation();
+
   const handleExecuteInitializeTransaction = () => {
     transactionInitializeExecute({
       id: checkoutCreateResult.data?.checkoutCreate?.checkout?.id ?? "",
@@ -59,7 +56,17 @@ const CheckoutPage = () => {
     });
   };
 
-  const [completeCheckoutResult, completeCheckoutExecute] = useCompleteCheckoutMutation();
+  const handleExecuteCheckoutCreate = () => {
+    checkoutCreateExecute({
+      channelSlug,
+      variants: [
+        {
+          quantity: 1,
+          variantId: productsData?.products?.edges[0]?.node.defaultVariant?.id ?? "",
+        },
+      ],
+    });
+  };
 
   const handleExecuteCompleteCheckout = () => {
     completeCheckoutExecute({
@@ -83,7 +90,12 @@ const CheckoutPage = () => {
           Quick checkout tool
         </Text>
         <Box display="flex" gap={4} marginTop={2} alignItems="center">
-          <Button onClick={() => handleExecuteCheckoutCreate()}>Create checkout</Button>
+          <Button
+            disabled={channelSlug === "" || fetchingChannels || fetchingProducts}
+            onClick={() => handleExecuteCheckoutCreate()}
+          >
+            Create checkout
+          </Button>
           <ArrowRightIcon />
           <Button
             onClick={() => handleExecuteDeliveryUpdate()}
@@ -105,6 +117,17 @@ const CheckoutPage = () => {
           >
             Complete checkout
           </Button>
+        </Box>
+        <Box display="flex" gap={2} alignItems="center">
+          <Text>Select channel:</Text>
+          <Combobox
+            value={channelSlug}
+            onChange={(value) => setChannelSlug(value as string)}
+            options={(channelsData?.channels ?? []).map((value) => ({
+              value: value.slug,
+              label: value.name,
+            }))}
+          />
         </Box>
         <Box display="flex" gap={2} alignItems="center">
           <Text>Select transaction response:</Text>

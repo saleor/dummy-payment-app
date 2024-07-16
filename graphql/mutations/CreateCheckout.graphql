@@ -1,7 +1,7 @@
-mutation CreateCheckout($variants: [CheckoutLineInput!]!) {
+mutation CreateCheckout($channelSlug: String!, $variants: [CheckoutLineInput!]!) {
   checkoutCreate(
     input: {
-      channel: "default-channel"
+      channel: $channelSlug
       lines: $variants
       languageCode: EN_US
       email: "demo@saleor.io"
