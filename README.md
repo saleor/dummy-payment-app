@@ -18,29 +18,34 @@
 
 ### What is Dummy Payment App?
 
-Dummy payment app is a simple Saleor app that allows you to test Saleor's Transactions API
-before you dive deep into implementing real payment provider integration.
+The Dummy Payment App allows you to test Saleor's payment and checkout features without needing to set up a real payment provider. You can create orders, process payments, issue refunds, and more, all within the Saleor Dashboard.
 
-You can make new checkouts and add Transactions with any status directly in Saleor Dashboard.
+### App features
+
+- Create new checkouts from Saleor Dashboard and create orders:
 
 ![Dummy Payment App has UI in Saleor dashboard for creating new orders from checkouts with Transactions](docs/1_checkout.jpeg)
 
-All Transactions created by the app can be updated via UI.
-You can choose use all available statuses for Transactions and app will report changes to Saleor.
+- Process payments and update transaction statuses:
 
 ![Dummy Payment App has UI in Saleor dashboard for updating Transactions](docs/2_event_reporter.jpeg)
 
-Each Transaction has `externalUrl` that links to this page from Order tails page in Saleor Dashboard:
+> ![TIP]
+> Each Transaction has `externalUrl` that links to this page from Order tails page in Saleor Dashboard:
 
-### What's included?
+- Issue refunds, process charges and cancellations for Transactions
 
-Dummy Payment App implements following webhooks so that you can complete payments in your storefront:
+### How does it work?
+
+The Dummy Payment App supports the following webhooks to enable payment flows:
+
+It implements webhooks to process payments initiated from your storefront:
 
 - `PAYMENT_GATEWAY_INITIALIZE_SESSION`
 - `TRANSACTION_INITIALIZE_SESSION`
 - `TRANSACTION_PROCESS_SESSION`
 
-It also implements webhooks that allow making changes on your Transaction from Saleor dashboard, just like a real payment provider app would do:
+It also implements webhooks to allow updating the status of Transactions from the Saleor Dashboard, similar to how a real third-party payment provider would:
 
 - `TRANSACTION_REFUND_REQUESTED`
 - `TRANSACTION_CHARGE_REQUESTED`
@@ -163,6 +168,15 @@ The choice of the APL is made using the `APL` environment variable. If the value
 - `upstash`: use [Upstash](https://upstash.com/) Redis as storage method. Free account required. It can be used for development and production and supports multi-tenancy. Requires `UPSTASH_URL` and `UPSTASH_TOKEN` environment variables to be set
 
 If you want to use your own database, you can implement your own APL. [Check the documentation to read more.](https://github.com/saleor/saleor-app-sdk/blob/main/docs/apl.md)
+
+## Support
+
+Please open GitHub issues if you find any problem with this app. PRs are welcome too 😄
+
+You can find help with Saleor in these places:
+
+- [GitHub Discussions](https://github.com/saleor/saleor/discussions)
+- [Saleor Discord](https://discord.gg/H52JTZAtSH)
 
 ## Credits
 
