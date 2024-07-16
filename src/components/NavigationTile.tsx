@@ -8,11 +8,26 @@ interface NavigationTileProps {
   children: React.ReactNode;
 }
 
+const navbarPathMatch = (href: string, pathname: string) => {
+  if (pathname === href) {
+    return true;
+  }
+
+  // pathname matches href + /[any param]
+  const regex = new RegExp(`^${href}/\\[.+\\]$`);
+  if (regex.test(pathname)) {
+    return true;
+  }
+
+  return false;
+};
+
 export const NavigationTile = ({ href, children }: NavigationTileProps) => {
   const router = useRouter();
   const { pathname } = router;
 
-  const isActive = pathname === href;
+  const isActive = navbarPathMatch(href, pathname);
+
   return (
     <Link href={href}>
       <Text
