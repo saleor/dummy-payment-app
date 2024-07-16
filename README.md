@@ -30,7 +30,7 @@ The Dummy Payment App allows you to test Saleor's payment and checkout features 
 
 ![Dummy Payment App has UI in Saleor dashboard for updating Transactions](docs/2_event_reporter.jpeg)
 
-> ![TIP]
+> [!TIP]
 > Each Transaction has `externalUrl` that links to this page from Order tails page in Saleor Dashboard:
 
 - Issue refunds, process charges and cancellations for Transactions
