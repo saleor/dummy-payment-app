@@ -10,6 +10,7 @@ import { v7 as uuidv7 } from "uuid";
 import { getTransactionActions } from "@/lib/transaction-actions";
 import { TRPCError } from "@trpc/server";
 import { createLogger } from "@/logger";
+import { AppUrlGenerator } from "@/modules/url/app-url-generator";
 
 export const transactionReporterRouter = router({
   reportEvent: procedureWithGraphqlClient
@@ -26,6 +27,8 @@ export const transactionReporterRouter = router({
       const { id, amount, type, pspReference, message } = input;
       const logger = createLogger("transactionReporterRouter.reportEvent", { input });
 
+      const urlGenerator = new AppUrlGenerator(ctx.authData);
+
       const result = await ctx.apiClient.mutation(TransactionEventReportDocument, {
         id,
         amount,
@@ -33,8 +36,7 @@ export const transactionReporterRouter = router({
         pspReference: pspReference ?? uuidv7(),
         message: message ?? "Great success!",
         availableActions: getTransactionActions(type) as TransactionActionEnum[],
-        // TODO: Add externalUrl
-        // externalUrl: ""
+        externalUrl: urlGenerator.getTransactionDetailsUrl(id, { includeSaleorBaseUrl: true }),
       });
 
       logger.info("Received result from Saleor", { result });
