@@ -12,8 +12,6 @@ fragment TransactionProcessSessionEvent on TransactionProcessSession {
     actionType
   }
   transaction {
-    id
-    token
-    pspReference
+    ...SyncWebhookTransaction
   }
 }

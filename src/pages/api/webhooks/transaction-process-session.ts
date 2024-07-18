@@ -12,6 +12,7 @@ import { dataSchema, ResponseType } from "../../../modules/validation/sync-trans
 import { getZodErrorMessage } from "../../../lib/zod-error";
 import { getTransactionActions } from "../../../lib/transaction-actions";
 import { AppUrlGenerator } from "@/modules/url/app-url-generator";
+import { TransactionPspFinder } from "@/modules/transaction/transaction-psp-finder";
 
 export const transactionProcessSessionWebhook =
   new SaleorSyncWebhook<TransactionProcessSessionEventFragment>({
@@ -61,7 +62,7 @@ export default transactionProcessSessionWebhook.createHandler((req, res, ctx) =>
   const urlGenerator = new AppUrlGenerator(ctx.authData);
 
   const successResponse: ResponseType = {
-    pspReference: uuidv7(),
+    pspReference: data.event.includePspReference ? uuidv7() : undefined,
     result: data.event.type,
     message: "Great success!",
     actions: getTransactionActions(data.event.type as TransactionEventTypeEnum),

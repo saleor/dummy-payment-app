@@ -5,9 +5,7 @@ fragment TransactionCancelRequestedEvent on TransactionCancelationRequested {
     ...PaymentGatewayRecipient
   }
   transaction {
-    id
-    token
-    pspReference
+    ...SyncWebhookTransaction
     authorizedAmount {
       ...Money
     }

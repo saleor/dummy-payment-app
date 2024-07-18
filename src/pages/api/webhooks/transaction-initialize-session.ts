@@ -61,7 +61,7 @@ export default transactionInitializeSessionWebhook.createHandler((req, res, ctx)
   const urlGenerator = new AppUrlGenerator(ctx.authData);
 
   const successResponse: ResponseType = {
-    pspReference: uuidv7(),
+    pspReference: data.event.includePspReference ? uuidv7() : undefined,
     result: data.event.type,
     message: "Great success!",
     actions: getTransactionActions(data.event.type as TransactionEventTypeEnum),

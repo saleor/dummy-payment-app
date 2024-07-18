@@ -9,9 +9,7 @@ fragment TransactionRefundRequestedEvent on TransactionRefundRequested {
     actionType
   }
   transaction {
-    id
-    token
-    pspReference
+    ...SyncWebhookTransaction
     chargedAmount {
       ...Money
     }

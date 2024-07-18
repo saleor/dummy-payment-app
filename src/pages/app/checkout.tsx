@@ -1,6 +1,14 @@
 // pages/checkout.tsx
 import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
-import { ArrowRightIcon, Box, Button, Combobox, ExternalLinkIcon, Text } from "@saleor/macaw-ui";
+import {
+  ArrowRightIcon,
+  Box,
+  Button,
+  Combobox,
+  ExternalLinkIcon,
+  Text,
+  Toggle,
+} from "@saleor/macaw-ui";
 import {
   useChannelsListQuery,
   useCompleteCheckoutMutation,
@@ -11,6 +19,7 @@ import {
 } from "@/generated/graphql";
 import { TransactionEventType, transactionEventTypeSchema } from "@/modules/validation/common";
 import React from "react";
+import { SyncWebhookRequestData } from "@/modules/validation/sync-transaction";
 
 interface TransactionResponseOptions {
   value: TransactionEventType;
@@ -24,6 +33,7 @@ const CheckoutPage = () => {
     label: "CHARGE_SUCCESS",
   });
   const [channelSlug, setChannelSlug] = React.useState<string>("");
+  const [includePspReference, setIncludePspReference] = React.useState<boolean>(true);
 
   const [{ data: channelsData, fetching: fetchingChannels }] = useChannelsListQuery();
   const [{ data: productsData, fetching: fetchingProducts }] = useProductListQuery({
@@ -51,8 +61,9 @@ const CheckoutPage = () => {
       data: {
         event: {
           type: response.value,
+          includePspReference,
         },
-      },
+      } as SyncWebhookRequestData,
     });
   };
 
@@ -142,6 +153,14 @@ const CheckoutPage = () => {
             size="small"
             __width="250px"
           />
+        </Box>
+        <Box>
+          <Toggle
+            pressed={includePspReference}
+            onPressedChange={(pressed) => setIncludePspReference(pressed)}
+          >
+            <Text>Return pspReference</Text>
+          </Toggle>
         </Box>
         {checkoutCreateResult.data && (
           <Box display="flex" flexDirection="column" gap={4}>

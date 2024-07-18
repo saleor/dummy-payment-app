@@ -9,9 +9,7 @@ fragment TransactionChargeRequestedEvent on TransactionChargeRequested {
     actionType
   }
   transaction {
-    id
-    token
-    pspReference
+    ...SyncWebhookTransaction
     authorizedAmount {
       ...Money
     }

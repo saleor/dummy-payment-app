@@ -1,10 +1,11 @@
-import { Box, Button, Combobox, Input, OrdersIcon, Spinner, Text } from "@saleor/macaw-ui";
+import { Box, Button, Combobox, Input, OrdersIcon, Spinner, Text, Toggle } from "@saleor/macaw-ui";
 import { useRouter } from "next/router";
 import { StatusChip } from "@/components/StatusChip";
 import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
-import React from "react";
+import React, { useState } from "react";
 import { trpcClient } from "@/trpc-client";
 import { TransactionEventTypeEnum, useTransactionDetailsViaIdQuery } from "@/generated/graphql";
+import { TransactionPspFinder } from "@/modules/transaction/transaction-psp-finder";
 
 interface EventReporterOptions {
   label: TransactionEventTypeEnum;
@@ -55,6 +56,8 @@ const EventReporterPage = () => {
 
   const [amount, setAmount] = React.useState("");
 
+  const [generateNewPspReference, setGenerateNewPspReference] = useState<boolean>(false);
+
   const navigateToOrder = (id: string) => {
     appBridge?.dispatch(
       actions.Redirect({
@@ -77,8 +80,10 @@ const EventReporterPage = () => {
   const mutation = trpcClient.transactionReporter.reportEvent.useMutation();
 
   const isLoading = fetching || mutation.isLoading;
+
   const handleReportEvent = async () => {
     setOtherError(null);
+    const pspFinder = new TransactionPspFinder();
     try {
       const parsedAmount = parseFloat(amount);
 
@@ -86,10 +91,29 @@ const EventReporterPage = () => {
         setOtherError("Invalid amount");
         return;
       }
+
+      let pspReference: string | undefined;
+      if (!generateNewPspReference) {
+        if (!data?.transaction) {
+          setOtherError("No transaction found to find lastPspRefernce");
+          return;
+        }
+
+        pspReference = pspFinder.findLastPspReference(data.transaction) || undefined;
+
+        if (!pspReference) {
+          setOtherError("No pspReference found in transaction, change setting to generate new one");
+          return;
+        }
+
+        console.log(pspReference);
+      }
+
       await mutation.mutateAsync({
         id: transaction?.id ?? "",
         amount: parseFloat(amount),
         type: eventType.value,
+        pspReference,
       });
       refetch({ requestPolicy: "network-only" });
     } catch (error) {
@@ -176,6 +200,12 @@ const EventReporterPage = () => {
           endAdornment={<Text size={1}>{transaction?.chargedAmount.currency}</Text>}
         />
       </Box>
+      <Toggle
+        pressed={generateNewPspReference}
+        onPressedChange={(pressed) => setGenerateNewPspReference(pressed)}
+      >
+        <Text>Generate new pspReference</Text>
+      </Toggle>
       <Button
         disabled={isLoading}
         onClick={handleReportEvent}

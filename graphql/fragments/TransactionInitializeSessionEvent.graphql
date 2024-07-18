@@ -18,8 +18,6 @@ fragment TransactionInitializeSessionEvent on TransactionInitializeSession {
     }
   }
   transaction {
-    id
-    token
-    pspReference
+    ...SyncWebhookTransaction
   }
 }

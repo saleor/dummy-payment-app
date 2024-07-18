@@ -24,6 +24,8 @@ export const attachAppToken = middleware(async ({ ctx, next }) => {
 
   return next({
     ctx: {
+      authData,
+      // TODO: Remove appToken
       appToken: authData.token,
     },
   });
