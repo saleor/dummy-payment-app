@@ -180,4 +180,4 @@ You can find help with Saleor in these places:
 
 ## Credits
 
-- App logo: <a href="https://www.flaticon.com/free-icons/dummy" title="dummy icons">Dummy icons created by Flat Icons - Flaticon</a>
+- App logo: [Lucide](https://lucide.dev/license)
