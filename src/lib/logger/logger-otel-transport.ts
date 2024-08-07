@@ -1,5 +1,5 @@
 import { context } from "@opentelemetry/api";
-import { LogAttributeValue, logs } from "@opentelemetry/api-logs";
+import { LogAttributes, logs } from "@opentelemetry/api-logs";
 import { SemanticResourceAttributes } from "@opentelemetry/semantic-conventions";
 import { ILogObj, Logger } from "tslog";
 import { LoggerContext } from "./logger-context";
@@ -36,7 +36,7 @@ export const attachLoggerOtelTransport = (
       }
 
       return acc;
-    }, {} as Record<string, LogAttributeValue>);
+    }, {} as LogAttributes);
 
     /**
      * Try to serialize Error. Modern-errors has plugin to serialize
@@ -49,7 +49,7 @@ export const attachLoggerOtelTransport = (
      */
     try {
       const errorAttribute = serializedAttributes.error;
-      const ErrorConstructor = errorAttribute["constructor"];
+      const ErrorConstructor = errorAttribute?.["constructor"];
 
       // @ts-expect-error - ErrorConstructor is a class that could have serialize method. If not, safely throw and ignore
       serializedAttributes.error = ErrorConstructor.serialize(serializedAttributes.error);
@@ -63,12 +63,9 @@ export const attachLoggerOtelTransport = (
       severityText: log._meta.logLevelName,
       attributes: {
         ...serializedAttributes,
-        // eslint-disable-next-line turbo/no-undeclared-env-vars
         [SemanticResourceAttributes.SERVICE_NAME]: process.env.OTEL_SERVICE_NAME,
         [SemanticResourceAttributes.SERVICE_VERSION]: appVersion,
-        // eslint-disable-next-line turbo/no-undeclared-env-vars
         ["commit-sha"]: process.env.VERCEL_GIT_COMMIT_SHA,
-        // eslint-disable-next-line turbo/no-undeclared-env-vars
         [SemanticResourceAttributes.DEPLOYMENT_ENVIRONMENT]: process.env.ENV,
       },
     });

@@ -78,7 +78,7 @@ export default wrapWithLoggerContext(
 
       return res.status(200).json(successResponse);
     }),
-    "/api/webhooks/transaction-process-session
+    "/api/webhooks/transaction-process-session"
   ),
   loggerContext
 );

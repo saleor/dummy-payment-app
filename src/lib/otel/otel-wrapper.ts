@@ -13,7 +13,6 @@ import { sharedOtelConfig } from "./shared-config";
 
 const tracer = getOtelTracer();
 
-// eslint-disable-next-line turbo/no-undeclared-env-vars
 if (process.env.OTEL_ENABLED === "true" && process.env.OTEL_SERVICE_NAME) {
   otelSdk.start();
 }
@@ -38,7 +37,6 @@ const flushOtel = async () => {
  * TODO: Consider injecting into Next.js config, to automatically wrap routes and infer static route name from file name
  */
 export const withOtel = (handler: NextApiHandler, staticRouteName: string): NextApiHandler => {
-  // eslint-disable-next-line turbo/no-undeclared-env-vars
   if (process.env.OTEL_ENABLED !== "true") {
     return handler;
   }
@@ -47,7 +45,7 @@ export const withOtel = (handler: NextApiHandler, staticRouteName: string): Next
     apply: async (
       wrappingTarget,
       thisArg,
-      args: [NextApiRequest | undefined, NextApiResponse | undefined],
+      args: [NextApiRequest | undefined, NextApiResponse | undefined]
     ) => {
       const [req, res] = args;
 
@@ -112,7 +110,7 @@ export const withOtel = (handler: NextApiHandler, staticRouteName: string): Next
              */
             throw error;
           }
-        },
+        }
       );
     },
   });
