@@ -1,5 +1,5 @@
-import { SaleorApp } from "@saleor/app-sdk/saleor-app";
 import { APL, FileAPL, SaleorCloudAPL, UpstashAPL } from "@saleor/app-sdk/APL";
+import { SaleorApp } from "@saleor/app-sdk/saleor-app";
 import { invariant } from "./lib/invariant";
 
 /**
@@ -25,7 +25,9 @@ switch (process.env.APL) {
     apl = new UpstashAPL();
     break;
   default:
-    apl = new FileAPL();
+    apl = new FileAPL({
+      fileName: process.env.FILE_APL_PATH,
+    });
 }
 
 export const saleorApp = new SaleorApp({
