@@ -9,7 +9,7 @@ import {
 import { v7 as uuidv7 } from "uuid";
 import { getTransactionActions } from "@/lib/transaction-actions";
 import { TRPCError } from "@trpc/server";
-import { createLogger } from "@/logger";
+import { createLogger } from "@/lib/logger/logger";
 import { AppUrlGenerator } from "@/modules/url/app-url-generator";
 
 export const transactionReporterRouter = router({

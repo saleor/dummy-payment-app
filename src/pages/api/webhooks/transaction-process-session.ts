@@ -1,18 +1,20 @@
 import { SaleorSyncWebhook } from "@saleor/app-sdk/handlers/next";
 import { v7 as uuidv7 } from "uuid";
-import { saleorApp } from "../../../saleor-app";
+import { saleorApp } from "@/saleor-app";
 import {
   TransactionEventTypeEnum,
   TransactionFlowStrategyEnum,
   TransactionProcessSessionDocument,
   TransactionProcessSessionEventFragment,
-} from "../../../../generated/graphql";
-import { createLogger } from "../../../logger";
-import { dataSchema, ResponseType } from "../../../modules/validation/sync-transaction";
-import { getZodErrorMessage } from "../../../lib/zod-error";
-import { getTransactionActions } from "../../../lib/transaction-actions";
+} from "@/generated/graphql";
+import { createLogger } from "@/lib/logger/logger";
+import { dataSchema, ResponseType } from "@/modules/validation/sync-transaction";
+import { getZodErrorMessage } from "@/lib/zod-error";
+import { getTransactionActions } from "@/lib/transaction-actions";
 import { AppUrlGenerator } from "@/modules/url/app-url-generator";
-import { TransactionPspFinder } from "@/modules/transaction/transaction-psp-finder";
+import { wrapWithLoggerContext } from "@/lib/logger/logger-context";
+import { withOtel } from "@/lib/otel/otel-wrapper";
+import { loggerContext } from "@/logger-context";
 
 export const transactionProcessSessionWebhook =
   new SaleorSyncWebhook<TransactionProcessSessionEventFragment>({
@@ -23,57 +25,63 @@ export const transactionProcessSessionWebhook =
     query: TransactionProcessSessionDocument,
   });
 
-export default transactionProcessSessionWebhook.createHandler((req, res, ctx) => {
-  const logger = createLogger("transaction-process-session");
-  const { payload } = ctx;
-  const { actionType, amount } = payload.action;
+export default wrapWithLoggerContext(
+  withOtel(
+    transactionProcessSessionWebhook.createHandler((req, res, ctx) => {
+      const logger = createLogger("transaction-process-session");
+      const { payload } = ctx;
+      const { actionType, amount } = payload.action;
 
-  logger.debug("Received webhook", { payload });
+      logger.debug("Received webhook", { payload });
 
-  const rawEventData = payload.data;
-  const dataResult = dataSchema.safeParse(rawEventData);
+      const rawEventData = payload.data;
+      const dataResult = dataSchema.safeParse(rawEventData);
 
-  if (dataResult.error) {
-    logger.warn("Invalid data field received in notification", { error: dataResult.error });
+      if (dataResult.error) {
+        logger.warn("Invalid data field received in notification", { error: dataResult.error });
 
-    const errorResponse: ResponseType = {
-      pspReference: uuidv7(),
-      result:
-        actionType === TransactionFlowStrategyEnum.Charge
-          ? "CHARGE_FAILURE"
-          : "AUTHORIZATION_FAILURE",
-      message: getZodErrorMessage(dataResult.error),
-      amount,
-      actions: [],
-      data: {
-        exception: true,
-      },
-    };
+        const errorResponse: ResponseType = {
+          pspReference: uuidv7(),
+          result:
+            actionType === TransactionFlowStrategyEnum.Charge
+              ? "CHARGE_FAILURE"
+              : "AUTHORIZATION_FAILURE",
+          message: getZodErrorMessage(dataResult.error),
+          amount,
+          actions: [],
+          data: {
+            exception: true,
+          },
+        };
 
-    logger.info("Returning error response to Saleor", { response: errorResponse });
+        logger.info("Returning error response to Saleor", { response: errorResponse });
 
-    return res.status(200).json(errorResponse);
-  }
+        return res.status(200).json(errorResponse);
+      }
 
-  const data = dataResult.data;
+      const data = dataResult.data;
 
-  logger.info("Parsed data field from notification", { data });
+      logger.info("Parsed data field from notification", { data });
 
-  const urlGenerator = new AppUrlGenerator(ctx.authData);
+      const urlGenerator = new AppUrlGenerator(ctx.authData);
 
-  const successResponse: ResponseType = {
-    pspReference: data.event.includePspReference ? uuidv7() : undefined,
-    result: data.event.type,
-    message: "Great success!",
-    actions: getTransactionActions(data.event.type as TransactionEventTypeEnum),
-    amount,
-    externalUrl: urlGenerator.getTransactionDetailsUrl(payload.transaction.id),
-  };
+      const successResponse: ResponseType = {
+        pspReference: data.event.includePspReference ? uuidv7() : undefined,
+        result: data.event.type,
+        message: "Great success!",
+        actions: getTransactionActions(data.event.type as TransactionEventTypeEnum),
+        amount,
+        externalUrl: urlGenerator.getTransactionDetailsUrl(payload.transaction.id),
+      };
 
-  logger.info("Returning response to Saleor", { response: successResponse });
+      logger.info("Returning response to Saleor", { response: successResponse });
 
-  return res.status(200).json(successResponse);
-});
+      return res.status(200).json(successResponse);
+    }),
+    "/api/webhooks/transaction-process-session"
+  ),
+  loggerContext
+);
 
 /**
  * Disable body parser for this endpoint, so signature can be verified
