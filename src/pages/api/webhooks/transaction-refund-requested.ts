@@ -5,7 +5,7 @@ import {
   TransactionRefundRequestedDocument,
   TransactionRefundRequestedEventFragment,
 } from "@/generated/graphql";
-import { createLogger } from "@/lib/logger/logger";
+import { createLogger } from "@/lib/logger/create-logger";
 import {
   RefundRequestedResponse,
   refundRequestedInputSchema,

@@ -8,7 +8,7 @@ import {
 } from "@/generated/graphql";
 import { v7 as uuidv7 } from "uuid";
 import { getTransactionActions } from "@/lib/transaction-actions";
-import { createLogger } from "@/lib/logger/logger";
+import { createLogger } from "@/lib/logger/create-logger";
 import { getZodErrorMessage } from "@/lib/zod-error";
 import { dataSchema, ResponseType } from "@/modules/validation/sync-transaction";
 import { AppUrlGenerator } from "@/modules/url/app-url-generator";
