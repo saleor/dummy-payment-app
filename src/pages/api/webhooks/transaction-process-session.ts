@@ -7,7 +7,7 @@ import {
   TransactionProcessSessionDocument,
   TransactionProcessSessionEventFragment,
 } from "@/generated/graphql";
-import { createLogger } from "@/lib/logger/logger";
+import { createLogger } from "@/lib/logger/create-logger";
 import { dataSchema, ResponseType } from "@/modules/validation/sync-transaction";
 import { getZodErrorMessage } from "@/lib/zod-error";
 import { getTransactionActions } from "@/lib/transaction-actions";

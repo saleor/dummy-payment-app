@@ -5,7 +5,7 @@ import {
   TransactionRefundRequestedDocument,
   TransactionRefundRequestedEventFragment,
 } from "@/generated/graphql";
-import { createLogger } from "@/lib/logger/logger";
+import { createLogger } from "@/lib/logger/create-logger";
 import {
   RefundRequestedResponse,
   refundRequestedInputSchema,
@@ -62,9 +62,9 @@ export default wrapWithLoggerContext(
       const urlGenerator = new AppUrlGenerator(ctx.authData);
 
       const successResponse: RefundRequestedResponse = {
-        pspReference: uuidv7(),
+        // pspReference: uuidv7(),
         // TODO: Add result customization
-        result: "REFUND_SUCCESS",
+        result: "REFUND_FAILURE",
         message: "Great success!",
         actions: transactionRefundChecker.checkIfAnotherRefundIsPossible(
           amount,

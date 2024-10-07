@@ -4,7 +4,7 @@ import { saleorApp } from "../../saleor-app";
 import { wrapWithLoggerContext } from "@/lib/logger/logger-context";
 import { withOtel } from "@/lib/otel/otel-wrapper";
 import { loggerContext } from "@/logger-context";
-import { createLogger } from "@/lib/logger/logger";
+import { createLogger } from "@/lib/logger/create-logger";
 
 const logger = createLogger("createAppRegisterHandler");
 
