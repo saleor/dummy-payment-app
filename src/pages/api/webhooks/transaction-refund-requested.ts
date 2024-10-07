@@ -62,9 +62,9 @@ export default wrapWithLoggerContext(
       const urlGenerator = new AppUrlGenerator(ctx.authData);
 
       const successResponse: RefundRequestedResponse = {
-        // pspReference: uuidv7(),
+        pspReference: uuidv7(),
         // TODO: Add result customization
-        result: "REFUND_FAILURE",
+        result: "REFUND_SUCCESS",
         message: "Great success!",
         actions: transactionRefundChecker.checkIfAnotherRefundIsPossible(
           amount,
