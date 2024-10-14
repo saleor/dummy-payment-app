@@ -16,6 +16,9 @@
   <a href="https://docs.saleor.io/docs/3.x/">Docs</a>
 </div>
 
+> [!TIP]
+> Questions or issues? Check our [discord](https://discord.gg/H52JTZAtSH) channel for help.
+
 ### What is Dummy Payment App?
 
 The Dummy Payment App allows you to test Saleor's payment and checkout features without needing to set up a real payment provider. You can create orders, process payments, issue refunds, and more, all within the Saleor Dashboard.
