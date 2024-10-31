@@ -41,7 +41,7 @@ gql`
   }
 `;
 
-function generateNumberOfLinesText(lines: any[]) {
+function generateNumberOfLinesText(lines: readonly unknown[]) {
   if (lines.length === 0) {
     return "no lines";
   }

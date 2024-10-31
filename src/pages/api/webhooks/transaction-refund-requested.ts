@@ -50,7 +50,7 @@ export default wrapWithLoggerContext(
           result: "REFUND_FAILURE",
           message: getZodErrorMessage(payloadResult.error),
           actions: getTransactionActions("REFUND_FAILURE"),
-          amount,
+          amount: amount ?? 0,
         };
 
         logger.info("Returning error response from Saleor", { response: failureResponse });
@@ -67,12 +67,12 @@ export default wrapWithLoggerContext(
         result: "REFUND_SUCCESS",
         message: "Great success!",
         actions: transactionRefundChecker.checkIfAnotherRefundIsPossible(
-          amount,
+          amount ?? 0,
           payload.transaction?.chargedAmount
         )
           ? ["REFUND"]
           : [],
-        amount,
+        amount: amount ?? 0,
         externalUrl: urlGenerator.getTransactionDetailsUrl(parsedPayload.transaction.id),
       };
 

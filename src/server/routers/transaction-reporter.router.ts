@@ -1,16 +1,13 @@
 import { z } from "zod";
 import { procedureWithGraphqlClient } from "../procedure/procedure-with-graphql-client";
 import { router } from "../server";
-import {
-  TransactionActionEnum,
-  TransactionEventReportDocument,
-  TransactionEventTypeEnum,
-} from "../../../generated/graphql";
+import { TransactionActionEnum, TransactionEventReportDocument } from "@/generated/graphql";
 import { v7 as uuidv7 } from "uuid";
 import { getTransactionActions } from "@/lib/transaction-actions";
 import { TRPCError } from "@trpc/server";
 import { createLogger } from "@/lib/logger/create-logger";
 import { AppUrlGenerator } from "@/modules/url/app-url-generator";
+import { TransactionEventTypeList } from "@/types";
 
 export const transactionReporterRouter = router({
   reportEvent: procedureWithGraphqlClient
@@ -18,7 +15,7 @@ export const transactionReporterRouter = router({
       z.object({
         id: z.string(),
         amount: z.number(),
-        type: z.nativeEnum(TransactionEventTypeEnum),
+        type: z.enum(TransactionEventTypeList),
         pspReference: z.string().optional(),
         message: z.string().optional(),
       })

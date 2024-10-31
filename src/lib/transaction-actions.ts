@@ -1,32 +1,34 @@
-import { TransactionEventTypeEnum } from "../../generated/graphql";
-
-export type TransactionEventType = `${TransactionEventTypeEnum}`;
+import { TransactionActionEnum, TransactionEventTypeEnum } from "../../generated/graphql";
 
 export function getTransactionActions(
-  type: TransactionEventType
-): Array<"REFUND" | "CHARGE" | "CANCEL"> {
+  type: TransactionEventTypeEnum
+): Array<TransactionActionEnum> {
   switch (type) {
-    case TransactionEventTypeEnum.Info:
-    case TransactionEventTypeEnum.ChargeBack:
-    case TransactionEventTypeEnum.ChargeFailure:
+    case "INFO":
+    case "CHARGE_BACK":
+    case "CHARGE_FAILURE":
       return ["REFUND", "CHARGE", "CANCEL"];
-    case TransactionEventTypeEnum.AuthorizationAdjustment:
-    case TransactionEventTypeEnum.AuthorizationFailure:
-    case TransactionEventTypeEnum.AuthorizationRequest:
-    case TransactionEventTypeEnum.AuthorizationSuccess:
-    case TransactionEventTypeEnum.CancelFailure:
-    case TransactionEventTypeEnum.CancelRequest:
+    case "REFUND_OR_CANCEL_SUCCESS":
+    case "REFUND_OR_CANCEL_FAILURE":
+    case "REFUND_OR_CANCEL_REQUEST":
+      return ["REFUND", "CANCEL"];
+    case "AUTHORIZATION_ADJUSTMENT":
+    case "AUTHORIZATION_FAILURE":
+    case "AUTHORIZATION_REQUEST":
+    case "AUTHORIZATION_SUCCESS":
+    case "CANCEL_FAILURE":
+    case "CANCEL_REQUEST":
       return ["CHARGE", "CANCEL"];
-    case TransactionEventTypeEnum.ChargeRequest:
-    case TransactionEventTypeEnum.ChargeSuccess:
-    case TransactionEventTypeEnum.RefundFailure:
-    case TransactionEventTypeEnum.RefundRequest:
-    case TransactionEventTypeEnum.RefundSuccess:
+    case "CHARGE_REQUEST":
+    case "CHARGE_SUCCESS":
+    case "REFUND_FAILURE":
+    case "REFUND_REQUEST":
+    case "REFUND_SUCCESS":
       return ["REFUND"];
-    case TransactionEventTypeEnum.CancelSuccess:
-    case TransactionEventTypeEnum.ChargeActionRequired:
-    case TransactionEventTypeEnum.AuthorizationActionRequired:
-    case TransactionEventTypeEnum.RefundReverse:
+    case "CANCEL_SUCCESS":
+    case "CHARGE_ACTION_REQUIRED":
+    case "AUTHORIZATION_ACTION_REQUIRED":
+    case "REFUND_REVERSE":
       return [];
     default:
       return [];

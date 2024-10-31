@@ -47,7 +47,7 @@ export default wrapWithLoggerContext(
           result: "CHARGE_FAILURE",
           message: getZodErrorMessage(payloadResult.error),
           actions: getTransactionActions("CHARGE_FAILURE"),
-          amount,
+          amount: amount ?? 0,
         };
 
         logger.info("Returning error response from Saleor", { response: failureResponse });
@@ -64,7 +64,7 @@ export default wrapWithLoggerContext(
         result: "CHARGE_SUCCESS",
         message: "Great success!",
         actions: getTransactionActions("CHARGE_SUCCESS"),
-        amount,
+        amount: amount ?? 0,
         externalUrl: urlGenerator.getTransactionDetailsUrl(parsedPayload.transaction.id),
       };
 

@@ -42,10 +42,7 @@ export default wrapWithLoggerContext(
 
         const errorResponse: ResponseType = {
           pspReference: uuidv7(),
-          result:
-            actionType === TransactionFlowStrategyEnum.Charge
-              ? "CHARGE_FAILURE"
-              : "AUTHORIZATION_FAILURE",
+          result: actionType === "CHARGE" ? "CHARGE_FAILURE" : "AUTHORIZATION_FAILURE",
           message: getZodErrorMessage(dataResult.error),
           amount,
           actions: [],

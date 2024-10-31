@@ -28,4 +28,4 @@ export const TransactionEventTypeList = [
   "REFUND_REQUEST",
   "REFUND_REVERSE",
   "REFUND_SUCCESS",
-];
+] as const;
