@@ -46,7 +46,7 @@ export default wrapWithLoggerContext(
             "HANDLE_PAYMENTS",
             "MANAGE_ORDERS",
           ],
-          id: "saleor.io.dummy-payment-app",
+          id: process.env.APP_MANIFEST_ID ?? "saleor.io.dummy-payment-app",
           version: packageJson.version,
           /**
            * Configure webhooks here. They will be created in Saleor during installation
