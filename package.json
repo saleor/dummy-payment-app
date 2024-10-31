@@ -62,6 +62,7 @@
   },
   "packageManager": "pnpm@9.2.0",
   "devDependencies": {
+    "@graphql-codegen/add": "5.0.3",
     "@graphql-codegen/cli": "3.3.1",
     "@graphql-codegen/introspection": "3.0.1",
     "@graphql-codegen/schema-ast": "3.0.1",
