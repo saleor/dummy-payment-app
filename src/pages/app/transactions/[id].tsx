@@ -6,6 +6,7 @@ import React, { useState } from "react";
 import { trpcClient } from "@/trpc-client";
 import { TransactionEventTypeEnum, useTransactionDetailsViaIdQuery } from "@/generated/graphql";
 import { TransactionPspFinder } from "@/modules/transaction/transaction-psp-finder";
+import { TransactionEventTypeList } from "@/types";
 
 interface EventReporterOptions {
   label: TransactionEventTypeEnum;
@@ -50,8 +51,8 @@ const EventReporterPage = () => {
   const transactionId = router.query.id as string;
 
   const [eventType, setEventType] = React.useState<EventReporterOptions>({
-    label: TransactionEventTypeEnum.ChargeSuccess,
-    value: TransactionEventTypeEnum.ChargeSuccess,
+    label: "CHARGE_SUCCESS",
+    value: "CHARGE_SUCCESS",
   });
 
   const [amount, setAmount] = React.useState("");
@@ -181,7 +182,7 @@ const EventReporterPage = () => {
       <Box display="flex" alignItems="center" gap={2}>
         <Text>Selet event type:</Text>
         <Combobox
-          options={Object.values(TransactionEventTypeEnum).map((eventType) => ({
+          options={Object.values(TransactionEventTypeList).map((eventType) => ({
             label: eventType,
             value: eventType,
           }))}
