@@ -15,6 +15,3 @@ extensions:
               documentVariablePrefix: "Untyped"
               fragmentVariablePrefix: "Untyped"
           - typed-document-node
-      generated/schema.graphql:
-        plugins:
-          - schema-ast

@@ -317,7 +317,6 @@ export type AccountError = {
   message?: Maybe<Scalars['String']>;
 };
 
-/** An enumeration. */
 export enum AccountErrorCode {
   AccountNotConfirmed = 'ACCOUNT_NOT_CONFIRMED',
   ActivateOwnAccount = 'ACTIVATE_OWN_ACCOUNT',
@@ -411,7 +410,7 @@ export type AccountRegisterInput = {
   metadata?: InputMaybe<Array<MetadataInput>>;
   /** Password. */
   password: Scalars['String'];
-  /** Base of frontend URL that will be needed to create confirmation URL. */
+  /** Base of frontend URL that will be needed to create confirmation URL. Required when account confirmation is enabled. */
   redirectUrl?: InputMaybe<Scalars['String']>;
 };
 
@@ -723,7 +722,6 @@ export type AddressSetDefault = {
   user?: Maybe<User>;
 };
 
-/** An enumeration. */
 export enum AddressTypeEnum {
   Billing = 'BILLING',
   Shipping = 'SHIPPING'
@@ -775,7 +773,7 @@ export type AddressValidationData = {
    * Many fields in the JSON refer to address fields by one-letter abbreviations. These are defined as follows:
    *
    * - `N`: Name
-   * - `O`: Organisation
+   * - `O`: Organization
    * - `A`: Street Address Line(s)
    * - `D`: Dependent locality (may be an inner-city district or a suburb)
    * - `C`: City or Locality
@@ -792,7 +790,7 @@ export type AddressValidationData = {
    * Many fields in the JSON refer to address fields by one-letter abbreviations. These are defined as follows:
    *
    * - `N`: Name
-   * - `O`: Organisation
+   * - `O`: Organization
    * - `A`: Street Address Line(s)
    * - `D`: Dependent locality (may be an inner-city district or a suburb)
    * - `C`: City or Locality
@@ -872,7 +870,7 @@ export type App = Node & ObjectWithMetadata & {
   __typename?: 'App';
   /** Description of this app. */
   aboutApp?: Maybe<Scalars['String']>;
-  /** JWT token used to authenticate by thridparty app. */
+  /** JWT token used to authenticate by third-party app. */
   accessToken?: Maybe<Scalars['String']>;
   /** URL to iframe with the app. */
   appUrl?: Maybe<Scalars['String']>;
@@ -1186,7 +1184,6 @@ export type AppError = {
   permissions?: Maybe<Array<PermissionEnum>>;
 };
 
-/** An enumeration. */
 export enum AppErrorCode {
   Forbidden = 'FORBIDDEN',
   GraphqlError = 'GRAPHQL_ERROR',
@@ -1624,7 +1621,6 @@ export type AppUpdated = Event & {
   version?: Maybe<Scalars['String']>;
 };
 
-/** An enumeration. */
 export enum AreaUnitsEnum {
   SqCm = 'SQ_CM',
   SqDm = 'SQ_DM',
@@ -1839,7 +1835,6 @@ export type AttributeBulkCreateError = {
   path?: Maybe<Scalars['String']>;
 };
 
-/** An enumeration. */
 export enum AttributeBulkCreateErrorCode {
   AlreadyExists = 'ALREADY_EXISTS',
   Blank = 'BLANK',
@@ -1955,7 +1950,6 @@ export type AttributeBulkUpdateError = {
   path?: Maybe<Scalars['String']>;
 };
 
-/** An enumeration. */
 export enum AttributeBulkUpdateErrorCode {
   AlreadyExists = 'ALREADY_EXISTS',
   Blank = 'BLANK',
@@ -2138,7 +2132,6 @@ export type AttributeDeleted = Event & {
   version?: Maybe<Scalars['String']>;
 };
 
-/** An enumeration. */
 export enum AttributeEntityTypeEnum {
   Page = 'PAGE',
   Product = 'PRODUCT',
@@ -2162,7 +2155,6 @@ export type AttributeError = {
   message?: Maybe<Scalars['String']>;
 };
 
-/** An enumeration. */
 export enum AttributeErrorCode {
   AlreadyExists = 'ALREADY_EXISTS',
   GraphqlError = 'GRAPHQL_ERROR',
@@ -2209,7 +2201,6 @@ export type AttributeInput = {
   valuesRange?: InputMaybe<IntRangeInput>;
 };
 
-/** An enumeration. */
 export enum AttributeInputTypeEnum {
   Boolean = 'BOOLEAN',
   Date = 'DATE',
@@ -2318,7 +2309,6 @@ export type AttributeTranslate = {
   translationErrors: Array<TranslationError>;
 };
 
-/** An enumeration. */
 export enum AttributeTranslateErrorCode {
   GraphqlError = 'GRAPHQL_ERROR',
   Invalid = 'INVALID',
@@ -2343,7 +2333,6 @@ export type AttributeTranslation = Node & {
   translatableContent?: Maybe<AttributeTranslatableContent>;
 };
 
-/** An enumeration. */
 export enum AttributeTypeEnum {
   PageType = 'PAGE_TYPE',
   ProductType = 'PRODUCT_TYPE'
@@ -2464,7 +2453,7 @@ export type AttributeValue = Node & {
   inputType?: Maybe<AttributeInputTypeEnum>;
   /** Name of a value displayed in the interface. */
   name?: Maybe<Scalars['String']>;
-  /** Represents the text of the attribute value, plain text without formating. */
+  /** Represents the text of the attribute value, plain text without formatting. */
   plainText?: Maybe<Scalars['String']>;
   /** The ID of the attribute reference. */
   reference?: Maybe<Scalars['ID']>;
@@ -2603,7 +2592,7 @@ export type AttributeValueCreateInput = {
   /** Name of a value displayed in the interface. */
   name: Scalars['String'];
   /**
-   * Represents the text of the attribute value, plain text without formating.
+   * Represents the text of the attribute value, plain text without formatting.
    *
    * DEPRECATED: this field will be removed in Saleor 4.0.The plain text attribute hasn't got predefined value, so can be specified only from instance that supports the given attribute.
    */
@@ -2813,7 +2802,6 @@ export type AttributeValueTranslate = {
   translationErrors: Array<TranslationError>;
 };
 
-/** An enumeration. */
 export enum AttributeValueTranslateErrorCode {
   GraphqlError = 'GRAPHQL_ERROR',
   Invalid = 'INVALID',
@@ -2891,7 +2879,7 @@ export type AttributeValueUpdateInput = {
   /** Name of a value displayed in the interface. */
   name?: InputMaybe<Scalars['String']>;
   /**
-   * Represents the text of the attribute value, plain text without formating.
+   * Represents the text of the attribute value, plain text without formatting.
    *
    * DEPRECATED: this field will be removed in Saleor 4.0.The plain text attribute hasn't got predefined value, so can be specified only from instance that supports the given attribute.
    */
@@ -3701,6 +3689,8 @@ export type Channel = Node & ObjectWithMetadata & {
   /**
    * Channel specific tax configuration.
    *
+   * Added in Saleor 3.20.
+   *
    * Requires one of the following permissions: AUTHENTICATED_STAFF_USER, AUTHENTICATED_APP.
    */
   taxConfiguration: TaxConfiguration;
@@ -3932,7 +3922,6 @@ export type ChannelError = {
   warehouses?: Maybe<Array<Scalars['ID']>>;
 };
 
-/** An enumeration. */
 export enum ChannelErrorCode {
   AlreadyExists = 'ALREADY_EXISTS',
   ChannelsCurrencyMustBeTheSame = 'CHANNELS_CURRENCY_MUST_BE_THE_SAME',
@@ -4316,7 +4305,7 @@ export type Checkout = Node & ObjectWithMetadata & {
    */
   totalBalance: Money;
   /**
-   * The sum of the the checkout line prices, with all the taxes,shipping costs, and discounts included.
+   * The sum of the checkout line prices, with all the taxes,shipping costs, and discounts included.
    *
    * Triggers the following webhook events:
    * - CHECKOUT_CALCULATE_TAXES (sync): Optionally triggered when checkout prices are expired.
@@ -4556,7 +4545,6 @@ export type CheckoutCreateFromOrderError = {
   message?: Maybe<Scalars['String']>;
 };
 
-/** An enumeration. */
 export enum CheckoutCreateFromOrderErrorCode {
   ChannelInactive = 'CHANNEL_INACTIVE',
   GraphqlError = 'GRAPHQL_ERROR',
@@ -4577,7 +4565,6 @@ export type CheckoutCreateFromOrderUnavailableVariant = {
   variantId: Scalars['ID'];
 };
 
-/** An enumeration. */
 export enum CheckoutCreateFromOrderUnavailableVariantErrorCode {
   InsufficientStock = 'INSUFFICIENT_STOCK',
   NotFound = 'NOT_FOUND',
@@ -4704,11 +4691,10 @@ export type CheckoutError = {
   lines?: Maybe<Array<Scalars['ID']>>;
   /** The error message. */
   message?: Maybe<Scalars['String']>;
-  /** List of varint IDs which causes the error. */
+  /** List of variant IDs which causes the error. */
   variants?: Maybe<Array<Scalars['ID']>>;
 };
 
-/** An enumeration. */
 export enum CheckoutErrorCode {
   BillingAddressNotSet = 'BILLING_ADDRESS_NOT_SET',
   ChannelInactive = 'CHANNEL_INACTIVE',
@@ -4780,7 +4766,7 @@ export type CheckoutFilterShippingMethods = Event & {
 };
 
 /**
- * Event sent when checkout is fully paid with transactions.
+ * Event sent when checkout is fully paid with transactions. The checkout is considered as fully paid when the checkout `charge_status` is `FULL` or `OVERCHARGED`. The event is not sent when the checkout authorization flow strategy is used.
  *
  * Added in Saleor 3.13.
  *
@@ -5153,6 +5139,12 @@ export type CheckoutRemovePromoCode = {
 export type CheckoutSettings = {
   __typename?: 'CheckoutSettings';
   /**
+   * Default `false`. Determines if the paid checkouts should be automatically completed. This setting applies only to checkouts where payment was processed through transactions.When enabled, the checkout will be automatically completed once the checkout `charge_status` reaches `FULL`. This occurs when the total sum of charged and authorized transaction amounts equals or exceeds the checkout's total amount.
+   *
+   * Added in Saleor 3.20.
+   */
+  automaticallyCompleteFullyPaidCheckouts: Scalars['Boolean'];
+  /**
    * Default `true`. Determines if the checkout mutations should use legacy error flow. In legacy flow, all mutations can raise an exception unrelated to the requested action - (e.g. out-of-stock exception when updating checkoutShippingAddress.) If `false`, the errors will be aggregated in `checkout.problems` field. Some of the `problems` can block the finalizing checkout process. The legacy flow will be removed in Saleor 4.0. The flow with `checkout.problems` will be the default one.
    *
    * Added in Saleor 3.15.This field will be removed in Saleor 4.0.
@@ -5161,6 +5153,12 @@ export type CheckoutSettings = {
 };
 
 export type CheckoutSettingsInput = {
+  /**
+   * Default `false`. Determines if the paid checkouts should be automatically completed. This setting applies only to checkouts where payment was processed through transactions.When enabled, the checkout will be automatically completed once the checkout `charge_status` reaches `FULL`. This occurs when the total sum of charged and authorized transaction amounts equals or exceeds the checkout's total amount.
+   *
+   * Added in Saleor 3.20.
+   */
+  automaticallyCompleteFullyPaidCheckouts?: InputMaybe<Scalars['Boolean']>;
   /**
    * Default `true`. Determines if the checkout mutations should use legacy error flow. In legacy flow, all mutations can raise an exception unrelated to the requested action - (e.g. out-of-stock exception when updating checkoutShippingAddress.) If `false`, the errors will be aggregated in `checkout.problems` field. Some of the `problems` can block the finalizing checkout process. The legacy flow will be removed in Saleor 4.0. The flow with `checkout.problems` will be the default one.
    *
@@ -5614,7 +5612,6 @@ export type CollectionError = {
   products?: Maybe<Array<Scalars['ID']>>;
 };
 
-/** An enumeration. */
 export enum CollectionErrorCode {
   CannotManageProductWithoutVariant = 'CANNOT_MANAGE_PRODUCT_WITHOUT_VARIANT',
   DuplicatedInputItem = 'DUPLICATED_INPUT_ITEM',
@@ -5943,7 +5940,6 @@ export type ConfigurationItemInput = {
   value?: InputMaybe<Scalars['String']>;
 };
 
-/** An enumeration. */
 export enum ConfigurationTypeFieldEnum {
   Boolean = 'BOOLEAN',
   Multiline = 'MULTILINE',
@@ -5988,7 +5984,11 @@ export type ConfirmEmailChange = {
   user?: Maybe<User>;
 };
 
-/** An enumeration. */
+/**
+ * Represents country codes defined by the ISO 3166-1 alpha-2 standard.
+ *
+ * The `EU` value is DEPRECATED and will be removed in Saleor 3.21.
+ */
 export enum CountryCode {
   Ad = 'AD',
   Ae = 'AE',
@@ -6361,7 +6361,6 @@ export type CustomerBulkUpdateError = {
   path?: Maybe<Scalars['String']>;
 };
 
-/** An enumeration. */
 export enum CustomerBulkUpdateErrorCode {
   Blank = 'BLANK',
   DuplicatedInputItem = 'DUPLICATED_INPUT_ITEM',
@@ -6459,7 +6458,6 @@ export type CustomerEvent = Node & {
   user?: Maybe<User>;
 };
 
-/** An enumeration. */
 export enum CustomerEventsEnum {
   AccountActivated = 'ACCOUNT_ACTIVATED',
   AccountCreated = 'ACCOUNT_CREATED',
@@ -6920,7 +6918,6 @@ export type DiscountError = {
   voucherCodes?: Maybe<Array<Scalars['String']>>;
 };
 
-/** An enumeration. */
 export enum DiscountErrorCode {
   AlreadyExists = 'ALREADY_EXISTS',
   CannotManageProductWithoutVariant = 'CANNOT_MANAGE_PRODUCT_WITHOUT_VARIANT',
@@ -6955,7 +6952,6 @@ export type DiscountedObjectWhereInput = {
   baseTotalPrice?: InputMaybe<DecimalFilterInput>;
 };
 
-/** An enumeration. */
 export enum DistanceUnitsEnum {
   Cm = 'CM',
   Dm = 'DM',
@@ -7349,7 +7345,6 @@ export type ExportError = {
   message?: Maybe<Scalars['String']>;
 };
 
-/** An enumeration. */
 export enum ExportErrorCode {
   GraphqlError = 'GRAPHQL_ERROR',
   Invalid = 'INVALID',
@@ -7374,7 +7369,6 @@ export type ExportEvent = Node & {
   user?: Maybe<User>;
 };
 
-/** An enumeration. */
 export enum ExportEventsEnum {
   ExportedFileSent = 'EXPORTED_FILE_SENT',
   ExportDeleted = 'EXPORT_DELETED',
@@ -7593,7 +7587,6 @@ export type ExternalNotificationError = {
   message?: Maybe<Scalars['String']>;
 };
 
-/** An enumeration. */
 export enum ExternalNotificationErrorCodes {
   ChannelInactive = 'CHANNEL_INACTIVE',
   InvalidModelType = 'INVALID_MODEL_TYPE',
@@ -7614,7 +7607,7 @@ export type ExternalNotificationTrigger = {
 export type ExternalNotificationTriggerInput = {
   /** External event type. This field is passed to a plugin as an event type. */
   externalEventType: Scalars['String'];
-  /** Additional payload that will be merged with the one based on the bussines object ID. */
+  /** Additional payload that will be merged with the one based on the business object ID. */
   extraPayload?: InputMaybe<Scalars['JSONString']>;
   /** The list of customers or orders node IDs that will be serialized and included in the notification payload. */
   ids: Array<Scalars['ID']>;
@@ -7674,7 +7667,6 @@ export type File = {
   url: Scalars['String'];
 };
 
-/** An enumeration. */
 export enum FileTypesEnum {
   Csv = 'CSV',
   Xlsx = 'XLSX'
@@ -7967,7 +7959,6 @@ export type FulfillmentReturnProducts = {
   returnFulfillment?: Maybe<Fulfillment>;
 };
 
-/** An enumeration. */
 export enum FulfillmentStatus {
   Canceled = 'CANCELED',
   Fulfilled = 'FULFILLED',
@@ -8500,7 +8491,6 @@ export type GiftCardError = {
   tags?: Maybe<Array<Scalars['String']>>;
 };
 
-/** An enumeration. */
 export enum GiftCardErrorCode {
   AlreadyExists = 'ALREADY_EXISTS',
   DuplicatedInputItem = 'DUPLICATED_INPUT_ITEM',
@@ -8566,7 +8556,6 @@ export type GiftCardEventFilterInput = {
   type?: InputMaybe<GiftCardEventsEnum>;
 };
 
-/** An enumeration. */
 export enum GiftCardEventsEnum {
   Activated = 'ACTIVATED',
   BalanceReset = 'BALANCE_RESET',
@@ -8704,14 +8693,12 @@ export type GiftCardSettingsError = {
   message?: Maybe<Scalars['String']>;
 };
 
-/** An enumeration. */
 export enum GiftCardSettingsErrorCode {
   GraphqlError = 'GRAPHQL_ERROR',
   Invalid = 'INVALID',
   Required = 'REQUIRED'
 }
 
-/** An enumeration. */
 export enum GiftCardSettingsExpiryTypeEnum {
   ExpiryPeriod = 'EXPIRY_PERIOD',
   NeverExpire = 'NEVER_EXPIRE'
@@ -9139,7 +9126,6 @@ export type InvoiceError = {
   message?: Maybe<Scalars['String']>;
 };
 
-/** An enumeration. */
 export enum InvoiceErrorCode {
   EmailNotSet = 'EMAIL_NOT_SET',
   InvalidStatus = 'INVALID_STATUS',
@@ -9278,7 +9264,6 @@ export type Job = {
   updatedAt: Scalars['DateTime'];
 };
 
-/** An enumeration. */
 export enum JobStatusEnum {
   Deleted = 'DELETED',
   Failed = 'FAILED',
@@ -9286,7 +9271,6 @@ export enum JobStatusEnum {
   Success = 'SUCCESS'
 }
 
-/** An enumeration. */
 export enum LanguageCodeEnum {
   Af = 'AF',
   AfNa = 'AF_NA',
@@ -10219,7 +10203,6 @@ export enum MarkAsPaidStrategyEnum {
   TransactionFlow = 'TRANSACTION_FLOW'
 }
 
-/** An enumeration. */
 export enum MeasurementUnitsEnum {
   AcreFt = 'ACRE_FT',
   AcreIn = 'ACRE_IN',
@@ -10497,7 +10480,6 @@ export type MenuError = {
   message?: Maybe<Scalars['String']>;
 };
 
-/** An enumeration. */
 export enum MenuErrorCode {
   CannotAssignNode = 'CANNOT_ASSIGN_NODE',
   GraphqlError = 'GRAPHQL_ERROR',
@@ -10982,7 +10964,6 @@ export type MetadataError = {
   message?: Maybe<Scalars['String']>;
 };
 
-/** An enumeration. */
 export enum MetadataErrorCode {
   GraphqlError = 'GRAPHQL_ERROR',
   Invalid = 'INVALID',
@@ -13324,6 +13305,11 @@ export type Mutation = {
    * Note: this API is currently in Feature Preview and can be subject to changes at later point.
    *
    * Requires the following permissions: OWNER and HANDLE_PAYMENTS for apps, HANDLE_PAYMENTS for staff users. Staff user cannot update a transaction that is owned by the app.
+   *
+   * Triggers the following webhook events:
+   * - TRANSACTION_ITEM_METADATA_UPDATED (async): Optionally called when transaction's metadata was updated.
+   * - CHECKOUT_FULLY_PAID (async): Optionally called when the checkout charge status changed to `FULL` or `OVERCHARGED`.
+   * - ORDER_UPDATED (async): Optionally called when the transaction is related to the order and the order was updated.
    */
   transactionEventReport?: Maybe<TransactionEventReport>;
   /**
@@ -15270,7 +15256,7 @@ export type MutationTransactionCreateArgs = {
 
 
 export type MutationTransactionEventReportArgs = {
-  amount: Scalars['PositiveDecimal'];
+  amount?: InputMaybe<Scalars['PositiveDecimal']>;
   availableActions?: InputMaybe<Array<TransactionActionEnum>>;
   externalUrl?: InputMaybe<Scalars['String']>;
   id?: InputMaybe<Scalars['ID']>;
@@ -15278,6 +15264,8 @@ export type MutationTransactionEventReportArgs = {
   pspReference: Scalars['String'];
   time?: InputMaybe<Scalars['DateTime']>;
   token?: InputMaybe<Scalars['UUID']>;
+  transactionMetadata?: InputMaybe<Array<MetadataInput>>;
+  transactionPrivateMetadata?: InputMaybe<Array<MetadataInput>>;
   type: TransactionEventTypeEnum;
 };
 
@@ -15826,6 +15814,12 @@ export type Order = Node & ObjectWithMetadata & {
    * @deprecated This field will be removed in Saleor 4.0. Use the `discounts` field instead.
    */
   translatedDiscountName?: Maybe<Scalars['String']>;
+  /**
+   * Undiscounted total price of shipping.
+   *
+   * Added in Saleor 3.19.
+   */
+  undiscountedShippingPrice?: Maybe<Money>;
   /** Undiscounted total amount of the order. */
   undiscountedTotal: TaxedMoney;
   /** Date and time when the order was created. */
@@ -15995,7 +15989,6 @@ export type OrderBulkCreateError = {
   path?: Maybe<Scalars['String']>;
 };
 
-/** An enumeration. */
 export enum OrderBulkCreateErrorCode {
   BulkLimit = 'BULK_LIMIT',
   FutureDate = 'FUTURE_DATE',
@@ -16135,6 +16128,12 @@ export type OrderBulkCreateOrderLineInput = {
   privateMetadata?: InputMaybe<Array<MetadataInput>>;
   /** The name of the product. */
   productName?: InputMaybe<Scalars['String']>;
+  /**
+   * The SKU of the product.
+   *
+   * Added in Saleor 3.18.
+   */
+  productSku?: InputMaybe<Scalars['String']>;
   /** Number of items in the order line */
   quantity: Scalars['Int'];
   /** The ID of the tax class. */
@@ -16155,6 +16154,24 @@ export type OrderBulkCreateOrderLineInput = {
   translatedVariantName?: InputMaybe<Scalars['String']>;
   /** Price of the order line excluding applied discount. */
   undiscountedTotalPrice: TaxedMoneyInput;
+  /**
+   * Reason of the discount on order line.
+   *
+   * Added in Saleor 3.19.
+   */
+  unitDiscountReason?: InputMaybe<Scalars['String']>;
+  /**
+   * Type of the discount: fixed or percent
+   *
+   * Added in Saleor 3.19.
+   */
+  unitDiscountType?: InputMaybe<DiscountValueTypeEnum>;
+  /**
+   * Value of the discount. Can store fixed value or percent value
+   *
+   * Added in Saleor 3.19.
+   */
+  unitDiscountValue?: InputMaybe<Scalars['PositiveDecimal']>;
   /** The external ID of the product variant. */
   variantExternalReference?: InputMaybe<Scalars['String']>;
   /** The ID of the product variant. */
@@ -16366,7 +16383,6 @@ export type OrderCreateFromCheckoutError = {
   variants?: Maybe<Array<Scalars['ID']>>;
 };
 
-/** An enumeration. */
 export enum OrderCreateFromCheckoutErrorCode {
   BillingAddressNotSet = 'BILLING_ADDRESS_NOT_SET',
   ChannelInactive = 'CHANNEL_INACTIVE',
@@ -16472,7 +16488,6 @@ export type OrderDiscountDelete = {
   orderErrors: Array<OrderError>;
 };
 
-/** An enumeration. */
 export enum OrderDiscountType {
   Manual = 'MANUAL',
   OrderPromotion = 'ORDER_PROMOTION',
@@ -16521,7 +16536,6 @@ export type OrderError = {
   warehouse?: Maybe<Scalars['ID']>;
 };
 
-/** An enumeration. */
 export enum OrderErrorCode {
   BillingAddressNotSet = 'BILLING_ADDRESS_NOT_SET',
   CannotCancelFulfillment = 'CANNOT_CANCEL_FULFILLMENT',
@@ -16669,7 +16683,6 @@ export type OrderEventOrderLineObject = {
   quantity?: Maybe<Scalars['Int']>;
 };
 
-/** An enumeration. */
 export enum OrderEventsEmailsEnum {
   Confirmed = 'CONFIRMED',
   DigitalLinks = 'DIGITAL_LINKS',
@@ -16724,6 +16737,7 @@ export enum OrderEventsEnum {
   PaymentRefunded = 'PAYMENT_REFUNDED',
   PaymentVoided = 'PAYMENT_VOIDED',
   Placed = 'PLACED',
+  PlacedAutomaticallyFromPaidCheckout = 'PLACED_AUTOMATICALLY_FROM_PAID_CHECKOUT',
   PlacedFromDraft = 'PLACED_FROM_DRAFT',
   RemovedProducts = 'REMOVED_PRODUCTS',
   TrackingUpdated = 'TRACKING_UPDATED',
@@ -16761,6 +16775,7 @@ export type OrderFilterInput = {
   channels?: InputMaybe<Array<Scalars['ID']>>;
   chargeStatus?: InputMaybe<Array<OrderChargeStatusEnum>>;
   checkoutIds?: InputMaybe<Array<Scalars['ID']>>;
+  checkoutTokens?: InputMaybe<Array<Scalars['UUID']>>;
   created?: InputMaybe<DateRangeInput>;
   customer?: InputMaybe<Scalars['String']>;
   giftCardBought?: InputMaybe<Scalars['Boolean']>;
@@ -16947,8 +16962,8 @@ export type OrderGrantRefundCreateError = {
   message?: Maybe<Scalars['String']>;
 };
 
-/** An enumeration. */
 export enum OrderGrantRefundCreateErrorCode {
+  AmountGreaterThanAvailable = 'AMOUNT_GREATER_THAN_AVAILABLE',
   GraphqlError = 'GRAPHQL_ERROR',
   Invalid = 'INVALID',
   NotFound = 'NOT_FOUND',
@@ -16977,6 +16992,14 @@ export type OrderGrantRefundCreateInput = {
   lines?: InputMaybe<Array<OrderGrantRefundCreateLineInput>>;
   /** Reason of the granted refund. */
   reason?: InputMaybe<Scalars['String']>;
+  /**
+   * The ID of the transaction item related to the granted refund. If `amount` provided in the input, the transaction.chargedAmount needs to be equal or greater than provided `amount`.If `amount` is not provided in the input and calculated automatically by Saleor, the `min(calculatedAmount, transaction.chargedAmount)` will be used.Field will be required starting from Saleor 3.21.
+   *
+   * Added in Saleor 3.20.
+   *
+   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   */
+  transactionId?: InputMaybe<Scalars['ID']>;
 };
 
 export type OrderGrantRefundCreateLineError = {
@@ -16991,7 +17014,6 @@ export type OrderGrantRefundCreateLineError = {
   message?: Maybe<Scalars['String']>;
 };
 
-/** An enumeration. */
 export enum OrderGrantRefundCreateLineErrorCode {
   GraphqlError = 'GRAPHQL_ERROR',
   NotFound = 'NOT_FOUND',
@@ -17051,8 +17073,8 @@ export type OrderGrantRefundUpdateError = {
   removeLines?: Maybe<Array<OrderGrantRefundUpdateLineError>>;
 };
 
-/** An enumeration. */
 export enum OrderGrantRefundUpdateErrorCode {
+  AmountGreaterThanAvailable = 'AMOUNT_GREATER_THAN_AVAILABLE',
   GraphqlError = 'GRAPHQL_ERROR',
   Invalid = 'INVALID',
   NotFound = 'NOT_FOUND',
@@ -17089,6 +17111,14 @@ export type OrderGrantRefundUpdateInput = {
    * Note: this API is currently in Feature Preview and can be subject to changes at later point.
    */
   removeLines?: InputMaybe<Array<Scalars['ID']>>;
+  /**
+   * The ID of the transaction item related to the granted refund. If `amount` provided in the input, the transaction.chargedAmount needs to be equal or greater than provided `amount`.If `amount` is not provided in the input and calculated automatically by Saleor, the `min(calculatedAmount, transaction.chargedAmount)` will be used.Field will be required starting from Saleor 3.21.
+   *
+   * Added in Saleor 3.20.
+   *
+   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   */
+  transactionId?: InputMaybe<Scalars['ID']>;
 };
 
 export type OrderGrantRefundUpdateLineAddInput = {
@@ -17112,7 +17142,6 @@ export type OrderGrantRefundUpdateLineError = {
   message?: Maybe<Scalars['String']>;
 };
 
-/** An enumeration. */
 export enum OrderGrantRefundUpdateLineErrorCode {
   GraphqlError = 'GRAPHQL_ERROR',
   NotFound = 'NOT_FOUND',
@@ -17153,6 +17182,24 @@ export type OrderGrantedRefund = {
    * Note: this API is currently in Feature Preview and can be subject to changes at later point.
    */
   shippingCostsIncluded: Scalars['Boolean'];
+  /**
+   * Status of the granted refund calculated based on transactionItem assigned to granted refund.
+   *
+   * Added in Saleor 3.20.
+   */
+  status: OrderGrantedRefundStatusEnum;
+  /**
+   * The transaction assigned to the granted refund.
+   *
+   * Added in Saleor 3.20.
+   */
+  transaction?: Maybe<TransactionItem>;
+  /**
+   * List of refund events associated with the granted refund.
+   *
+   * Added in Saleor 3.20.
+   */
+  transactionEvents?: Maybe<Array<TransactionEvent>>;
   /** Time of last update. */
   updatedAt: Scalars['DateTime'];
   /** User who performed the action. Requires of of the following permissions: MANAGE_USERS, MANAGE_STAFF, OWNER. */
@@ -17176,6 +17223,21 @@ export type OrderGrantedRefundLine = {
   /** Reason for refunding the line. */
   reason?: Maybe<Scalars['String']>;
 };
+
+/**
+ * Represents the status of a granted refund.
+ *
+ *     NONE - the refund on related transactionItem is not processed
+ *     PENDING - the refund on related transactionItem is pending
+ *     FULL - the refund on related transactionItem is fully processed
+ *     FAIL - the refund on related transactionItem failed
+ */
+export enum OrderGrantedRefundStatusEnum {
+  Failure = 'FAILURE',
+  None = 'NONE',
+  Pending = 'PENDING',
+  Success = 'SUCCESS'
+}
 
 /** Represents order line of particular order. */
 export type OrderLine = Node & ObjectWithMetadata & {
@@ -17525,7 +17587,6 @@ export type OrderNoteAddError = {
   message?: Maybe<Scalars['String']>;
 };
 
-/** An enumeration. */
 export enum OrderNoteAddErrorCode {
   GraphqlError = 'GRAPHQL_ERROR',
   Required = 'REQUIRED'
@@ -17564,7 +17625,6 @@ export type OrderNoteUpdateError = {
   message?: Maybe<Scalars['String']>;
 };
 
-/** An enumeration. */
 export enum OrderNoteUpdateErrorCode {
   GraphqlError = 'GRAPHQL_ERROR',
   NotFound = 'NOT_FOUND',
@@ -17573,7 +17633,6 @@ export enum OrderNoteUpdateErrorCode {
 
 export type OrderOrCheckout = Checkout | Order;
 
-/** An enumeration. */
 export enum OrderOriginEnum {
   BulkCreate = 'BULK_CREATE',
   Checkout = 'CHECKOUT',
@@ -17706,7 +17765,7 @@ export type OrderReturnProductsInput = {
 export type OrderSettings = {
   __typename?: 'OrderSettings';
   /**
-   * Determine if it is possible to place unpdaid order by calling `checkoutComplete` mutation.
+   * Determine if it is possible to place unpaid order by calling `checkoutComplete` mutation.
    *
    * Added in Saleor 3.15.
    *
@@ -17763,7 +17822,6 @@ export type OrderSettingsError = {
   message?: Maybe<Scalars['String']>;
 };
 
-/** An enumeration. */
 export enum OrderSettingsErrorCode {
   Invalid = 'INVALID'
 }
@@ -17779,7 +17837,7 @@ export type OrderSettingsInput = {
   allowUnpaidOrders?: InputMaybe<Scalars['Boolean']>;
   /** When disabled, all new orders from checkout will be marked as unconfirmed. When enabled orders from checkout will become unfulfilled immediately. By default set to True */
   automaticallyConfirmAllNewOrders?: InputMaybe<Scalars['Boolean']>;
-  /** When enabled, all non-shippable gift card orders will be fulfilled automatically. By defualt set to True. */
+  /** When enabled, all non-shippable gift card orders will be fulfilled automatically. By default set to True. */
   automaticallyFulfillNonShippableGiftCard?: InputMaybe<Scalars['Boolean']>;
   /**
    * The time in days after expired orders will be deleted.Allowed range is from 1 to 120.
@@ -17874,7 +17932,6 @@ export type OrderSortingInput = {
   field: OrderSortField;
 };
 
-/** An enumeration. */
 export enum OrderStatus {
   Canceled = 'CANCELED',
   Draft = 'DRAFT',
@@ -18269,7 +18326,6 @@ export type PageError = {
   values?: Maybe<Array<Scalars['ID']>>;
 };
 
-/** An enumeration. */
 export enum PageErrorCode {
   AttributeAlreadyAssigned = 'ATTRIBUTE_ALREADY_ASSIGNED',
   DuplicatedInputItem = 'DUPLICATED_INPUT_ITEM',
@@ -18991,7 +19047,6 @@ export type PaymentCaptureEvent = Event & {
   version?: Maybe<Scalars['String']>;
 };
 
-/** An enumeration. */
 export enum PaymentChargeStatusEnum {
   Cancelled = 'CANCELLED',
   FullyCharged = 'FULLY_CHARGED',
@@ -19072,7 +19127,6 @@ export type PaymentError = {
   variants?: Maybe<Array<Scalars['ID']>>;
 };
 
-/** An enumeration. */
 export enum PaymentErrorCode {
   BalanceCheckError = 'BALANCE_CHECK_ERROR',
   BillingAddressNotSet = 'BILLING_ADDRESS_NOT_SET',
@@ -19136,7 +19190,6 @@ export type PaymentGatewayConfigError = {
   message?: Maybe<Scalars['String']>;
 };
 
-/** An enumeration. */
 export enum PaymentGatewayConfigErrorCode {
   GraphqlError = 'GRAPHQL_ERROR',
   Invalid = 'INVALID',
@@ -19167,7 +19220,6 @@ export type PaymentGatewayInitializeError = {
   message?: Maybe<Scalars['String']>;
 };
 
-/** An enumeration. */
 export enum PaymentGatewayInitializeErrorCode {
   GraphqlError = 'GRAPHQL_ERROR',
   Invalid = 'INVALID',
@@ -19230,7 +19282,6 @@ export type PaymentGatewayInitializeTokenizationError = {
   message?: Maybe<Scalars['String']>;
 };
 
-/** An enumeration. */
 export enum PaymentGatewayInitializeTokenizationErrorCode {
   ChannelInactive = 'CHANNEL_INACTIVE',
   GatewayError = 'GATEWAY_ERROR',
@@ -19381,7 +19432,6 @@ export type PaymentMethodInitializeTokenizationError = {
   message?: Maybe<Scalars['String']>;
 };
 
-/** An enumeration. */
 export enum PaymentMethodInitializeTokenizationErrorCode {
   ChannelInactive = 'CHANNEL_INACTIVE',
   GatewayError = 'GATEWAY_ERROR',
@@ -19450,7 +19500,6 @@ export type PaymentMethodProcessTokenizationError = {
   message?: Maybe<Scalars['String']>;
 };
 
-/** An enumeration. */
 export enum PaymentMethodProcessTokenizationErrorCode {
   ChannelInactive = 'CHANNEL_INACTIVE',
   GatewayError = 'GATEWAY_ERROR',
@@ -19651,7 +19700,6 @@ export type Permission = {
   name: Scalars['String'];
 };
 
-/** An enumeration. */
 export enum PermissionEnum {
   HandleCheckouts = 'HANDLE_CHECKOUTS',
   HandlePayments = 'HANDLE_PAYMENTS',
@@ -19776,7 +19824,7 @@ export type PermissionGroupDeleted = Event & {
 
 export type PermissionGroupError = {
   __typename?: 'PermissionGroupError';
-  /** List of chnnels IDs which causes the error. */
+  /** List of channels IDs which causes the error. */
   channels?: Maybe<Array<Scalars['ID']>>;
   /** The error code. */
   code: PermissionGroupErrorCode;
@@ -19790,7 +19838,6 @@ export type PermissionGroupError = {
   users?: Maybe<Array<Scalars['ID']>>;
 };
 
-/** An enumeration. */
 export enum PermissionGroupErrorCode {
   AssignNonStaffMember = 'ASSIGN_NON_STAFF_MEMBER',
   CannotRemoveFromLastGroup = 'CANNOT_REMOVE_FROM_LAST_GROUP',
@@ -19951,7 +19998,6 @@ export type PluginError = {
   message?: Maybe<Scalars['String']>;
 };
 
-/** An enumeration. */
 export enum PluginErrorCode {
   GraphqlError = 'GRAPHQL_ERROR',
   Invalid = 'INVALID',
@@ -20004,7 +20050,6 @@ export type PluginUpdateInput = {
   configuration?: InputMaybe<Array<ConfigurationItemInput>>;
 };
 
-/** An enumeration. */
 export enum PostalCodeRuleInclusionTypeEnum {
   Exclude = 'EXCLUDE',
   Include = 'INCLUDE'
@@ -20398,7 +20443,6 @@ export type ProductBulkCreateError = {
   warehouses?: Maybe<Array<Scalars['ID']>>;
 };
 
-/** An enumeration. */
 export enum ProductBulkCreateErrorCode {
   AttributeAlreadyAssigned = 'ATTRIBUTE_ALREADY_ASSIGNED',
   AttributeCannotBeAssigned = 'ATTRIBUTE_CANNOT_BE_ASSIGNED',
@@ -20867,7 +20911,6 @@ export type ProductError = {
   values?: Maybe<Array<Scalars['ID']>>;
 };
 
-/** An enumeration. */
 export enum ProductErrorCode {
   AlreadyExists = 'ALREADY_EXISTS',
   AttributeAlreadyAssigned = 'ATTRIBUTE_ALREADY_ASSIGNED',
@@ -21255,7 +21298,6 @@ export type ProductMediaReorder = {
   productErrors: Array<ProductError>;
 };
 
-/** An enumeration. */
 export enum ProductMediaType {
   Image = 'IMAGE',
   Video = 'VIDEO'
@@ -21515,7 +21557,6 @@ export type ProductTranslate = {
   translationErrors: Array<TranslationError>;
 };
 
-/** An enumeration. */
 export enum ProductTranslateErrorCode {
   GraphqlError = 'GRAPHQL_ERROR',
   Invalid = 'INVALID',
@@ -21808,7 +21849,6 @@ export type ProductTypeInput = {
   weight?: InputMaybe<Scalars['WeightScalar']>;
 };
 
-/** An enumeration. */
 export enum ProductTypeKindEnum {
   GiftCard = 'GIFT_CARD',
   Normal = 'NORMAL'
@@ -22229,7 +22269,6 @@ export type ProductVariantBulkError = {
   warehouses?: Maybe<Array<Scalars['ID']>>;
 };
 
-/** An enumeration. */
 export enum ProductVariantBulkErrorCode {
   AttributeAlreadyAssigned = 'ATTRIBUTE_ALREADY_ASSIGNED',
   AttributeCannotBeAssigned = 'ATTRIBUTE_CANNOT_BE_ASSIGNED',
@@ -22906,7 +22945,6 @@ export type ProductVariantTranslate = {
   translationErrors: Array<TranslationError>;
 };
 
-/** An enumeration. */
 export enum ProductVariantTranslateErrorCode {
   GraphqlError = 'GRAPHQL_ERROR',
   Invalid = 'INVALID',
@@ -23234,7 +23272,6 @@ export type PromotionCreateError = {
   rulesLimitExceedBy?: Maybe<Scalars['Int']>;
 };
 
-/** An enumeration. */
 export enum PromotionCreateErrorCode {
   GiftsNumberLimit = 'GIFTS_NUMBER_LIMIT',
   GraphqlError = 'GRAPHQL_ERROR',
@@ -23262,13 +23299,9 @@ export type PromotionCreateInput = {
   /**
    * Defines the promotion type. Implicate the required promotion rules predicate type and whether the promotion rules will give the catalogue or order discount.
    *
-   * The default value is `Catalogue`.
-   *
-   * This field will be required from Saleor 3.20.
-   *
    * Added in Saleor 3.19.
    */
-  type?: InputMaybe<PromotionTypeEnum>;
+  type: PromotionTypeEnum;
 };
 
 /**
@@ -23342,7 +23375,6 @@ export type PromotionDeleteError = {
   message?: Maybe<Scalars['String']>;
 };
 
-/** An enumeration. */
 export enum PromotionDeleteErrorCode {
   GraphqlError = 'GRAPHQL_ERROR',
   NotFound = 'NOT_FOUND'
@@ -23428,7 +23460,6 @@ export type PromotionEventInterface = {
   type: PromotionEventsEnum;
 };
 
-/** An enumeration. */
 export enum PromotionEventsEnum {
   PromotionCreated = 'PROMOTION_CREATED',
   PromotionEnded = 'PROMOTION_ENDED',
@@ -23565,7 +23596,6 @@ export type PromotionRuleCreateError = {
   rulesLimitExceedBy?: Maybe<Scalars['Int']>;
 };
 
-/** An enumeration. */
 export enum PromotionRuleCreateErrorCode {
   GiftsNumberLimit = 'GIFTS_NUMBER_LIMIT',
   GraphqlError = 'GRAPHQL_ERROR',
@@ -23693,7 +23723,6 @@ export type PromotionRuleDeleteError = {
   message?: Maybe<Scalars['String']>;
 };
 
-/** An enumeration. */
 export enum PromotionRuleDeleteErrorCode {
   GraphqlError = 'GRAPHQL_ERROR',
   NotFound = 'NOT_FOUND'
@@ -23916,7 +23945,6 @@ export type PromotionRuleUpdateError = {
   message?: Maybe<Scalars['String']>;
 };
 
-/** An enumeration. */
 export enum PromotionRuleUpdateErrorCode {
   DuplicatedInputItem = 'DUPLICATED_INPUT_ITEM',
   GiftsNumberLimit = 'GIFTS_NUMBER_LIMIT',
@@ -24168,7 +24196,6 @@ export type PromotionTranslationInput = {
   name?: InputMaybe<Scalars['String']>;
 };
 
-/** An enumeration. */
 export enum PromotionTypeEnum {
   Catalogue = 'CATALOGUE',
   Order = 'ORDER'
@@ -24211,7 +24238,6 @@ export type PromotionUpdateError = {
   message?: Maybe<Scalars['String']>;
 };
 
-/** An enumeration. */
 export enum PromotionUpdateErrorCode {
   GraphqlError = 'GRAPHQL_ERROR',
   Invalid = 'INVALID',
@@ -24394,7 +24420,7 @@ export type Query = {
   /** List of the shop's collections. Requires one of the following permissions to include the unpublished items: MANAGE_ORDERS, MANAGE_DISCOUNTS, MANAGE_PRODUCTS. */
   collections?: Maybe<CollectionCountableConnection>;
   /**
-   * List of the shop's customers.
+   * List of the shop's customers. This list includes all users who registered through the accountRegister mutation. Additionally, staff users who have placed an order using their account will also appear in this list.
    *
    * Requires one of the following permissions: MANAGE_ORDERS, MANAGE_USERS.
    */
@@ -24676,7 +24702,10 @@ export type Query = {
   taxCountryConfiguration?: Maybe<TaxCountryConfiguration>;
   /** \n\nRequires one of the following permissions: AUTHENTICATED_STAFF_USER, AUTHENTICATED_APP. */
   taxCountryConfigurations?: Maybe<Array<TaxCountryConfiguration>>;
-  /** List of all tax rates available from tax gateway. */
+  /**
+   * List of all tax rates available from tax gateway.
+   * @deprecated This field will be removed in Saleor 4.0. Use `taxClasses` field instead.
+   */
   taxTypes?: Maybe<Array<TaxType>>;
   /**
    * Look up a transaction by ID.
@@ -25410,13 +25439,11 @@ export type RequestPasswordReset = {
   errors: Array<AccountError>;
 };
 
-/** An enumeration. */
 export enum RewardTypeEnum {
   Gift = 'GIFT',
   SubtotalDiscount = 'SUBTOTAL_DISCOUNT'
 }
 
-/** An enumeration. */
 export enum RewardValueTypeEnum {
   Fixed = 'FIXED',
   Percentage = 'PERCENTAGE'
@@ -26102,7 +26129,6 @@ export type SendConfirmationEmailError = {
   message?: Maybe<Scalars['String']>;
 };
 
-/** An enumeration. */
 export enum SendConfirmationEmailErrorCode {
   AccountConfirmed = 'ACCOUNT_CONFIRMED',
   ConfirmationAlreadyRequested = 'CONFIRMATION_ALREADY_REQUESTED',
@@ -26147,7 +26173,6 @@ export type ShippingError = {
   warehouses?: Maybe<Array<Scalars['ID']>>;
 };
 
-/** An enumeration. */
 export enum ShippingErrorCode {
   AlreadyExists = 'ALREADY_EXISTS',
   DuplicatedInputItem = 'DUPLICATED_INPUT_ITEM',
@@ -26390,7 +26415,7 @@ export type ShippingMethodTranslation = Node & {
   /** Translation language. */
   language: LanguageDisplay;
   /** Translated shipping method name. */
-  name: Scalars['String'];
+  name?: Maybe<Scalars['String']>;
   /**
    * Represents the shipping method fields to translate.
    *
@@ -26521,7 +26546,6 @@ export type ShippingMethodTypeTranslationArgs = {
   languageCode: LanguageCodeEnum;
 };
 
-/** An enumeration. */
 export enum ShippingMethodTypeEnum {
   Price = 'PRICE',
   Weight = 'WEIGHT'
@@ -27121,7 +27145,7 @@ export type ShippingZoneUpdatedShippingZoneArgs = {
 export type Shop = ObjectWithMetadata & {
   __typename?: 'Shop';
   /**
-   * Determines if user can login without confirmation when `enableAccountConfrimation` is enabled.
+   * Determines if user can login without confirmation when `enableAccountConfirmation` is enabled.
    *
    * Added in Saleor 3.15.
    *
@@ -27247,6 +27271,7 @@ export type Shop = ObjectWithMetadata & {
    * Resource limitations and current usage if any set for a shop
    *
    * Requires one of the following permissions: AUTHENTICATED_STAFF_USER.
+   * @deprecated This field will be removed in Saleor 4.0.
    */
   limits: LimitInfo;
   /** List of public metadata items. Can be accessed without permissions. */
@@ -27406,7 +27431,6 @@ export type ShopError = {
   message?: Maybe<Scalars['String']>;
 };
 
-/** An enumeration. */
 export enum ShopErrorCode {
   AlreadyExists = 'ALREADY_EXISTS',
   CannotFetchTaxRates = 'CANNOT_FETCH_TAX_RATES',
@@ -27978,7 +28002,6 @@ export type StockBulkUpdateError = {
   message?: Maybe<Scalars['String']>;
 };
 
-/** An enumeration. */
 export enum StockBulkUpdateErrorCode {
   GraphqlError = 'GRAPHQL_ERROR',
   Invalid = 'INVALID',
@@ -28026,7 +28049,6 @@ export type StockError = {
   message?: Maybe<Scalars['String']>;
 };
 
-/** An enumeration. */
 export enum StockErrorCode {
   AlreadyExists = 'ALREADY_EXISTS',
   GraphqlError = 'GRAPHQL_ERROR',
@@ -28164,7 +28186,6 @@ export type StoredPaymentMethodRequestDelete = {
   result: StoredPaymentMethodRequestDeleteResult;
 };
 
-/** An enumeration. */
 export enum StoredPaymentMethodRequestDeleteErrorCode {
   ChannelInactive = 'CHANNEL_INACTIVE',
   GatewayError = 'GATEWAY_ERROR',
@@ -28205,11 +28226,206 @@ export type StringFilterInput = {
 export type Subscription = {
   __typename?: 'Subscription';
   /**
+   * Event sent when new draft order is created.
+   *
+   * Added in Saleor 3.20.
+   *
+   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   */
+  draftOrderCreated?: Maybe<DraftOrderCreated>;
+  /**
+   * Event sent when draft order is deleted.
+   *
+   * Added in Saleor 3.20.
+   *
+   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   */
+  draftOrderDeleted?: Maybe<DraftOrderDeleted>;
+  /**
+   * Event sent when draft order is updated.
+   *
+   * Added in Saleor 3.20.
+   *
+   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   */
+  draftOrderUpdated?: Maybe<DraftOrderUpdated>;
+  /**
    * Look up subscription event.
    *
    * Added in Saleor 3.2.
    */
   event?: Maybe<Event>;
+  /**
+   * Event sent when orders are imported.
+   *
+   * Added in Saleor 3.20.
+   *
+   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   */
+  orderBulkCreated?: Maybe<OrderBulkCreated>;
+  /**
+   * Event sent when order is cancelled.
+   *
+   * Added in Saleor 3.20.
+   *
+   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   */
+  orderCancelled?: Maybe<OrderCancelled>;
+  /**
+   * Event sent when order is confirmed.
+   *
+   * Added in Saleor 3.20.
+   *
+   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   */
+  orderConfirmed?: Maybe<OrderConfirmed>;
+  /**
+   * Event sent when new order is created.
+   *
+   * Added in Saleor 3.20.
+   *
+   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   */
+  orderCreated?: Maybe<OrderCreated>;
+  /**
+   * Event sent when order becomes expired.
+   *
+   * Added in Saleor 3.20.
+   *
+   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   */
+  orderExpired?: Maybe<OrderExpired>;
+  /**
+   * Event sent when order is fulfilled.
+   *
+   * Added in Saleor 3.20.
+   *
+   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   */
+  orderFulfilled?: Maybe<OrderFulfilled>;
+  /**
+   * Event sent when order is fully paid.
+   *
+   * Added in Saleor 3.20.
+   *
+   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   */
+  orderFullyPaid?: Maybe<OrderFullyPaid>;
+  /**
+   * The order is fully refunded.
+   *
+   * Added in Saleor 3.20.
+   *
+   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   */
+  orderFullyRefunded?: Maybe<OrderFullyRefunded>;
+  /**
+   * Event sent when order metadata is updated.
+   *
+   * Added in Saleor 3.20.
+   *
+   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   */
+  orderMetadataUpdated?: Maybe<OrderMetadataUpdated>;
+  /**
+   * Payment has been made. The order may be partially or fully paid.
+   *
+   * Added in Saleor 3.20.
+   *
+   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   */
+  orderPaid?: Maybe<OrderPaid>;
+  /**
+   * The order received a refund. The order may be partially or fully refunded.
+   *
+   * Added in Saleor 3.20.
+   *
+   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   */
+  orderRefunded?: Maybe<OrderRefunded>;
+  /**
+   * Event sent when order is updated.
+   *
+   * Added in Saleor 3.20.
+   *
+   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   */
+  orderUpdated?: Maybe<OrderUpdated>;
+};
+
+
+export type SubscriptionDraftOrderCreatedArgs = {
+  channels?: InputMaybe<Array<Scalars['String']>>;
+};
+
+
+export type SubscriptionDraftOrderDeletedArgs = {
+  channels?: InputMaybe<Array<Scalars['String']>>;
+};
+
+
+export type SubscriptionDraftOrderUpdatedArgs = {
+  channels?: InputMaybe<Array<Scalars['String']>>;
+};
+
+
+export type SubscriptionOrderBulkCreatedArgs = {
+  channels?: InputMaybe<Array<Scalars['String']>>;
+};
+
+
+export type SubscriptionOrderCancelledArgs = {
+  channels?: InputMaybe<Array<Scalars['String']>>;
+};
+
+
+export type SubscriptionOrderConfirmedArgs = {
+  channels?: InputMaybe<Array<Scalars['String']>>;
+};
+
+
+export type SubscriptionOrderCreatedArgs = {
+  channels?: InputMaybe<Array<Scalars['String']>>;
+};
+
+
+export type SubscriptionOrderExpiredArgs = {
+  channels?: InputMaybe<Array<Scalars['String']>>;
+};
+
+
+export type SubscriptionOrderFulfilledArgs = {
+  channels?: InputMaybe<Array<Scalars['String']>>;
+};
+
+
+export type SubscriptionOrderFullyPaidArgs = {
+  channels?: InputMaybe<Array<Scalars['String']>>;
+};
+
+
+export type SubscriptionOrderFullyRefundedArgs = {
+  channels?: InputMaybe<Array<Scalars['String']>>;
+};
+
+
+export type SubscriptionOrderMetadataUpdatedArgs = {
+  channels?: InputMaybe<Array<Scalars['String']>>;
+};
+
+
+export type SubscriptionOrderPaidArgs = {
+  channels?: InputMaybe<Array<Scalars['String']>>;
+};
+
+
+export type SubscriptionOrderRefundedArgs = {
+  channels?: InputMaybe<Array<Scalars['String']>>;
+};
+
+
+export type SubscriptionOrderUpdatedArgs = {
+  channels?: InputMaybe<Array<Scalars['String']>>;
 };
 
 export enum TaxCalculationStrategy {
@@ -28361,7 +28577,6 @@ export type TaxClassCreateError = {
   message?: Maybe<Scalars['String']>;
 };
 
-/** An enumeration. */
 export enum TaxClassCreateErrorCode {
   GraphqlError = 'GRAPHQL_ERROR',
   Invalid = 'INVALID',
@@ -28398,7 +28613,6 @@ export type TaxClassDeleteError = {
   message?: Maybe<Scalars['String']>;
 };
 
-/** An enumeration. */
 export enum TaxClassDeleteErrorCode {
   GraphqlError = 'GRAPHQL_ERROR',
   Invalid = 'INVALID',
@@ -28455,7 +28669,6 @@ export type TaxClassUpdateError = {
   message?: Maybe<Scalars['String']>;
 };
 
-/** An enumeration. */
 export enum TaxClassUpdateErrorCode {
   DuplicatedInputItem = 'DUPLICATED_INPUT_ITEM',
   GraphqlError = 'GRAPHQL_ERROR',
@@ -28660,7 +28873,6 @@ export type TaxConfigurationUpdateError = {
   message?: Maybe<Scalars['String']>;
 };
 
-/** An enumeration. */
 export enum TaxConfigurationUpdateErrorCode {
   DuplicatedInputItem = 'DUPLICATED_INPUT_ITEM',
   GraphqlError = 'GRAPHQL_ERROR',
@@ -28726,7 +28938,6 @@ export type TaxCountryConfigurationDeleteError = {
   message?: Maybe<Scalars['String']>;
 };
 
-/** An enumeration. */
 export enum TaxCountryConfigurationDeleteErrorCode {
   GraphqlError = 'GRAPHQL_ERROR',
   Invalid = 'INVALID',
@@ -28759,7 +28970,6 @@ export type TaxCountryConfigurationUpdateError = {
   taxClassIds: Array<Scalars['String']>;
 };
 
-/** An enumeration. */
 export enum TaxCountryConfigurationUpdateErrorCode {
   CannotCreateNegativeRate = 'CANNOT_CREATE_NEGATIVE_RATE',
   GraphqlError = 'GRAPHQL_ERROR',
@@ -28791,7 +29001,6 @@ export type TaxExemptionManageError = {
   message?: Maybe<Scalars['String']>;
 };
 
-/** An enumeration. */
 export enum TaxExemptionManageErrorCode {
   GraphqlError = 'GRAPHQL_ERROR',
   Invalid = 'INVALID',
@@ -28839,7 +29048,15 @@ export type TaxableObjectDiscount = {
   amount: Money;
   /** The name of the discount. */
   name?: Maybe<Scalars['String']>;
+  /** Indicates which part of the order the discount should affect: SUBTOTAL or SHIPPING. */
+  type: TaxableObjectDiscountTypeEnum;
 };
+
+/** Indicates which part of the order the discount should affect: SUBTOTAL or SHIPPING. */
+export enum TaxableObjectDiscountTypeEnum {
+  Shipping = 'SHIPPING',
+  Subtotal = 'SUBTOTAL'
+}
 
 export type TaxableObjectLine = {
   __typename?: 'TaxableObjectLine';
@@ -28931,7 +29148,6 @@ export type ThumbnailCreated = Event & {
   version?: Maybe<Scalars['String']>;
 };
 
-/** An enumeration. */
 export enum ThumbnailFormatEnum {
   Avif = 'AVIF',
   Original = 'ORIGINAL',
@@ -28953,7 +29169,6 @@ export type TimePeriodInputType = {
   type: TimePeriodTypeEnum;
 };
 
-/** An enumeration. */
 export enum TimePeriodTypeEnum {
   Day = 'DAY',
   Month = 'MONTH',
@@ -29094,7 +29309,6 @@ export type TransactionCreateError = {
   message?: Maybe<Scalars['String']>;
 };
 
-/** An enumeration. */
 export enum TransactionCreateErrorCode {
   GraphqlError = 'GRAPHQL_ERROR',
   IncorrectCurrency = 'INCORRECT_CURRENCY',
@@ -29197,7 +29411,7 @@ export type TransactionEvent = Node & {
    *
    * Added in Saleor 3.13.
    */
-  type?: Maybe<TransactionEventTypeEnum>;
+  type?: Maybe<TransactionEventOutputTypeEnum>;
 };
 
 export type TransactionEventInput = {
@@ -29216,6 +29430,53 @@ export type TransactionEventInput = {
 };
 
 /**
+ * Represents possible event types on transaction event.
+ *
+ *     Added in Saleor 3.20.
+ *     The following types are possible:
+ *     AUTHORIZATION_SUCCESS - represents success authorization.
+ *     AUTHORIZATION_FAILURE - represents failure authorization.
+ *     AUTHORIZATION_ADJUSTMENT - represents authorization adjustment.
+ *     AUTHORIZATION_REQUEST - represents authorization request.
+ *     AUTHORIZATION_ACTION_REQUIRED - represents authorization that needs
+ *     additional actions from the customer.
+ *     CHARGE_ACTION_REQUIRED - represents charge that needs
+ *     additional actions from the customer.
+ *     CHARGE_SUCCESS - represents success charge.
+ *     CHARGE_FAILURE - represents failure charge.
+ *     CHARGE_BACK - represents chargeback.
+ *     CHARGE_REQUEST - represents charge request.
+ *     REFUND_SUCCESS - represents success refund.
+ *     REFUND_FAILURE - represents failure refund.
+ *     REFUND_REVERSE - represents reverse refund.
+ *     REFUND_REQUEST - represents refund request.
+ *     CANCEL_SUCCESS - represents success cancel.
+ *     CANCEL_FAILURE - represents failure cancel.
+ *     CANCEL_REQUEST - represents cancel request.
+ *     INFO - represents info event.
+ */
+export enum TransactionEventOutputTypeEnum {
+  AuthorizationActionRequired = 'AUTHORIZATION_ACTION_REQUIRED',
+  AuthorizationAdjustment = 'AUTHORIZATION_ADJUSTMENT',
+  AuthorizationFailure = 'AUTHORIZATION_FAILURE',
+  AuthorizationRequest = 'AUTHORIZATION_REQUEST',
+  AuthorizationSuccess = 'AUTHORIZATION_SUCCESS',
+  CancelFailure = 'CANCEL_FAILURE',
+  CancelRequest = 'CANCEL_REQUEST',
+  CancelSuccess = 'CANCEL_SUCCESS',
+  ChargeActionRequired = 'CHARGE_ACTION_REQUIRED',
+  ChargeBack = 'CHARGE_BACK',
+  ChargeFailure = 'CHARGE_FAILURE',
+  ChargeRequest = 'CHARGE_REQUEST',
+  ChargeSuccess = 'CHARGE_SUCCESS',
+  Info = 'INFO',
+  RefundFailure = 'REFUND_FAILURE',
+  RefundRequest = 'REFUND_REQUEST',
+  RefundReverse = 'REFUND_REVERSE',
+  RefundSuccess = 'REFUND_SUCCESS'
+}
+
+/**
  * Report the event for the transaction.
  *
  * Added in Saleor 3.13.
@@ -29223,6 +29484,11 @@ export type TransactionEventInput = {
  * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  *
  * Requires the following permissions: OWNER and HANDLE_PAYMENTS for apps, HANDLE_PAYMENTS for staff users. Staff user cannot update a transaction that is owned by the app.
+ *
+ * Triggers the following webhook events:
+ * - TRANSACTION_ITEM_METADATA_UPDATED (async): Optionally called when transaction's metadata was updated.
+ * - CHECKOUT_FULLY_PAID (async): Optionally called when the checkout charge status changed to `FULL` or `OVERCHARGED`.
+ * - ORDER_UPDATED (async): Optionally called when the transaction is related to the order and the order was updated.
  */
 export type TransactionEventReport = {
   __typename?: 'TransactionEventReport';
@@ -29245,17 +29511,17 @@ export type TransactionEventReportError = {
   message?: Maybe<Scalars['String']>;
 };
 
-/** An enumeration. */
 export enum TransactionEventReportErrorCode {
   AlreadyExists = 'ALREADY_EXISTS',
   GraphqlError = 'GRAPHQL_ERROR',
   IncorrectDetails = 'INCORRECT_DETAILS',
   Invalid = 'INVALID',
-  NotFound = 'NOT_FOUND'
+  NotFound = 'NOT_FOUND',
+  Required = 'REQUIRED'
 }
 
 /**
- * Represents possible event types.
+ * Represents possible event types reported for transaction event.
  *
  *     Added in Saleor 3.12.
  *
@@ -29280,6 +29546,9 @@ export enum TransactionEventReportErrorCode {
  *     CANCEL_FAILURE - represents failure cancel.
  *     CANCEL_REQUEST - represents cancel request.
  *     INFO - represents info event.
+ *     REFUND_OR_CANCEL_REQUEST - represents refund or cancel request.
+ *     REFUND_OR_CANCEL_SUCCESS - represents refund or cancel success.
+ *     REFUND_OR_CANCEL_FAILURE - represents refund or cancel failure.
  */
 export enum TransactionEventTypeEnum {
   AuthorizationActionRequired = 'AUTHORIZATION_ACTION_REQUIRED',
@@ -29297,6 +29566,9 @@ export enum TransactionEventTypeEnum {
   ChargeSuccess = 'CHARGE_SUCCESS',
   Info = 'INFO',
   RefundFailure = 'REFUND_FAILURE',
+  RefundOrCancelFailure = 'REFUND_OR_CANCEL_FAILURE',
+  RefundOrCancelRequest = 'REFUND_OR_CANCEL_REQUEST',
+  RefundOrCancelSuccess = 'REFUND_OR_CANCEL_SUCCESS',
   RefundRequest = 'REFUND_REQUEST',
   RefundReverse = 'REFUND_REVERSE',
   RefundSuccess = 'REFUND_SUCCESS'
@@ -29341,7 +29613,6 @@ export type TransactionInitializeError = {
   message?: Maybe<Scalars['String']>;
 };
 
-/** An enumeration. */
 export enum TransactionInitializeErrorCode {
   CheckoutCompletionInProgress = 'CHECKOUT_COMPLETION_IN_PROGRESS',
   GraphqlError = 'GRAPHQL_ERROR',
@@ -29595,7 +29866,6 @@ export type TransactionItemMetadataUpdated = Event & {
   version?: Maybe<Scalars['String']>;
 };
 
-/** An enumeration. */
 export enum TransactionKind {
   ActionToConfirm = 'ACTION_TO_CONFIRM',
   Auth = 'AUTH',
@@ -29646,7 +29916,6 @@ export type TransactionProcessError = {
   message?: Maybe<Scalars['String']>;
 };
 
-/** An enumeration. */
 export enum TransactionProcessErrorCode {
   CheckoutCompletionInProgress = 'CHECKOUT_COMPLETION_IN_PROGRESS',
   GraphqlError = 'GRAPHQL_ERROR',
@@ -29748,7 +30017,6 @@ export type TransactionRequestActionError = {
   message?: Maybe<Scalars['String']>;
 };
 
-/** An enumeration. */
 export enum TransactionRequestActionErrorCode {
   GraphqlError = 'GRAPHQL_ERROR',
   Invalid = 'INVALID',
@@ -29781,12 +30049,14 @@ export type TransactionRequestRefundForGrantedRefundError = {
   message?: Maybe<Scalars['String']>;
 };
 
-/** An enumeration. */
 export enum TransactionRequestRefundForGrantedRefundErrorCode {
+  AmountGreaterThanAvailable = 'AMOUNT_GREATER_THAN_AVAILABLE',
   GraphqlError = 'GRAPHQL_ERROR',
   Invalid = 'INVALID',
   MissingTransactionActionRequestWebhook = 'MISSING_TRANSACTION_ACTION_REQUEST_WEBHOOK',
-  NotFound = 'NOT_FOUND'
+  NotFound = 'NOT_FOUND',
+  RefundAlreadyProcessed = 'REFUND_ALREADY_PROCESSED',
+  RefundIsPending = 'REFUND_IS_PENDING'
 }
 
 /**
@@ -29814,7 +30084,6 @@ export type TransactionUpdateError = {
   message?: Maybe<Scalars['String']>;
 };
 
-/** An enumeration. */
 export enum TransactionUpdateErrorCode {
   GraphqlError = 'GRAPHQL_ERROR',
   IncorrectCurrency = 'INCORRECT_CURRENCY',
@@ -29933,7 +30202,6 @@ export type TranslationError = {
   message?: Maybe<Scalars['String']>;
 };
 
-/** An enumeration. */
 export enum TranslationErrorCode {
   GraphqlError = 'GRAPHQL_ERROR',
   Invalid = 'INVALID',
@@ -30021,7 +30289,6 @@ export type UploadError = {
   message?: Maybe<Scalars['String']>;
 };
 
-/** An enumeration. */
 export enum UploadErrorCode {
   GraphqlError = 'GRAPHQL_ERROR'
 }
@@ -30485,7 +30752,6 @@ export type VerifyToken = {
   user?: Maybe<User>;
 };
 
-/** An enumeration. */
 export enum VolumeUnitsEnum {
   AcreFt = 'ACRE_FT',
   AcreIn = 'ACRE_IN',
@@ -30824,7 +31090,6 @@ export type VoucherCodeBulkDeleteError = {
   voucherCodes?: Maybe<Array<Scalars['ID']>>;
 };
 
-/** An enumeration. */
 export enum VoucherCodeBulkDeleteErrorCode {
   GraphqlError = 'GRAPHQL_ERROR',
   Invalid = 'INVALID',
@@ -31358,6 +31623,14 @@ export type Warehouse = Node & ObjectWithMetadata & {
   shippingZones: ShippingZoneCountableConnection;
   /** Warehouse slug. */
   slug: Scalars['String'];
+  /**
+   * Stocks that belong to this warehouse.
+   *
+   * Added in Saleor 3.20.
+   *
+   * Requires one of the following permissions: MANAGE_PRODUCTS, MANAGE_ORDERS.
+   */
+  stocks?: Maybe<StockCountableConnection>;
 };
 
 
@@ -31393,7 +31666,15 @@ export type WarehouseShippingZonesArgs = {
   last?: InputMaybe<Scalars['Int']>;
 };
 
-/** An enumeration. */
+
+/** Represents warehouse. */
+export type WarehouseStocksArgs = {
+  after?: InputMaybe<Scalars['String']>;
+  before?: InputMaybe<Scalars['String']>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+};
+
 export enum WarehouseClickAndCollectOptionEnum {
   All = 'ALL',
   Disabled = 'DISABLED',
@@ -31516,7 +31797,6 @@ export type WarehouseError = {
   shippingZones?: Maybe<Array<Scalars['ID']>>;
 };
 
-/** An enumeration. */
 export enum WarehouseErrorCode {
   AlreadyExists = 'ALREADY_EXISTS',
   GraphqlError = 'GRAPHQL_ERROR',
@@ -31799,7 +32079,6 @@ export type WebhookDryRunError = {
   message?: Maybe<Scalars['String']>;
 };
 
-/** An enumeration. */
 export enum WebhookDryRunErrorCode {
   GraphqlError = 'GRAPHQL_ERROR',
   InvalidId = 'INVALID_ID',
@@ -31822,7 +32101,6 @@ export type WebhookError = {
   message?: Maybe<Scalars['String']>;
 };
 
-/** An enumeration. */
 export enum WebhookErrorCode {
   DeleteFailed = 'DELETE_FAILED',
   GraphqlError = 'GRAPHQL_ERROR',
@@ -32801,7 +33079,6 @@ export enum WebhookEventTypeSyncEnum {
   TransactionRefundRequested = 'TRANSACTION_REFUND_REQUESTED'
 }
 
-/** An enumeration. */
 export enum WebhookSampleEventTypeEnum {
   AccountChangeEmailRequested = 'ACCOUNT_CHANGE_EMAIL_REQUESTED',
   AccountConfirmationRequested = 'ACCOUNT_CONFIRMATION_REQUESTED',
@@ -32971,7 +33248,6 @@ export type WebhookTriggerError = {
   message?: Maybe<Scalars['String']>;
 };
 
-/** An enumeration. */
 export enum WebhookTriggerErrorCode {
   GraphqlError = 'GRAPHQL_ERROR',
   InvalidId = 'INVALID_ID',
@@ -33048,7 +33324,6 @@ export type Weight = {
   value: Scalars['Float'];
 };
 
-/** An enumeration. */
 export enum WeightUnitsEnum {
   G = 'G',
   Kg = 'KG',
@@ -33396,7 +33671,7 @@ export type PaymentGatewayRecipientFragment = { __typename?: 'App', id: string, 
 
 export type SyncWebhookTransactionFragment = { __typename?: 'TransactionItem', id: string, token: any, pspReference: string, events: Array<{ __typename?: 'TransactionEvent', pspReference: string }> };
 
-export type TransactionFragment = { __typename?: 'TransactionItem', id: string, pspReference: string, createdAt: any, message: string, name: string, authorizedAmount: { __typename?: 'Money', amount: number, currency: string }, authorizePendingAmount: { __typename?: 'Money', amount: number, currency: string }, refundedAmount: { __typename?: 'Money', amount: number, currency: string }, refundPendingAmount: { __typename?: 'Money', amount: number, currency: string }, canceledAmount: { __typename?: 'Money', amount: number, currency: string }, cancelPendingAmount: { __typename?: 'Money', amount: number, currency: string }, chargedAmount: { __typename?: 'Money', amount: number, currency: string }, chargePendingAmount: { __typename?: 'Money', amount: number, currency: string }, events: Array<{ __typename?: 'TransactionEvent', id: string, createdAt: any, pspReference: string, message: string, type?: TransactionEventTypeEnum | null, amount: { __typename?: 'Money', amount: number, currency: string } }>, order?: { __typename?: 'Order', id: string } | null };
+export type TransactionFragment = { __typename?: 'TransactionItem', id: string, pspReference: string, createdAt: any, message: string, name: string, authorizedAmount: { __typename?: 'Money', amount: number, currency: string }, authorizePendingAmount: { __typename?: 'Money', amount: number, currency: string }, refundedAmount: { __typename?: 'Money', amount: number, currency: string }, refundPendingAmount: { __typename?: 'Money', amount: number, currency: string }, canceledAmount: { __typename?: 'Money', amount: number, currency: string }, cancelPendingAmount: { __typename?: 'Money', amount: number, currency: string }, chargedAmount: { __typename?: 'Money', amount: number, currency: string }, chargePendingAmount: { __typename?: 'Money', amount: number, currency: string }, events: Array<{ __typename?: 'TransactionEvent', id: string, createdAt: any, pspReference: string, message: string, type?: TransactionEventOutputTypeEnum | null, amount: { __typename?: 'Money', amount: number, currency: string } }>, order?: { __typename?: 'Order', id: string } | null };
 
 export type TransactionCancelRequestedEventFragment = { __typename: 'TransactionCancelationRequested', issuedAt?: any | null, version?: string | null, recipient?: { __typename?: 'App', id: string, privateMetadata: Array<{ __typename?: 'MetadataItem', key: string, value: string }>, metadata: Array<{ __typename?: 'MetadataItem', key: string, value: string }> } | null, transaction?: { __typename?: 'TransactionItem', id: string, token: any, pspReference: string, authorizedAmount: { __typename?: 'Money', amount: number, currency: string }, events: Array<{ __typename?: 'TransactionEvent', pspReference: string }> } | null };
 
@@ -33429,7 +33704,7 @@ export type InitializeTransactionMutationVariables = Exact<{
 }>;
 
 
-export type InitializeTransactionMutation = { __typename?: 'Mutation', transactionInitialize?: { __typename?: 'TransactionInitialize', errors: Array<{ __typename?: 'TransactionInitializeError', code: TransactionInitializeErrorCode, field?: string | null, message?: string | null }>, transaction?: { __typename?: 'TransactionItem', id: string, pspReference: string } | null, transactionEvent?: { __typename?: 'TransactionEvent', id: string, pspReference: string, message: string, externalUrl: string, type?: TransactionEventTypeEnum | null, idempotencyKey?: string | null, amount: { __typename?: 'Money', currency: string, amount: number } } | null } | null };
+export type InitializeTransactionMutation = { __typename?: 'Mutation', transactionInitialize?: { __typename?: 'TransactionInitialize', errors: Array<{ __typename?: 'TransactionInitializeError', code: TransactionInitializeErrorCode, field?: string | null, message?: string | null }>, transaction?: { __typename?: 'TransactionItem', id: string, pspReference: string } | null, transactionEvent?: { __typename?: 'TransactionEvent', id: string, pspReference: string, message: string, externalUrl: string, type?: TransactionEventOutputTypeEnum | null, idempotencyKey?: string | null, amount: { __typename?: 'Money', currency: string, amount: number } } | null } | null };
 
 export type TransactionEventReportMutationVariables = Exact<{
   id: Scalars['ID'];
@@ -33474,14 +33749,14 @@ export type TransactionDetailsViaIdQueryVariables = Exact<{
 }>;
 
 
-export type TransactionDetailsViaIdQuery = { __typename?: 'Query', transaction?: { __typename?: 'TransactionItem', id: string, pspReference: string, createdAt: any, message: string, name: string, authorizedAmount: { __typename?: 'Money', amount: number, currency: string }, authorizePendingAmount: { __typename?: 'Money', amount: number, currency: string }, refundedAmount: { __typename?: 'Money', amount: number, currency: string }, refundPendingAmount: { __typename?: 'Money', amount: number, currency: string }, canceledAmount: { __typename?: 'Money', amount: number, currency: string }, cancelPendingAmount: { __typename?: 'Money', amount: number, currency: string }, chargedAmount: { __typename?: 'Money', amount: number, currency: string }, chargePendingAmount: { __typename?: 'Money', amount: number, currency: string }, events: Array<{ __typename?: 'TransactionEvent', id: string, createdAt: any, pspReference: string, message: string, type?: TransactionEventTypeEnum | null, amount: { __typename?: 'Money', amount: number, currency: string } }>, order?: { __typename?: 'Order', id: string } | null } | null };
+export type TransactionDetailsViaIdQuery = { __typename?: 'Query', transaction?: { __typename?: 'TransactionItem', id: string, pspReference: string, createdAt: any, message: string, name: string, authorizedAmount: { __typename?: 'Money', amount: number, currency: string }, authorizePendingAmount: { __typename?: 'Money', amount: number, currency: string }, refundedAmount: { __typename?: 'Money', amount: number, currency: string }, refundPendingAmount: { __typename?: 'Money', amount: number, currency: string }, canceledAmount: { __typename?: 'Money', amount: number, currency: string }, cancelPendingAmount: { __typename?: 'Money', amount: number, currency: string }, chargedAmount: { __typename?: 'Money', amount: number, currency: string }, chargePendingAmount: { __typename?: 'Money', amount: number, currency: string }, events: Array<{ __typename?: 'TransactionEvent', id: string, createdAt: any, pspReference: string, message: string, type?: TransactionEventOutputTypeEnum | null, amount: { __typename?: 'Money', amount: number, currency: string } }>, order?: { __typename?: 'Order', id: string } | null } | null };
 
 export type TransactionDetailsViaPspQueryVariables = Exact<{
   pspReference: Scalars['String'];
 }>;
 
 
-export type TransactionDetailsViaPspQuery = { __typename?: 'Query', orders?: { __typename?: 'OrderCountableConnection', edges: Array<{ __typename?: 'OrderCountableEdge', node: { __typename?: 'Order', id: string, number: string, transactions: Array<{ __typename?: 'TransactionItem', id: string, pspReference: string, createdAt: any, message: string, name: string, authorizedAmount: { __typename?: 'Money', amount: number, currency: string }, authorizePendingAmount: { __typename?: 'Money', amount: number, currency: string }, refundedAmount: { __typename?: 'Money', amount: number, currency: string }, refundPendingAmount: { __typename?: 'Money', amount: number, currency: string }, canceledAmount: { __typename?: 'Money', amount: number, currency: string }, cancelPendingAmount: { __typename?: 'Money', amount: number, currency: string }, chargedAmount: { __typename?: 'Money', amount: number, currency: string }, chargePendingAmount: { __typename?: 'Money', amount: number, currency: string }, events: Array<{ __typename?: 'TransactionEvent', id: string, createdAt: any, pspReference: string, message: string, type?: TransactionEventTypeEnum | null, amount: { __typename?: 'Money', amount: number, currency: string } }>, order?: { __typename?: 'Order', id: string } | null }> } }> } | null };
+export type TransactionDetailsViaPspQuery = { __typename?: 'Query', orders?: { __typename?: 'OrderCountableConnection', edges: Array<{ __typename?: 'OrderCountableEdge', node: { __typename?: 'Order', id: string, number: string, transactions: Array<{ __typename?: 'TransactionItem', id: string, pspReference: string, createdAt: any, message: string, name: string, authorizedAmount: { __typename?: 'Money', amount: number, currency: string }, authorizePendingAmount: { __typename?: 'Money', amount: number, currency: string }, refundedAmount: { __typename?: 'Money', amount: number, currency: string }, refundPendingAmount: { __typename?: 'Money', amount: number, currency: string }, canceledAmount: { __typename?: 'Money', amount: number, currency: string }, cancelPendingAmount: { __typename?: 'Money', amount: number, currency: string }, chargedAmount: { __typename?: 'Money', amount: number, currency: string }, chargePendingAmount: { __typename?: 'Money', amount: number, currency: string }, events: Array<{ __typename?: 'TransactionEvent', id: string, createdAt: any, pspReference: string, message: string, type?: TransactionEventOutputTypeEnum | null, amount: { __typename?: 'Money', amount: number, currency: string } }>, order?: { __typename?: 'Order', id: string } | null }> } }> } | null };
 
 export type PaymentGatewayInitializeSessionSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
@@ -44698,6 +44973,17 @@ export default {
         "kind": "OBJECT",
         "name": "CheckoutSettings",
         "fields": [
+          {
+            "name": "automaticallyCompleteFullyPaidCheckouts",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
           {
             "name": "useLegacyErrorFlow",
             "type": {
@@ -65115,11 +65401,8 @@ export default {
               {
                 "name": "amount",
                 "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "Any"
-                  }
+                  "kind": "SCALAR",
+                  "name": "Any"
                 }
               },
               {
@@ -65178,6 +65461,32 @@ export default {
                 "type": {
                   "kind": "SCALAR",
                   "name": "Any"
+                }
+              },
+              {
+                "name": "transactionMetadata",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Any"
+                    }
+                  }
+                }
+              },
+              {
+                "name": "transactionPrivateMetadata",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Any"
+                    }
+                  }
                 }
               },
               {
@@ -67688,6 +67997,15 @@ export default {
             "args": []
           },
           {
+            "name": "undiscountedShippingPrice",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Money",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
             "name": "undiscountedTotal",
             "type": {
               "kind": "NON_NULL",
@@ -70029,6 +70347,41 @@ export default {
               "ofType": {
                 "kind": "SCALAR",
                 "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "status",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "transaction",
+            "type": {
+              "kind": "OBJECT",
+              "name": "TransactionItem",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "transactionEvents",
+            "type": {
+              "kind": "LIST",
+              "ofType": {
+                "kind": "NON_NULL",
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "TransactionEvent",
+                  "ofType": null
+                }
               }
             },
             "args": []
@@ -90666,11 +91019,8 @@ export default {
           {
             "name": "name",
             "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
+              "kind": "SCALAR",
+              "name": "Any"
             },
             "args": []
           },
@@ -94796,6 +95146,75 @@ export default {
         "name": "Subscription",
         "fields": [
           {
+            "name": "draftOrderCreated",
+            "type": {
+              "kind": "OBJECT",
+              "name": "DraftOrderCreated",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "channels",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Any"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "draftOrderDeleted",
+            "type": {
+              "kind": "OBJECT",
+              "name": "DraftOrderDeleted",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "channels",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Any"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "draftOrderUpdated",
+            "type": {
+              "kind": "OBJECT",
+              "name": "DraftOrderUpdated",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "channels",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Any"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
             "name": "event",
             "type": {
               "kind": "INTERFACE",
@@ -94803,6 +95222,282 @@ export default {
               "ofType": null
             },
             "args": []
+          },
+          {
+            "name": "orderBulkCreated",
+            "type": {
+              "kind": "OBJECT",
+              "name": "OrderBulkCreated",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "channels",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Any"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "orderCancelled",
+            "type": {
+              "kind": "OBJECT",
+              "name": "OrderCancelled",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "channels",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Any"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "orderConfirmed",
+            "type": {
+              "kind": "OBJECT",
+              "name": "OrderConfirmed",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "channels",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Any"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "orderCreated",
+            "type": {
+              "kind": "OBJECT",
+              "name": "OrderCreated",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "channels",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Any"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "orderExpired",
+            "type": {
+              "kind": "OBJECT",
+              "name": "OrderExpired",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "channels",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Any"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "orderFulfilled",
+            "type": {
+              "kind": "OBJECT",
+              "name": "OrderFulfilled",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "channels",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Any"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "orderFullyPaid",
+            "type": {
+              "kind": "OBJECT",
+              "name": "OrderFullyPaid",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "channels",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Any"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "orderFullyRefunded",
+            "type": {
+              "kind": "OBJECT",
+              "name": "OrderFullyRefunded",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "channels",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Any"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "orderMetadataUpdated",
+            "type": {
+              "kind": "OBJECT",
+              "name": "OrderMetadataUpdated",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "channels",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Any"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "orderPaid",
+            "type": {
+              "kind": "OBJECT",
+              "name": "OrderPaid",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "channels",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Any"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "orderRefunded",
+            "type": {
+              "kind": "OBJECT",
+              "name": "OrderRefunded",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "channels",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Any"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "orderUpdated",
+            "type": {
+              "kind": "OBJECT",
+              "name": "OrderUpdated",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "channels",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Any"
+                    }
+                  }
+                }
+              }
+            ]
           }
         ],
         "interfaces": []
@@ -96214,6 +96909,17 @@ export default {
             "type": {
               "kind": "SCALAR",
               "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "type",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
             },
             "args": []
           }
@@ -102019,6 +102725,44 @@ export default {
               }
             },
             "args": []
+          },
+          {
+            "name": "stocks",
+            "type": {
+              "kind": "OBJECT",
+              "name": "StockCountableConnection",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "after",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "before",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "first",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
+                "name": "last",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              }
+            ]
           }
         ],
         "interfaces": [
