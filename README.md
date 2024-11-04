@@ -54,6 +54,22 @@ It also implements webhooks to allow updating the status of Transactions from th
 - `TRANSACTION_CHARGE_REQUESTED`
 - `TRANSACTION_CANCELATION_REQUESTED`
 
+### How to use the app?
+
+After installing the app in Saleor, visit the app's Dashboard.
+
+There you can create a [Checkout](https://docs.saleor.io/developer/checkout/overview), a set shipping method on that checkout.
+After that step is completed you can initialize a Transaction using [`transactionInitialize`](https://docs.saleor.io/api-reference/payments/mutations/transaction-initialize) mutation. App's response to that mutation can be modified using provided input.
+
+The checkout process in app looks like this:
+
+1. Select channel where you want to create the Checkout
+2. Click "Create checkout" to create Checkout in Saleor in your selected channel
+3. Click "Set delivery" to set delivery method on that checkout
+4. Set response you want the app to return for [`TRANSACTION_INITIALIZE_SESSION`](https://docs.saleor.io/developer/extending/webhooks/synchronous-events/transaction#initialize-transaction-session)
+5. Click "Initialize transaction"
+6. Wait until response is returned and click "Complete checkout" to send [`checkoutComplete`](https://docs.saleor.io/api-reference/checkout/mutations/checkout-complete) mutation
+
 ### Learn more
 
 #### Docs
