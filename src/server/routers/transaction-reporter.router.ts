@@ -44,7 +44,7 @@ export const transactionReporterRouter = router({
       if (result.error) {
         logger.error("There was an error while making mutation call", { error: result.error });
         throw new TRPCError({
-          message: "There was an error while making transactionEventReport mutation",
+          message: result.error.message,
           cause: result.error,
           code: "INTERNAL_SERVER_ERROR",
         });
@@ -54,7 +54,7 @@ export const transactionReporterRouter = router({
       if (errors && errors.length > 0) {
         logger.error("Error in mutation result", { errors });
         throw new TRPCError({
-          message: "There was an error while making transactionEventReport mutation",
+          message: errors.map((error) => error.message).join(", "),
           cause: errors[0],
           code: "INTERNAL_SERVER_ERROR",
         });

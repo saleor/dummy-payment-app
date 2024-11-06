@@ -218,7 +218,14 @@ const EventReporterPage = () => {
           Transaction reported: <pre>{JSON.stringify(mutation.data, null, 2)}</pre>
         </Text>
       )}
-      {mutation.error && <Text color="critical1">Error reporting event (check console)</Text>}
+      {mutation.error && (
+        <Box display="flex" alignItems="center" gap={2} flexDirection="column" paddingX={12}>
+          <Text color="critical1" size={5} fontWeight="medium">
+            Error returned when reporting event:
+          </Text>
+          <Text>{mutation.error.message}</Text>
+        </Box>
+      )}
       {otherError && <Text color="critical1">{otherError}</Text>}
     </Box>
   );
