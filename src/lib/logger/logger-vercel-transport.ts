@@ -16,7 +16,7 @@ function isLogExceedingVercelLimit(inputString: string): boolean {
 export const attachLoggerVercelRuntimeTransport = (
   logger: Logger<ILogObj>,
   appVersion: string,
-  loggerContext?: LoggerContext,
+  loggerContext?: LoggerContext
 ) => {
   logger.attachTransport((log) => {
     try {
@@ -55,7 +55,7 @@ export const attachLoggerVercelRuntimeTransport = (
               logName: log._meta.name,
               logMessage: bodyMessage,
             },
-          }),
+          })
         );
       }
 
@@ -75,7 +75,7 @@ export const attachLoggerVercelRuntimeTransport = (
       Sentry.captureException(
         new UnknownError("Error during attaching Vercel transport", {
           cause: error,
-        }),
+        })
       );
     }
   });
