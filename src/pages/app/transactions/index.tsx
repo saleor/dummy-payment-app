@@ -6,6 +6,7 @@ import React, { useEffect } from "react";
 const TransactionsPage = () => {
   const router = useRouter();
   const [pspReference, setPspReference] = React.useState<string>("");
+  const [transactionId, setTransactionId] = React.useState<string>("");
   const [notFoundError, setNotFoundError] = React.useState(false);
 
   const [{ data, error: apiError }, fetchTransactions] = useTransactionDetailsViaPspQuery({
@@ -44,7 +45,19 @@ const TransactionsPage = () => {
       <Text size={7}>Here you can create events for any transaction made using this app.</Text>
       <Box>
         <Text>Please paste PSP Reference of the transaction you want to create events for.</Text>
-        <Input value={pspReference} onChange={(event) => setPspReference(event.target.value)} />
+        <Input
+          value={pspReference}
+          disabled={!!transactionId}
+          onChange={(event) => setPspReference(event.target.value)}
+        />
+      </Box>
+      <Box>
+        <Text>Or paste TransactionItem.id from Saleor</Text>
+        <Input
+          value={transactionId}
+          disabled={!!pspReference}
+          onChange={(event) => setTransactionId(event.target.value)}
+        />
       </Box>
       <Box display="flex" gap={2}>
         <Button variant="secondary" onClick={() => setPspReference("")}>
@@ -53,9 +66,13 @@ const TransactionsPage = () => {
         <Button
           onClick={() => {
             setNotFoundError(false);
-            fetchTransactions();
+            if (transactionId) {
+              router.push(`/app/transactions/${transactionId}`);
+            } else {
+              fetchTransactions();
+            }
           }}
-          disabled={!pspReference}
+          disabled={!pspReference && !transactionId}
           variant={displayError ? "error" : "primary"}
         >
           Go to transaction
