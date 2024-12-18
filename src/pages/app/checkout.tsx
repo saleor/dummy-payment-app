@@ -6,6 +6,7 @@ import {
   Button,
   Combobox,
   ExternalLinkIcon,
+  List,
   Text,
   Toggle,
 } from "@saleor/macaw-ui";
@@ -20,6 +21,7 @@ import {
 import { TransactionEventType, transactionEventTypeSchema } from "@/modules/validation/common";
 import React from "react";
 import { SyncWebhookRequestData } from "@/modules/validation/sync-transaction";
+import { useRouter } from "next/router";
 
 interface TransactionResponseOptions {
   value: TransactionEventType;
@@ -27,6 +29,7 @@ interface TransactionResponseOptions {
 }
 
 const CheckoutPage = () => {
+  const router = useRouter();
   const { appBridge, appBridgeState } = useAppBridge();
   const [response, setResponse] = React.useState<TransactionResponseOptions>({
     value: "CHARGE_SUCCESS",
@@ -83,6 +86,12 @@ const CheckoutPage = () => {
     completeCheckoutExecute({
       id: checkoutCreateResult.data?.checkoutCreate?.checkout?.id ?? "",
     });
+  };
+
+  const navigateToTransaction = (id: string | undefined) => {
+    if (id) {
+      router.push(`/app/transactions/${id}`);
+    }
   };
 
   const navigateToOrder = (id: string) => {
@@ -188,14 +197,48 @@ const CheckoutPage = () => {
               {transactionInitializeResult.data && (
                 <>
                   <Text fontWeight="bold">Transaction initialized: </Text>
-                  <Text>
-                    {transactionInitializeResult.data.transactionInitialize?.transactionEvent
-                      ?.pspReference ?? "Error PSP Reference"}
-                  </Text>
-                  <Text>
-                    {transactionInitializeResult.data.transactionInitialize?.transactionEvent
-                      ?.type ?? "Error type"}
-                  </Text>
+                  <List display="flex" flexDirection="column" gap={1}>
+                    <List.Item>
+                      <Text marginRight={1}>pspReference:</Text>
+                      <Text fontWeight="medium">
+                        {transactionInitializeResult.data.transactionInitialize?.transactionEvent
+                          ?.pspReference || "<missing>"}
+                      </Text>
+                    </List.Item>
+                    <List.Item>
+                      <Text marginRight={1}>transactionId:</Text>
+                      <Text fontWeight="medium">
+                        {transactionInitializeResult.data.transactionInitialize?.transaction?.id ||
+                          "<missing>"}
+                      </Text>
+                    </List.Item>
+                    <List.Item>
+                      <Text marginRight={1}>Event type:</Text>
+                      <Text fontWeight="medium">
+                        {transactionInitializeResult.data.transactionInitialize?.transactionEvent
+                          ?.type ?? "Error type"}
+                      </Text>
+                    </List.Item>
+                  </List>
+                  {transactionInitializeResult.data.transactionInitialize?.transaction?.id && (
+                    <Box
+                      onClick={() =>
+                        navigateToTransaction(
+                          transactionInitializeResult.data.transactionInitialize?.transaction?.id
+                        )
+                      }
+                      cursor="pointer"
+                      color="accent1"
+                      display="flex"
+                      gap={2}
+                      alignItems="center"
+                    >
+                      <ExternalLinkIcon />
+                      <Text fontWeight="bold" color="accent1">
+                        Report changes on Transaction
+                      </Text>
+                    </Box>
+                  )}
                 </>
               )}
             </Box>
