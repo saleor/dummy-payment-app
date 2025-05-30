@@ -224,7 +224,7 @@ const CheckoutPage = () => {
                     <Box
                       onClick={() =>
                         navigateToTransaction(
-                          transactionInitializeResult.data.transactionInitialize?.transaction?.id
+                          transactionInitializeResult.data?.transactionInitialize?.transaction?.id
                         )
                       }
                       cursor="pointer"
