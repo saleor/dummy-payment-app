@@ -60,33 +60,33 @@ To run the Dummy Payment App locally, follow these steps:
 
 1. **Install dependencies**
 
-   This project uses [pnpm](https://pnpm.io/) as the package manager. If you don't have it installed, you can enable it with corepack:
+  This project uses [pnpm](https://pnpm.io/) as the package manager. If you don't have it installed, you can enable it with corepack:
 
-   ```sh
-   npm install --global corepack@latest
-   corepack enable pnpm
-   pnpm install
-   ```
+  ```sh
+  npm install --global corepack@latest
+  corepack enable pnpm
+  pnpm install
+  ```
 
 2. **(Optional) Set up environment variables for custom URLs**
 
-   By default, no environment variables are required. However, if you are developing locally with Docker or using tunnels, you may want to customize the app's URLs. Copy the example environment file if you want to override defaults:
+  By default, no environment variables are required. However, if you are developing locally with Docker or using tunnels, you may want to customize the app's URLs. Copy the example environment file if you want to override defaults:
 
-   ```sh
-   cp .env.example .env
-   ```
+  ```sh
+  cp .env.example .env
+  ```
 
-   Check [Saleor Docs about local app development](https://docs.saleor.io/developer/extending/apps/local-app-development) for more details
+  Check [Saleor Docs about local app development](https://docs.saleor.io/developer/extending/apps/local-app-development) for more details
 
 3. **Run the app locally**
 
-   Start the development server:
+  Start the development server:
 
-   ```sh
-   pnpm dev
-   ```
+  ```sh
+  pnpm dev
+  ```
 
-   The app will be available at [http://localhost:3000](http://localhost:3000).
+  The app will be available at [http://localhost:3000](http://localhost:3000).
 
 ### How to use the app?
 
