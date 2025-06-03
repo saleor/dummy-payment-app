@@ -60,33 +60,33 @@ To run the Dummy Payment App locally, follow these steps:
 
 1. **Install dependencies**
 
-  This project uses [pnpm](https://pnpm.io/) as the package manager. If you don't have it installed, you can enable it with corepack:
+This project uses [pnpm](https://pnpm.io/) as the package manager. If you don't have it installed, you can enable it with corepack:
 
-  ```sh
-  npm install --global corepack@latest
-  corepack enable pnpm
-  pnpm install
-  ```
+```sh
+npm install --global corepack@latest
+corepack enable pnpm
+pnpm install
+```
 
 2. **(Optional) Set up environment variables for custom URLs**
 
-  By default, no environment variables are required. However, if you are developing locally with Docker or using tunnels, you may want to customize the app's URLs. Copy the example environment file if you want to override defaults:
+By default, no environment variables are required. However, if you are developing locally with Docker or using tunnels, you may want to customize the app's URLs. Copy the example environment file if you want to override defaults:
 
-  ```sh
-  cp .env.example .env
-  ```
+```sh
+cp .env.example .env
+```
 
-  Check [Saleor Docs about local app development](https://docs.saleor.io/developer/extending/apps/local-app-development) for more details
+Check [Saleor Docs about local app development](https://docs.saleor.io/developer/extending/apps/local-app-development) for more details
 
 3. **Run the app locally**
 
-  Start the development server:
+Start the development server:
 
-  ```sh
-  pnpm dev
-  ```
+```sh
+pnpm dev
+```
 
-  The app will be available at [http://localhost:3000](http://localhost:3000).
+The app will be available at [http://localhost:3000](http://localhost:3000).
 
 ### How to use the app?
 
@@ -160,8 +160,8 @@ Here's how you'd structure the variables, focus on the `data` field which is req
   "amount": 54.24,
   "data": {
     "event": {
-      "type": "CHARGE_SUCCESS",
-      "includePspReference": true
+      "type": "CHARGE_SUCCESS", // See below for all possible types
+      "includePspReference": true // true or false
     }
   }
 }
@@ -172,6 +172,19 @@ When the app receives the `TRANSACTION_INITIALIZE_SESSION` webhook triggered by 
 - If `data.event.includePspReference` from your mutation is `true`, the app's response will contain a `pspReference` (a v7 UUID). Otherwise, `pspReference` will be `undefined` (or `null`).
 - The `data.event.type` you send (e.g., `"CHARGE_SUCCESS"`) will become the `result` in the app's JSON response.
 - The `actions` array in the app's response (e.g., `["REFUND", "CANCEL"]`) is also determined by the `data.event.type`.
+
+##### Available types
+
+App accepts following types in `data.event.type` (these are taken from the possible responses the app can send to Saleor from the [`TRANSACTION_INITIALIZE_SESSION`](https://docs.saleor.io/developer/extending/webhooks/synchronous-events/transaction#response) webhook, see [Saleor docs](https://docs.saleor.io/developer/extending/webhooks/synchronous-events/transaction#response) for details):
+
+- `CHARGE_REQUEST`
+- `CHARGE_ACTION_REQUIRED`
+- `CHARGE_FAILURE`
+- `CHARGE_SUCCESS`
+- `AUTHORIZATION_REQUEST`
+- `AUTHORIZATION_ACTION_REQUIRED`
+- `AUTHORIZATION_FAILURE`
+- `AUTHORIZATION_SUCCESS`
 
 #### 2. [`transactionProcess`](https://docs.saleor.io/api-reference/payments/mutations/transaction-process) Mutation
 
