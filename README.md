@@ -70,6 +70,156 @@ The checkout process in app looks like this:
 5. Click "Initialize transaction"
 6. Wait until response is returned and click "Complete checkout" to send [`checkoutComplete`](https://docs.saleor.io/api-reference/checkout/mutations/checkout-complete) mutation
 
+### Using app with custom storefront
+
+Dummy Payment App provides a built-in storefront for creating Transactions in Saleor. If you want to test your own storefront before integrating a real payment provider or you prefer to make requests manually here is a description of all available Transaction mutations in Saleor supported by app.
+
+#### Modifying response via `data` field
+
+When you send [`transactionInitialize`](https://docs.saleor.io/api-reference/payments/mutations/transaction-initialize) or [`transactionProcess`](https://docs.saleor.io/api-reference/payments/mutations/transaction-process) mutations to Saleor, you can include a `data` field in your mutation variables. This `data` field is passed through to the Dummy Payment App's webhooks. The app uses the content of this `data` field to determine how it should respond.
+
+For this app, the crucial parts of the `data` field you send are:
+
+- `data.event.type`: Specifies the desired outcome of the transaction (e.g., `CHARGE_SUCCESS`, `AUTHORIZATION_FAILURE`). This directly controls the `result` field in the app's response. See [`TransactionEventTypeEnum`](https://docs.saleor.io/api-reference/payments/enums/transaction-event-type-enum) for all possible values.
+- `data.event.includePspReference`: A boolean indicating whether the app should generate and return a `pspReference` in its response or if it should return `undefined`.
+
+#### 1. [`transactionInitialize`](https://docs.saleor.io/api-reference/payments/mutations/transaction-initialize) Mutation
+
+Use the [`transactionInitialize`](https://docs.saleor.io/api-reference/payments/mutations/transaction-initialize) mutation to start a new transaction. It can be created on either Checkout or Order objects.
+
+##### GraphQL Mutation
+
+```graphql
+mutation TransactionInitialize(
+  $id: ID! # Checkout or Order ID
+  $action: TransactionFlowStrategyEnum # Override channel default action - e.g., CHARGE, AUTHORIZATION
+  $amount: PositiveDecimal # Override default amount (totalBalance)
+  $data: JSON! # Data object to control app behavior - required
+) {
+  transactionInitialize(id: $id, action: $action, amount: $amount, data: $data) {
+    transactionEvent {
+      pspReference # Populated based on your data.event.includePspReference
+      amount {
+        amount
+        currency
+      }
+      type # Reflects your data.event.type
+    }
+    data # The JSON response from this app's webhook (see "App's Webhook Response Structure" below)
+    errors {
+      field
+      message
+      code
+    }
+  }
+}
+```
+
+##### Example Variables for `transactionInitialize`
+
+Here's how you'd structure the variables, focus on the `data` field which is required by the app:
+
+```json
+{
+  "id": "Q2hlY2tvdXQ6YWY3MDJkMGQtMzM0NC00NjMxLTlkNmEtMDk4Yzk1ODhlNmMy",
+  "action": "CHARGE",
+  "amount": 54.24,
+  "data": {
+    "event": {
+      "type": "CHARGE_SUCCESS",
+      "includePspReference": true
+    }
+  }
+}
+```
+
+When the app receives the `TRANSACTION_INITIALIZE_SESSION` webhook triggered by this mutation:
+
+- If `data.event.includePspReference` from your mutation is `true`, the app's response will contain a `pspReference` (a v7 UUID). Otherwise, `pspReference` will be `undefined` (or `null`).
+- The `data.event.type` you send (e.g., `"CHARGE_SUCCESS"`) will become the `result` in the app's JSON response.
+- The `actions` array in the app's response (e.g., `["REFUND", "CANCEL"]`) is also determined by the `data.event.type`.
+
+#### 2. [`transactionProcess`](https://docs.saleor.io/api-reference/payments/mutations/transaction-process) Mutation
+
+This mutation is used for subsequent steps in a transaction flow, such as handling 3D Secure authentication or other additional actions required by a payment provider. It is used after payment app returns `CHARGE_ACTION_REQUIRED` or `AUTHORIZATION_ACTION_REQUIRED` event types.
+
+##### GraphQL Mutation
+
+```graphql
+mutation TransactionProcess(
+  $id: ID! # Transaction ID from the previous step
+  $data: JSON! # Data object to control app behavior - required
+) {
+  transactionProcess(id: $id, data: $data) {
+    transaction {
+      id
+      actions
+    }
+    transactionEvent {
+      message
+      type # Reflects your data.event.type
+    }
+    data # The JSON response from this app's webhook (see "App's Webhook Response Structure" below)
+    errors {
+      field
+      code
+      message
+    }
+  }
+}
+```
+
+##### Example Variables for `transactionProcess`
+
+```json
+{
+  "id": "VHJhbnNhY3Rpb25JdGVtOjRhODMxNThkLTU0NTAtNDU2Mi04MDE5LTAzYzY4NjMyZjA1Mg==",
+  "data": {
+    "event": {
+      "type": "CHARGE_SUCCESS",
+      "includePspReference": true
+    }
+  }
+}
+```
+
+When the app receives the `TRANSACTION_PROCESS_SESSION` webhook:
+
+- The app handles the `data` field (specifically `data.event.type` and `data.event.includePspReference`) similarly to `transactionInitialize` to shape its response. The `result` and `pspReference` in the app's output will be based on these values.
+
+#### App's webhook response structure
+
+When the Dummy Payment App's webhooks are called (triggered by [`transactionInitialize`](https://docs.saleor.io/api-reference/payments/mutations/transaction-initialize) or [`transactionProcess`](https://docs.saleor.io/api-reference/payments/mutations/transaction-process) mutations), the `data` field within Saleor's GraphQL mutation response (i.e., `transactionInitialize.data` or `transactionProcess.data`) will be structured by this app as follows:
+
+##### On Successful Processing (based on your input `data`):
+
+```json
+{
+  "pspReference": "xxxxxxxx-xxxx-7xxx-xxxx-xxxxxxxxxxxx",
+  "result": "CHARGE_SUCCESS",
+  "message": "Great success!",
+  "actions": ["REFUND", "CANCEL"],
+  "amount": null,
+  "externalUrl": "https://your-app-deployment-url.com/app/transactions/<transaction_id>"
+}
+```
+
+##### On Validation Error (if `data` sent to webhook is malformed):
+
+If the `data` field you provide in the mutation doesn't match the app's expected schema (defined in `src/modules/validation/sync-transaction.ts`), the app will return an error structure within the `data` field of the mutation response:
+
+```json
+{
+  "pspReference": "xxxxxxxx-xxxx-7xxx-xxxx-xxxxxxxxxxxx",
+  "result": "CHARGE_FAILURE",
+  "message": "Zod validation error message details...",
+  "amount": 54.24,
+  "actions": [],
+  "data": {
+    "exception": true
+  }
+}
+```
 ### Learn more
 
 #### Docs
