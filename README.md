@@ -54,6 +54,40 @@ It also implements webhooks to allow updating the status of Transactions from th
 - `TRANSACTION_CHARGE_REQUESTED`
 - `TRANSACTION_CANCELATION_REQUESTED`
 
+### Running the Dummy Payment App
+
+To run the Dummy Payment App locally, follow these steps:
+
+1. **Install dependencies**
+
+   This project uses [pnpm](https://pnpm.io/) as the package manager. If you don't have it installed, you can enable it with corepack:
+
+   ```sh
+   npm install --global corepack@latest
+   corepack enable pnpm
+   pnpm install
+   ```
+
+2. **(Optional) Set up environment variables for custom URLs**
+
+   By default, no environment variables are required. However, if you are developing locally with Docker or using tunnels, you may want to customize the app's URLs. Copy the example environment file if you want to override defaults:
+
+   ```sh
+   cp .env.example .env
+   ```
+
+   Check [Saleor Docs about local app development](https://docs.saleor.io/developer/extending/apps/local-app-development) for more details
+
+3. **Run the app locally**
+
+   Start the development server:
+
+   ```sh
+   pnpm dev
+   ```
+
+   The app will be available at [http://localhost:3000](http://localhost:3000).
+
 ### How to use the app?
 
 After installing the app in Saleor, visit the app's Dashboard.
@@ -220,6 +254,7 @@ If the `data` field you provide in the mutation doesn't match the app's expected
   }
 }
 ```
+
 ### Learn more
 
 #### Docs
