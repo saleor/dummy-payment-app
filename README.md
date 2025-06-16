@@ -297,3 +297,8 @@ You can find help with Saleor in these places:
 ## Credits
 
 - App logo: [Lucide](https://lucide.dev/license)
+
+
+##  PCI DSS compliance
+
+This application is exempted from PCI DSS requirements due to not allowing users to input any credit card number.
