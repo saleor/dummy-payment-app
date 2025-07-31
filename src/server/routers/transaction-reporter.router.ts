@@ -1,16 +1,16 @@
+import { createLogger } from "@/lib/logger/create-logger";
+import { getTransactionActions } from "@/lib/transaction-actions";
+import { AppUrlGenerator } from "@/modules/url/app-url-generator";
+import { TRPCError } from "@trpc/server";
+import { v7 as uuidv7 } from "uuid";
 import { z } from "zod";
-import { procedureWithGraphqlClient } from "../procedure/procedure-with-graphql-client";
-import { router } from "../server";
 import {
   TransactionActionEnum,
   TransactionEventReportDocument,
   TransactionEventTypeEnum,
 } from "../../../generated/graphql";
-import { v7 as uuidv7 } from "uuid";
-import { getTransactionActions } from "@/lib/transaction-actions";
-import { TRPCError } from "@trpc/server";
-import { createLogger } from "@/lib/logger/create-logger";
-import { AppUrlGenerator } from "@/modules/url/app-url-generator";
+import { procedureWithGraphqlClient } from "../procedure/procedure-with-graphql-client";
+import { router } from "../server";
 
 export const transactionReporterRouter = router({
   reportEvent: procedureWithGraphqlClient
@@ -36,7 +36,7 @@ export const transactionReporterRouter = router({
         pspReference: pspReference ?? uuidv7(),
         message: message ?? "Great success!",
         availableActions: getTransactionActions(type) as TransactionActionEnum[],
-        externalUrl: urlGenerator.getTransactionDetailsUrl(id, { includeSaleorBaseUrl: true }),
+        externalUrl: urlGenerator.getTransactionDetailsUrl(id),
       });
 
       logger.info("Received result from Saleor", { result });

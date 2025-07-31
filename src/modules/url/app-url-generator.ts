@@ -4,7 +4,7 @@ export class AppUrlGenerator {
   constructor(private authData: Pick<AuthData, "appId" | "saleorApiUrl">) {}
 
   private getAppBaseUrlRelative(appId: string) {
-    return `/dashboard/apps/${appId}/app/app`;
+    return `/dashboard/apps/${encodeURIComponent(appId)}/app/app`;
   }
 
   private getAppBaseUrlAbsolute(appId: string, saleorApiUrl: string) {
@@ -12,11 +12,8 @@ export class AppUrlGenerator {
     return `${saleorDashboardUrl}${this.getAppBaseUrlRelative(appId)}`;
   }
 
-  getTransactionDetailsUrl(transactionId: string, options?: { includeSaleorBaseUrl: boolean }) {
-    const { includeSaleorBaseUrl = false } = options ?? {};
-    const baseUrl = includeSaleorBaseUrl
-      ? this.getAppBaseUrlAbsolute(this.authData.appId, this.authData.saleorApiUrl)
-      : this.getAppBaseUrlRelative(this.authData.appId);
+  getTransactionDetailsUrl(transactionId: string) {
+    const baseUrl = this.getAppBaseUrlAbsolute(this.authData.appId, this.authData.saleorApiUrl);
     return `${baseUrl}/transactions/${transactionId}`;
   }
 }
