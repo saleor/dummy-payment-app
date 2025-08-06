@@ -73,7 +73,7 @@ export default wrapWithLoggerContext(
           ? ["REFUND"]
           : [],
         amount,
-        externalUrl: urlGenerator.getTransactionDetailsUrl(parsedPayload.transaction.id),
+        externalUrl: urlGenerator.getTransactionDetailsUrl(parsedPayload.transaction.id, { includeSaleorBaseUrl: true }),
       };
 
       logger.info("Returning response to Saleor", { response: successResponse });

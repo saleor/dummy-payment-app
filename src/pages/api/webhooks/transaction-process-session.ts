@@ -71,7 +71,7 @@ export default wrapWithLoggerContext(
         message: "Great success!",
         actions: getTransactionActions(data.event.type as TransactionEventTypeEnum),
         amount,
-        externalUrl: urlGenerator.getTransactionDetailsUrl(payload.transaction.id),
+        externalUrl: urlGenerator.getTransactionDetailsUrl(payload.transaction.id, { includeSaleorBaseUrl: true }),
       };
 
       logger.info("Returning response to Saleor", { response: successResponse });
