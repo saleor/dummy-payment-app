@@ -1,7 +1,7 @@
 import { MiddlewareFunction, TRPCError } from "@trpc/server";
 import { middleware, procedure } from "../server";
 import { attachAppToken } from "../middleware/attach-app-token";
-import { createClient } from "@/lib/create-graphq-client";
+import { createClient } from "@/lib/create-graphql-client";
 import { invariant } from "@/lib/invariant";
 
 /**

@@ -75,7 +75,7 @@ Supported webhooks:
 - Procedures can use `procedureWithGraphqlClient` middleware for Saleor API access
 
 #### GraphQL Client
-Created via `createClient` in `src/lib/create-graphq-client.ts`:
+Created via `createClient` in `src/lib/create-graphql-client.ts`:
 - Uses urql with auth exchange
 - Custom `Authorization-Bearer` header (note: not standard `Authorization: Bearer`)
 - Auth token provided via APL
