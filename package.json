@@ -60,7 +60,7 @@
     "vitest": "1.5.2",
     "zod": "3.23.8"
   },
-  "packageManager": "pnpm@9.2.0",
+  "packageManager": "pnpm@10.28.1",
   "devDependencies": {
     "@graphql-codegen/cli": "3.3.1",
     "@graphql-codegen/introspection": "3.0.1",
