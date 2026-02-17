@@ -8,13 +8,17 @@ import {
   TransactionProcessSessionEventFragment,
 } from "@/generated/graphql";
 import { createLogger } from "@/lib/logger/create-logger";
-import { dataSchema, ResponseType } from "@/modules/validation/sync-transaction";
+import { dataSchema } from "@/modules/validation/sync-transaction";
 import { getZodErrorMessage } from "@/lib/zod-error";
 import { getTransactionActions } from "@/lib/transaction-actions";
 import { AppUrlGenerator } from "@/modules/url/app-url-generator";
 import { wrapWithLoggerContext } from "@/lib/logger/logger-context";
 import { withOtel } from "@/lib/otel/otel-wrapper";
 import { loggerContext } from "@/logger-context";
+import {
+  TransactionSessionFailure,
+  TransactionSessionSuccess,
+} from "@/generated/app-webhooks-types/transaction-process-session";
 
 export const transactionProcessSessionWebhook =
   new SaleorSyncWebhook<TransactionProcessSessionEventFragment>({
@@ -40,7 +44,7 @@ export default wrapWithLoggerContext(
       if (dataResult.error) {
         logger.warn("Invalid data field received in notification", { error: dataResult.error });
 
-        const errorResponse: ResponseType = {
+        const errorResponse: TransactionSessionFailure = {
           pspReference: uuidv7(),
           result:
             actionType === TransactionFlowStrategyEnum.Charge
@@ -65,9 +69,9 @@ export default wrapWithLoggerContext(
 
       const urlGenerator = new AppUrlGenerator(ctx.authData);
 
-      const successResponse: ResponseType = {
-        pspReference: data.event.includePspReference ? uuidv7() : undefined,
-        result: data.event.type,
+      const successResponse: TransactionSessionSuccess = {
+        pspReference: data.event.includePspReference ? uuidv7() : "test-psp",
+        result: data.event.type as TransactionSessionSuccess["result"],
         message: "Great success!",
         actions: getTransactionActions(data.event.type as TransactionEventTypeEnum),
         amount,

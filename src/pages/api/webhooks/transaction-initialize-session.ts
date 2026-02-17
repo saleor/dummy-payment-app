@@ -10,11 +10,15 @@ import { v7 as uuidv7 } from "uuid";
 import { getTransactionActions } from "@/lib/transaction-actions";
 import { createLogger } from "@/lib/logger/create-logger";
 import { getZodErrorMessage } from "@/lib/zod-error";
-import { dataSchema, ResponseType } from "@/modules/validation/sync-transaction";
+import { dataSchema } from "@/modules/validation/sync-transaction";
 import { AppUrlGenerator } from "@/modules/url/app-url-generator";
 import { wrapWithLoggerContext } from "@/lib/logger/logger-context";
 import { withOtel } from "@/lib/otel/otel-wrapper";
 import { loggerContext } from "@/logger-context";
+import {
+  TransactionSessionFailure,
+  TransactionSessionSuccess,
+} from "@/generated/app-webhooks-types/transaction-initialize-session";
 
 export const transactionInitializeSessionWebhook =
   new SaleorSyncWebhook<TransactionInitializeSessionEventFragment>({
@@ -40,7 +44,7 @@ export default wrapWithLoggerContext(
       if (dataResult.error) {
         logger.warn("Invalid data field received in notification", { error: dataResult.error });
 
-        const errorResponse: ResponseType = {
+        const errorResponse: TransactionSessionFailure = {
           pspReference: uuidv7(),
           result:
             actionType === TransactionFlowStrategyEnum.Charge
@@ -65,13 +69,23 @@ export default wrapWithLoggerContext(
 
       const urlGenerator = new AppUrlGenerator(ctx.authData);
 
-      const successResponse: ResponseType = {
-        pspReference: data.event.includePspReference ? uuidv7() : undefined,
-        result: data.event.type,
+      const successResponse: TransactionSessionSuccess = {
+        pspReference: data.event.includePspReference ? uuidv7() : "psp-ref",
+        result: data.event.type as TransactionSessionSuccess['result'],
         message: "Great success!",
         actions: getTransactionActions(data.event.type as TransactionEventTypeEnum),
         amount,
         externalUrl: urlGenerator.getTransactionDetailsUrl(payload.transaction.id),
+        // todo allow to set from ui
+        paymentMethodDetails: {
+          type:"CARD",
+          brand:"master",
+          name:"Card",
+          expMonth: 4,
+          expYear: 2030,
+          firstDigits:"1234",
+          lastDigits:"1234"
+        },
       };
 
       logger.info("Returning response to Saleor", { response: successResponse });
