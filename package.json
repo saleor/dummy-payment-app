@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "fetch-schema": "curl https://raw.githubusercontent.com/saleor/saleor/${npm_package_saleor_schemaVersion}/saleor/graphql/schema.graphql > graphql/schema.graphql",
-    "generate": "graphql-codegen",
+    "generate": "npm run generate:schema && npm run generate:app-webhooks-types",
+    "generate:schema": "graphql-codegen",
     "test": "vitest",
     "generate:app-webhooks-types": "tsx ./scripts/generate-app-webhooks-types.ts --json-schema-version=3.22"
   },
