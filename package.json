@@ -9,10 +9,11 @@
     "lint": "next lint",
     "fetch-schema": "curl https://raw.githubusercontent.com/saleor/saleor/${npm_package_saleor_schemaVersion}/saleor/graphql/schema.graphql > graphql/schema.graphql",
     "generate": "graphql-codegen",
-    "test": "vitest"
+    "test": "vitest",
+    "generate:app-webhooks-types": "tsx ./scripts/generate-app-webhooks-types.ts --json-schema-version=3.22"
   },
   "saleor": {
-    "schemaVersion": "3.19"
+    "schemaVersion": "3.22"
   },
   "engines": {
     "node": ">=18.17.0 <=20",
@@ -47,6 +48,7 @@
     "graphql": "16.8.1",
     "graphql-tag": "2.12.6",
     "jsdom": "20.0.3",
+    "json-schema-to-typescript": "15.0.4",
     "modern-errors": "7.0.1",
     "modern-errors-serialize": "6.1.0",
     "next": "14.1.2",
@@ -62,6 +64,7 @@
   },
   "packageManager": "pnpm@10.28.1",
   "devDependencies": {
+    "tsx": "4.21.0",
     "@graphql-codegen/cli": "3.3.1",
     "@graphql-codegen/introspection": "3.0.1",
     "@graphql-codegen/schema-ast": "3.0.1",
