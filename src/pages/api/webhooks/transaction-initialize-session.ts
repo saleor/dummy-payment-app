@@ -79,7 +79,7 @@ export default wrapWithLoggerContext(
         // todo allow to set from ui
         paymentMethodDetails: {
           type:"CARD",
-          brand:"master",
+          brand:"visa",
           name:"Card",
           expMonth: 4,
           expYear: 2030,
