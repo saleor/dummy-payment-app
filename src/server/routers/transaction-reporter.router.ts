@@ -17,7 +17,7 @@ export const transactionReporterRouter = router({
     .input(
       z.object({
         id: z.string(),
-        amount: z.number().nullable(),
+        amount: z.number().nonnegative().finite().nullable(),
         type: z.nativeEnum(TransactionEventTypeEnum),
         pspReference: z.string().optional(),
         message: z.string().optional(),
