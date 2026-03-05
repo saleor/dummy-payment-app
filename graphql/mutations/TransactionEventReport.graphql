@@ -1,6 +1,6 @@
 mutation TransactionEventReport(
   $id: ID!
-  $amount: PositiveDecimal!
+  $amount: PositiveDecimal
   $type: TransactionEventTypeEnum!
   $pspReference: String!
   $availableActions: [TransactionActionEnum!]
