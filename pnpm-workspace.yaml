@@ -1,3 +1,9 @@
 blockExoticSubdeps: true
 minimumReleaseAge: 1440 # 24h
+
+onlyBuiltDependencies:
+  - '@sentry/cli'
+  - esbuild
+  - protobufjs
+
 trustPolicy: no-downgrade

@@ -57,6 +57,7 @@ const EventReporterPage = () => {
   const [amount, setAmount] = React.useState("");
 
   const [generateNewPspReference, setGenerateNewPspReference] = useState<boolean>(false);
+  const [sendNullAmount, setSendNullAmount] = useState<boolean>(false);
 
   const navigateToOrder = (id: string) => {
     appBridge?.dispatch(
@@ -85,9 +86,9 @@ const EventReporterPage = () => {
     setOtherError(null);
     const pspFinder = new TransactionPspFinder();
     try {
-      const parsedAmount = parseFloat(amount);
+      const parsedAmount = sendNullAmount ? null : parseFloat(amount);
 
-      if (Number.isNaN(parsedAmount)) {
+      if (!sendNullAmount && Number.isNaN(parsedAmount as number)) {
         setOtherError("Invalid amount");
         return;
       }
@@ -111,7 +112,7 @@ const EventReporterPage = () => {
 
       await mutation.mutateAsync({
         id: transaction?.id ?? "",
-        amount: parseFloat(amount),
+        amount: parsedAmount,
         type: eventType.value,
         pspReference,
       });
@@ -195,10 +196,18 @@ const EventReporterPage = () => {
         <Text>Enter event amount:</Text>
         <Input
           type="number"
-          value={amount}
+          value={sendNullAmount ? "" : amount}
           onChange={(e) => setAmount(e.target.value)}
+          disabled={sendNullAmount}
+          __opacity={sendNullAmount ? "0.4" : "1"}
           endAdornment={<Text size={1}>{transaction?.chargedAmount.currency}</Text>}
         />
+        <Toggle
+          pressed={sendNullAmount}
+          onPressedChange={(pressed) => setSendNullAmount(pressed)}
+        >
+          <Text>null</Text>
+        </Toggle>
       </Box>
       <Toggle
         pressed={generateNewPspReference}
