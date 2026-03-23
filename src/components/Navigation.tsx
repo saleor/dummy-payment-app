@@ -4,6 +4,7 @@ import { NavigationTile } from "./NavigationTile";
 export const ROUTES = {
   dashboard: "/app",
   checkout: "/app/checkout",
+  checkoutV2: "/app/checkout-v2",
   transactions: "/app/transactions",
   configuration: "/app/configuration",
 } as const;
@@ -19,6 +20,10 @@ export const Navigation = () => {
         <NavigationTile href={ROUTES.checkout}>
           <OrdersIcon />
           Quick checkout
+        </NavigationTile>
+        <NavigationTile href={ROUTES.checkoutV2}>
+          <OrdersIcon />
+          Checkout v2
         </NavigationTile>
         <NavigationTile href={ROUTES.transactions}>
           <SellsIcon />
