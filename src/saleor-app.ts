@@ -1,6 +1,10 @@
-import { APL, FileAPL, SaleorCloudAPL, UpstashAPL } from "@saleor/app-sdk/APL";
 import { SaleorApp } from "@saleor/app-sdk/saleor-app";
-import { invariant } from "./lib/invariant";
+import { DynamoAPL } from "@saleor/app-sdk/APL/dynamodb";
+import { UpstashAPL } from "@saleor/app-sdk/APL/upstash";
+import { FileAPL } from "@saleor/app-sdk/APL/file";
+import { logger } from "@/lib/logger/logger";
+import { APL } from "@saleor/app-sdk/APL";
+import { dynamoMainTable } from "@/db/dynamo-main-table";
 
 /**
  * By default auth data are stored in the `.auth-data.json` (FileAPL).
@@ -11,15 +15,20 @@ import { invariant } from "./lib/invariant";
  */
 export let apl: APL;
 switch (process.env.APL) {
-  case "saleor-cloud":
-    const token = process.env.REST_APL_TOKEN;
-    const endpoint = process.env.REST_APL_ENDPOINT;
+  case "dynamodb": {
+    apl = DynamoAPL.create({
+      table: dynamoMainTable,
+      externalLogger: (message, level) => {
+        if (level === "error") {
+          logger.error(`[DynamoAPL] ${message}`);
+        } else {
+          logger.debug(`[DynamoAPL] ${message}`);
+        }
+      },
+    });
 
-    invariant(token);
-    invariant(endpoint);
-
-    apl = new SaleorCloudAPL({ token, resourceUrl: endpoint });
     break;
+  }
   case "upstash":
     // Require `UPSTASH_URL` and `UPSTASH_TOKEN` environment variables
     apl = new UpstashAPL();
