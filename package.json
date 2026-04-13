@@ -17,12 +17,11 @@
     "schemaVersion": "3.22"
   },
   "engines": {
-    "node": ">=18.17.0 <=20",
+    "node": ">=24 <=26",
     "pnpm": ">=10"
   },
   "type": "module",
   "dependencies": {
-    "dynamodb-toolbox": "2.6.4",
     "@aws-sdk/client-dynamodb": "3.658.1",
     "@aws-sdk/lib-dynamodb": "3.658.1",
     "@aws-sdk/util-dynamodb": "3.658.1",
@@ -49,7 +48,9 @@
     "@trpc/react-query": "^10.45.3",
     "@trpc/server": "10.45.3",
     "@urql/exchange-auth": "1.0.0",
+    "@vercel/oidc-aws-credentials-provider": "3.0.7",
     "@vitejs/plugin-react": "4.2.1",
+    "dynamodb-toolbox": "2.6.4",
     "graphql": "16.8.1",
     "graphql-tag": "2.12.6",
     "jsdom": "20.0.3",
@@ -69,7 +70,6 @@
   },
   "packageManager": "pnpm@10.28.1",
   "devDependencies": {
-    "tsx": "4.21.0",
     "@graphql-codegen/cli": "3.3.1",
     "@graphql-codegen/introspection": "3.0.1",
     "@graphql-codegen/schema-ast": "3.0.1",
@@ -79,7 +79,7 @@
     "@graphql-codegen/typescript-urql": "3.7.3",
     "@graphql-codegen/urql-introspection": "2.2.1",
     "@graphql-typed-document-node/core": "3.2.0",
-    "@types/node": "18.11.18",
+    "@types/node": "24.12.2",
     "@types/react": "18.2.6",
     "@types/react-dom": "18.2.4",
     "@types/uuid": "10.0.0",
@@ -87,6 +87,7 @@
     "eslint-config-next": "13.1.2",
     "eslint-config-prettier": "8.6.0",
     "prettier": "2.8.2",
+    "tsx": "4.21.0",
     "typescript": "5.0.4"
   },
   "lint-staged": {
