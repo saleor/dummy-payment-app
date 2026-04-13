@@ -1,0 +1,23 @@
+src/db/dynamo-client.ts
+  be5e2fad732debfc 1,31
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.8",
+  "base_commit_sha": "11ccfccb3bf1d65b0e5ebce8cff2e2bee22ccc88",
+  "prompts": {
+    "be5e2fad732debfc": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "949d30b0-7472-435b-9f74-9c209b65a728",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Lukasz Ostrowski",
+      "messages": [],
+      "total_additions": 2,
+      "total_deletions": 2,
+      "accepted_lines": 2,
+      "overriden_lines": 0
+    }
+  }
+}
