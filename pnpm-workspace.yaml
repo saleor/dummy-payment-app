@@ -10,3 +10,10 @@ trustPolicy: no-downgrade
 trustPolicyExclude:
   # Only version >= 7.x have trusted publishing & provenance
   - "semver@6.3.1"
+
+overrides:
+  # protobufjs 7.5.6 and 8.0.2 fix CVE-2026-41242, CVE-2026-44290,
+  # CVE-2026-44291, CVE-2026-44292, CVE-2026-44293, CVE-2026-44294,
+  # CVE-2026-44295, CVE-2026-45740
+  "protobufjs@<7.5.6": ">=7.5.8 <8"
+  "protobufjs@>=8 <8.2.0": ">=8.2.0"
