@@ -1,21 +1,7 @@
-import { Box, Text } from "@saleor/macaw-ui";
+import { SettingsTab } from "@/components/tabs/settings-tab";
 
 const ConfigurationPage = () => {
-  return (
-    <>
-      <Box
-        display="flex"
-        flexDirection="column"
-        height="100%"
-        width="100%"
-        justifyContent="center"
-        alignItems="center"
-        gap={4}
-      >
-        <Text size={7}>🚀 Welcome to Dummy Payment App!</Text>
-      </Box>
-    </>
-  );
+  return <SettingsTab />;
 };
 
 export default ConfigurationPage;

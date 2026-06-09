@@ -3,6 +3,8 @@ import { Box, Button, Input, Text } from "@saleor/macaw-ui";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 
+import { SectionWithDescription } from "@/components/section-with-description";
+
 const TransactionsPage = () => {
   const router = useRouter();
   const [pspReference, setPspReference] = React.useState<string>("");
@@ -27,59 +29,74 @@ const TransactionsPage = () => {
         setNotFoundError(true);
       }
     }
-  }, [data]);
+  }, [data, pspReference, router]);
 
   const displayError = notFoundError || apiError;
 
   return (
-    <Box
-      display="flex"
-      flexDirection="column"
-      height="100%"
-      width="100%"
-      justifyContent="flex-start"
-      alignItems="center"
-      gap={4}
-      marginTop={4}
-    >
-      <Text size={7}>Here you can create events for any transaction made using this app.</Text>
+    <Box display="grid" gap={8}>
       <Box>
-        <Text>Please paste PSP Reference of the transaction you want to create events for.</Text>
-        <Input
-          value={pspReference}
-          disabled={!!transactionId}
-          onChange={(event) => setPspReference(event.target.value)}
-        />
+        <Text as="h1" size={6} fontWeight="bold">
+          Event reporter
+        </Text>
+        <Text size={3} color="default2" marginTop={2}>
+          Look up a transaction from a test checkout or storefront order, then manually fire
+          transaction events.
+        </Text>
       </Box>
-      <Box>
-        <Text>Or paste TransactionItem.id from Saleor</Text>
-        <Input
-          value={transactionId}
-          disabled={!!pspReference}
-          onChange={(event) => setTransactionId(event.target.value)}
-        />
-      </Box>
-      <Box display="flex" gap={2}>
-        <Button variant="secondary" onClick={() => setPspReference("")}>
-          Clear
-        </Button>
-        <Button
-          onClick={() => {
-            setNotFoundError(false);
-            if (transactionId) {
-              router.push(`/app/transactions/${transactionId}`);
-            } else {
-              fetchTransactions();
-            }
-          }}
-          disabled={!pspReference && !transactionId}
-          variant={displayError ? "error" : "primary"}
-        >
-          Go to transaction
-        </Button>
-      </Box>
-      {notFoundError && <Text color="critical1">Invalid PSP Reference</Text>}
-      {apiError && <Text color="critical1">Error fetching transaction</Text>}
+
+      <SectionWithDescription
+        title="Find transaction"
+        description={
+          <Text size={3} color="default2">
+            Enter a PSP reference returned by the gateway, or paste a Saleor TransactionItem ID
+            directly.
+          </Text>
+        }
+      >
+        <Box display="grid" gap={4}>
+          <Input
+            label="PSP reference"
+            value={pspReference}
+            disabled={!!transactionId}
+            onChange={(event) => setPspReference(event.target.value)}
+          />
+          <Input
+            label="Transaction ID"
+            value={transactionId}
+            disabled={!!pspReference}
+            onChange={(event) => setTransactionId(event.target.value)}
+          />
+          <Box display="flex" gap={2}>
+            <Button
+              variant="secondary"
+              onClick={() => {
+                setPspReference("");
+                setTransactionId("");
+                setNotFoundError(false);
+              }}
+            >
+              Clear
+            </Button>
+            <Button
+              onClick={() => {
+                setNotFoundError(false);
+                if (transactionId) {
+                  router.push(`/app/transactions/${transactionId}`);
+                } else {
+                  fetchTransactions();
+                }
+              }}
+              disabled={!pspReference && !transactionId}
+              variant={displayError ? "error" : "primary"}
+            >
+              Go to transaction
+            </Button>
+          </Box>
+          {notFoundError && <Text color="critical1">Invalid PSP reference</Text>}
+          {apiError && <Text color="critical1">Error fetching transaction</Text>}
+        </Box>
+      </SectionWithDescription>
     </Box>
   );
 };

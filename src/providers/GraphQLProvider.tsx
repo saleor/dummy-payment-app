@@ -65,7 +65,7 @@ function NotConnectedError() {
             borderRadius={2}
             backgroundColor="default1"
           >
-            <Text __wordBreak="break-all" size={3} fontFamily="mono">
+            <Text size={3} style={{ fontFamily: "monospace", wordBreak: "break-all" }}>
               {manifestUrl}
             </Text>
             <Box
