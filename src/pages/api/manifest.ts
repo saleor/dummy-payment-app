@@ -10,6 +10,7 @@ import { transactionChargeRequestedWebhook } from "./webhooks/transaction-charge
 import { transactionCancelationRequestedWebhook } from "./webhooks/transaction-cancel-requested";
 import { wrapWithLoggerContext } from "@/lib/logger/logger-context";
 import { withOtel } from "@/lib/otel/otel-wrapper";
+import { GATEWAY_ID } from "@/lib/gateway-id";
 import { loggerContext } from "@/logger-context";
 
 /**
@@ -46,7 +47,7 @@ export default wrapWithLoggerContext(
             "HANDLE_PAYMENTS",
             "MANAGE_ORDERS",
           ],
-          id: "saleor.io.dummy-payment-app",
+          id: GATEWAY_ID,
           version: packageJson.version,
           /**
            * Configure webhooks here. They will be created in Saleor during installation

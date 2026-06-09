@@ -6,6 +6,7 @@ import { withSentryConfig } from "@sentry/nextjs";
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  transpilePackages: ["@saleor/macaw-ui"],
   experimental: {
     optimizePackageImports: [
       "@sentry/nextjs",
