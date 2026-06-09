@@ -76,15 +76,20 @@ const IndexPage: NextPage = () => {
       <Box display="flex" gap={6} alignItems="flex-start" flexWrap="wrap">
         <Box display="grid" gap={4} __flex="1" __minWidth="240px">
           <Text size={3} color="default2">
-            Install this app in your Saleor Dashboard to use it as a payment gateway. Control
-            transaction outcomes from your storefront checkout or the built-in testing tools.
+            Install this app in your Saleor Dashboard to register a sync payment gateway for local
+            development and integration testing.
           </Text>
           <Text size={3} color="default2">
-            No card processing — pass a{" "}
+            No card processing — set{" "}
             <Text size={2} style={{ fontFamily: "monospace" }}>
-              data.event
+              data.event.type
             </Text>{" "}
-            payload to simulate charge, authorization, refund, and cancel flows.
+            on{" "}
+            <Text size={2} style={{ fontFamily: "monospace" }}>
+              transactionInitialize
+            </Text>{" "}
+            to simulate charge, authorization, refund, and
+            cancel flows.
           </Text>
         </Box>
         <TestCardMockup />

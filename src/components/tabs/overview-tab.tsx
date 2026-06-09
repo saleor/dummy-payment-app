@@ -1,11 +1,10 @@
 import { Box, Text } from "@saleor/macaw-ui";
-import { useRouter } from "next/router";
+import Link from "next/link";
 import type { ReactNode } from "react";
 
 import { APP_ROUTES } from "@/components/app-tabs";
 import { TestCardMockup } from "@/components/test-card-mockup";
-
-const GATEWAY_ID = "saleor.io.dummy-payment-app";
+import { GATEWAY_ID } from "@/lib/gateway-id";
 
 const EXAMPLE_PAYMENT_GATEWAY = `{
   "id": "${GATEWAY_ID}",
@@ -19,6 +18,14 @@ const EXAMPLE_PAYMENT_GATEWAY = `{
 
 function Mono({ children }: { children: ReactNode }) {
   return <Text style={{ fontFamily: "monospace" }}>{children}</Text>;
+}
+
+function InlineLink({ href, children }: { href: string; children: ReactNode }) {
+  return (
+    <Link href={href} style={{ color: "var(--mu-colors-text-accent1)", textDecoration: "none" }}>
+      {children}
+    </Link>
+  );
 }
 
 function BulletItem({ children }: { children: ReactNode }) {
@@ -67,8 +74,6 @@ function Step({ number, children }: { number: number; children: ReactNode }) {
 }
 
 export function OverviewTab() {
-  const router = useRouter();
-
   const capabilities: ReactNode[] = [
     <>
       <Text fontWeight="bold" color="default1">
@@ -86,9 +91,7 @@ export function OverviewTab() {
         Run an end-to-end checkout
       </Text>
       {" — use "}
-      <Text color="accent1" cursor="pointer" onClick={() => router.push(APP_ROUTES.checkout)}>
-        Quick checkout
-      </Text>
+      <InlineLink href={APP_ROUTES.checkout}>Quick checkout</InlineLink>
       {" to create, initialize, and complete a transaction via GraphQL"}
     </>,
     <>
@@ -96,13 +99,7 @@ export function OverviewTab() {
         Exercise later stages
       </Text>
       {" — fire charge, refund, and cancel events in "}
-      <Text
-        color="accent1"
-        cursor="pointer"
-        onClick={() => router.push(APP_ROUTES.transactions)}
-      >
-        Event reporter
-      </Text>
+      <InlineLink href={APP_ROUTES.transactions}>Event reporter</InlineLink>
       {" or through Saleor's transaction mutations"}
     </>,
   ];
@@ -195,15 +192,7 @@ export function OverviewTab() {
               </Box>
               <Text as="p" size={2} color="default2">
                 Event types and webhook contracts:{" "}
-                <Text
-                  size={2}
-                  color="accent1"
-                  cursor="pointer"
-                  onClick={() => router.push(APP_ROUTES.settings)}
-                >
-                  integration reference
-                </Text>
-                .
+                <InlineLink href={APP_ROUTES.settings}>integration reference</InlineLink>.
               </Text>
             </Box>
           </Box>

@@ -10,10 +10,6 @@ body {
   margin: 0;
 }
 
-.quick-action-card:hover {
-  background-color: var(--mu-colors-background-surface-default-hovered);
-}
-
 .overview-columns {
   display: grid;
   gap: 2rem;
