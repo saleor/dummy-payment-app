@@ -11,5 +11,5 @@ interface WidgetLayoutProps {
  * auto-resized to its content via `useWidgetAutoResize`.
  */
 export function WidgetLayout({ children }: WidgetLayoutProps) {
-  return <Box padding={4}>{children}</Box>;
+  return <Box>{children}</Box>;
 }
