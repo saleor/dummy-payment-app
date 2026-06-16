@@ -1,18 +1,11 @@
-import { Box, Button, Combobox, Input, OrdersIcon, Spinner, Text, Toggle } from "@saleor/macaw-ui";
+import { Box, Button, OrdersIcon, Spinner, Text } from "@saleor/macaw-ui";
 import { useRouter } from "next/router";
 import { StatusChip } from "@/components/StatusChip";
 import { actions, useAppBridge } from "@saleor/app-sdk/app-bridge";
-import React, { useState } from "react";
-import { trpcClient } from "@/trpc-client";
-import { TransactionEventTypeEnum, useTransactionDetailsViaIdQuery } from "@/generated/graphql";
-import { TransactionPspFinder } from "@/modules/transaction/transaction-psp-finder";
+import { useTransactionDetailsViaIdQuery } from "@/generated/graphql";
+import { TransactionEventReportForm } from "@/components/transaction-event-report-form";
 
 import { SectionWithDescription } from "@/components/section-with-description";
-
-interface EventReporterOptions {
-  label: TransactionEventTypeEnum;
-  value: TransactionEventTypeEnum;
-}
 
 function formatCurrency(amount: number, currencyCode: string, locale: string = "en-US") {
   const formatter = new Intl.NumberFormat(locale, {
@@ -42,19 +35,8 @@ function formatDateTime(dateString: string, locale = "en-US") {
 const EventReporterPage = () => {
   const router = useRouter();
   const { appBridgeState, appBridge } = useAppBridge();
-  const [otherError, setOtherError] = React.useState<string | null>(null);
 
   const transactionId = router.query.id as string;
-
-  const [eventType, setEventType] = React.useState<EventReporterOptions>({
-    label: TransactionEventTypeEnum.ChargeSuccess,
-    value: TransactionEventTypeEnum.ChargeSuccess,
-  });
-
-  const [amount, setAmount] = React.useState("");
-
-  const [generateNewPspReference, setGenerateNewPspReference] = useState<boolean>(false);
-  const [sendNullAmount, setSendNullAmount] = useState<boolean>(false);
 
   const navigateToOrder = (id: string) => {
     appBridge?.dispatch(
@@ -65,7 +47,7 @@ const EventReporterPage = () => {
     );
   };
 
-  const [{ data, fetching }, refetch] = useTransactionDetailsViaIdQuery({
+  const [{ data }, refetch] = useTransactionDetailsViaIdQuery({
     variables: {
       id: transactionId,
     },
@@ -74,48 +56,6 @@ const EventReporterPage = () => {
   const transaction = data?.transaction;
 
   const orderId = transaction?.order?.id;
-
-  const mutation = trpcClient.transactionReporter.reportEvent.useMutation();
-
-  const isLoading = fetching || mutation.isLoading;
-
-  const handleReportEvent = async () => {
-    setOtherError(null);
-    const pspFinder = new TransactionPspFinder();
-    try {
-      const parsedAmount = sendNullAmount ? null : parseFloat(amount);
-
-      if (!sendNullAmount && Number.isNaN(parsedAmount as number)) {
-        setOtherError("Invalid amount");
-        return;
-      }
-
-      let pspReference: string | undefined;
-      if (!generateNewPspReference) {
-        if (!data?.transaction) {
-          setOtherError("No transaction found to find lastPspRefernce");
-          return;
-        }
-
-        pspReference = pspFinder.findLastPspReference(data.transaction) || undefined;
-
-        if (!pspReference) {
-          setOtherError("No pspReference found in transaction, change setting to generate new one");
-          return;
-        }
-      }
-
-      await mutation.mutateAsync({
-        id: transaction?.id ?? "",
-        amount: parsedAmount,
-        type: eventType.value,
-        pspReference,
-      });
-      refetch({ requestPolicy: "network-only" });
-    } catch (error) {
-      console.error(error);
-    }
-  };
 
   return (
     <Box display="grid" gap={8}>
@@ -193,62 +133,14 @@ const EventReporterPage = () => {
           </Text>
         }
       >
-        <Box display="grid" gap={4}>
-          <Box display="flex" alignItems="center" gap={2}>
-            <Text size={3}>Event type</Text>
-            <Combobox
-              options={Object.values(TransactionEventTypeEnum).map((eventType) => ({
-                label: eventType,
-                value: eventType,
-              }))}
-              value={eventType}
-              onChange={(val) => setEventType(val as EventReporterOptions)}
-              size="small"
-              __width="220px"
-            />
-          </Box>
-          <Box display="flex" alignItems="center" gap={2}>
-            <Text size={3}>Amount</Text>
-            <Input
-              type="number"
-              value={sendNullAmount ? "" : amount}
-              onChange={(e) => setAmount(e.target.value)}
-              disabled={sendNullAmount}
-              __opacity={sendNullAmount ? "0.4" : "1"}
-              endAdornment={<Text size={1}>{transaction?.chargedAmount.currency}</Text>}
-            />
-            <Toggle pressed={sendNullAmount} onPressedChange={(pressed) => setSendNullAmount(pressed)}>
-              <Text>null</Text>
-            </Toggle>
-          </Box>
-          <Toggle
-            pressed={generateNewPspReference}
-            onPressedChange={(pressed) => setGenerateNewPspReference(pressed)}
-          >
-            <Text>Generate new pspReference</Text>
-          </Toggle>
-          <Button
-            disabled={isLoading}
-            onClick={handleReportEvent}
-            variant={otherError || mutation.error ? "error" : "primary"}
-          >
-            {isLoading && <Spinner />}Fire event
-          </Button>
-          {mutation.data && (
-            <Text color="success1">
-              Transaction reported: <pre>{JSON.stringify(mutation.data, null, 2)}</pre>
-            </Text>
-          )}
-          {mutation.error && (
-            <Box display="flex" alignItems="center" gap={2} flexDirection="column">
-              <Text color="critical1" size={4} fontWeight="medium">
-                Error returned when reporting event:
-              </Text>
-              <Text>{mutation.error.message}</Text>
-            </Box>
-          )}
-          {otherError && <Text color="critical1">{otherError}</Text>}
-        </Box>
+        {transaction ? (
+          <TransactionEventReportForm
+            transaction={transaction}
+            onReported={() => refetch({ requestPolicy: "network-only" })}
+          />
+        ) : (
+          <Spinner />
+        )}
       </SectionWithDescription>
     </Box>
   );

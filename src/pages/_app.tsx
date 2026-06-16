@@ -9,6 +9,7 @@ import { useRouter } from "next/router";
 
 import { AppBridgeGuard } from "@/components/app-bridge-guard";
 import { AppLayout } from "@/components/app-layout";
+import { WidgetLayout } from "@/components/widget-layout";
 import { NoSSRWrapper } from "../lib/no-ssr-wrapper";
 import { ThemeSynchronizer } from "../lib/theme-synchronizer";
 import { GraphQLProvider } from "../providers/GraphQLProvider";
@@ -19,6 +20,7 @@ export const appBridgeInstance = typeof window !== "undefined" ? new AppBridge()
 function NextApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
   const isAppRoute = router.pathname.startsWith("/app");
+  const isWidgetRoute = router.pathname.startsWith("/app/widgets");
 
   return (
     <NoSSRWrapper>
@@ -29,9 +31,15 @@ function NextApp({ Component, pageProps }: AppProps) {
           {isAppRoute ? (
             <AppBridgeGuard>
               <GraphQLProvider>
-                <AppLayout>
-                  <Component {...pageProps} />
-                </AppLayout>
+                {isWidgetRoute ? (
+                  <WidgetLayout>
+                    <Component {...pageProps} />
+                  </WidgetLayout>
+                ) : (
+                  <AppLayout>
+                    <Component {...pageProps} />
+                  </AppLayout>
+                )}
               </GraphQLProvider>
             </AppBridgeGuard>
           ) : (

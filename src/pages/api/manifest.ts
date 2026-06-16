@@ -69,7 +69,20 @@ export default wrapWithLoggerContext(
            * Optionally, extend Dashboard with custom UIs
            * https://docs.saleor.io/docs/3.x/developer/extending/apps/extending-dashboard-with-apps
            */
-          extensions: [],
+          extensions: [
+            {
+              label: "Manage transactions",
+              mount: "ORDER_DETAILS_WIDGETS",
+              target: "WIDGET",
+              permissions: ["HANDLE_PAYMENTS", "MANAGE_ORDERS"],
+              url: `${iframeBaseUrl}/app/widgets/order-details`,
+              options: {
+                widgetTarget: {
+                  method: "GET",
+                },
+              },
+            },
+          ],
           author: "Saleor Commerce",
           brand: {
             logo: {

@@ -312,7 +312,9 @@ export enum AccountErrorCode {
   DeleteOwnAccount = 'DELETE_OWN_ACCOUNT',
   DeleteStaffAccount = 'DELETE_STAFF_ACCOUNT',
   DeleteSuperuserAccount = 'DELETE_SUPERUSER_ACCOUNT',
+  DisabledAuthenticationMethod = 'DISABLED_AUTHENTICATION_METHOD',
   DuplicatedInputItem = 'DUPLICATED_INPUT_ITEM',
+  FileSizeLimitExceeded = 'FILE_SIZE_LIMIT_EXCEEDED',
   GraphqlError = 'GRAPHQL_ERROR',
   Inactive = 'INACTIVE',
   Invalid = 'INVALID',
@@ -1133,38 +1135,21 @@ export type AppExtension = Node & {
   /** Label of the extension to show in the dashboard. */
   label: Scalars['String'];
   /**
-   * Place where given extension will be mounted.
-   * @deprecated Use `mountName` instead.
-   */
-  mount: AppExtensionMountEnum;
-  /**
-   * Name of the extension mount point in the dashboard. Replaces `mount`
+   * Name of the extension mount point in the dashboard. Value returned in UPPERCASE.
    *
    * Added in Saleor 3.22.
    */
   mountName: Scalars['String'];
-  /**
-   * App extension options.
-   *
-   * Added in Saleor 3.22.
-   * @deprecated Use `settings` field instead.
-   */
-  options?: Maybe<AppExtensionPossibleOptions>;
   /** List of the app extension's permissions. */
   permissions: Array<Permission>;
   /**
-   * App extension settings. Replaces `options` field.
+   * App extension settings.
    *
    * Added in Saleor 3.22.
    */
   settings: Scalars['JSON'];
   /**
-   * Type of way how app extension will be opened.
-   * @deprecated Use `targetName` instead.
-   */
-  target: AppExtensionTargetEnum;
-  /**
-   * Name of the extension target in the dashboard. Replaces `target`
+   * Name of the extension target in the dashboard. Value returned in UPPERCASE.
    *
    * Added in Saleor 3.22.
    */
@@ -1192,21 +1177,11 @@ export type AppExtensionCountableEdge = {
 
 export type AppExtensionFilterInput = {
   /**
-   * DEPRECATED: Use `mountName` instead.
-   * @deprecated Field no longer supported
-   */
-  mount?: InputMaybe<Array<AppExtensionMountEnum>>;
-  /**
    * Plain-text mount name (case insensitive)
    *
    * Added in Saleor 3.22.
    */
   mountName?: InputMaybe<Array<Scalars['String']>>;
-  /**
-   * DEPRECATED: Use `targetName` instead.
-   * @deprecated Field no longer supported
-   */
-  target?: InputMaybe<AppExtensionTargetEnum>;
   /**
    * Plain-text target name (case insensitive)
    *
@@ -1214,95 +1189,6 @@ export type AppExtensionFilterInput = {
    */
   targetName?: InputMaybe<Scalars['String']>;
 };
-
-/** All places where app extension can be mounted. */
-export enum AppExtensionMountEnum {
-  CategoryDetailsMoreActions = 'CATEGORY_DETAILS_MORE_ACTIONS',
-  CategoryOverviewCreate = 'CATEGORY_OVERVIEW_CREATE',
-  CategoryOverviewMoreActions = 'CATEGORY_OVERVIEW_MORE_ACTIONS',
-  CollectionDetailsMoreActions = 'COLLECTION_DETAILS_MORE_ACTIONS',
-  CollectionDetailsWidgets = 'COLLECTION_DETAILS_WIDGETS',
-  CollectionOverviewCreate = 'COLLECTION_OVERVIEW_CREATE',
-  CollectionOverviewMoreActions = 'COLLECTION_OVERVIEW_MORE_ACTIONS',
-  CustomerDetailsMoreActions = 'CUSTOMER_DETAILS_MORE_ACTIONS',
-  CustomerDetailsWidgets = 'CUSTOMER_DETAILS_WIDGETS',
-  CustomerOverviewCreate = 'CUSTOMER_OVERVIEW_CREATE',
-  CustomerOverviewMoreActions = 'CUSTOMER_OVERVIEW_MORE_ACTIONS',
-  DiscountDetailsMoreActions = 'DISCOUNT_DETAILS_MORE_ACTIONS',
-  DiscountOverviewCreate = 'DISCOUNT_OVERVIEW_CREATE',
-  DiscountOverviewMoreActions = 'DISCOUNT_OVERVIEW_MORE_ACTIONS',
-  DraftOrderDetailsMoreActions = 'DRAFT_ORDER_DETAILS_MORE_ACTIONS',
-  DraftOrderDetailsWidgets = 'DRAFT_ORDER_DETAILS_WIDGETS',
-  DraftOrderOverviewCreate = 'DRAFT_ORDER_OVERVIEW_CREATE',
-  DraftOrderOverviewMoreActions = 'DRAFT_ORDER_OVERVIEW_MORE_ACTIONS',
-  GiftCardDetailsMoreActions = 'GIFT_CARD_DETAILS_MORE_ACTIONS',
-  GiftCardDetailsWidgets = 'GIFT_CARD_DETAILS_WIDGETS',
-  GiftCardOverviewCreate = 'GIFT_CARD_OVERVIEW_CREATE',
-  GiftCardOverviewMoreActions = 'GIFT_CARD_OVERVIEW_MORE_ACTIONS',
-  MenuDetailsMoreActions = 'MENU_DETAILS_MORE_ACTIONS',
-  MenuOverviewCreate = 'MENU_OVERVIEW_CREATE',
-  MenuOverviewMoreActions = 'MENU_OVERVIEW_MORE_ACTIONS',
-  NavigationCatalog = 'NAVIGATION_CATALOG',
-  NavigationCustomers = 'NAVIGATION_CUSTOMERS',
-  NavigationDiscounts = 'NAVIGATION_DISCOUNTS',
-  NavigationOrders = 'NAVIGATION_ORDERS',
-  NavigationPages = 'NAVIGATION_PAGES',
-  NavigationTranslations = 'NAVIGATION_TRANSLATIONS',
-  OrderDetailsMoreActions = 'ORDER_DETAILS_MORE_ACTIONS',
-  OrderDetailsWidgets = 'ORDER_DETAILS_WIDGETS',
-  OrderOverviewCreate = 'ORDER_OVERVIEW_CREATE',
-  OrderOverviewMoreActions = 'ORDER_OVERVIEW_MORE_ACTIONS',
-  PageDetailsMoreActions = 'PAGE_DETAILS_MORE_ACTIONS',
-  PageOverviewCreate = 'PAGE_OVERVIEW_CREATE',
-  PageOverviewMoreActions = 'PAGE_OVERVIEW_MORE_ACTIONS',
-  PageTypeDetailsMoreActions = 'PAGE_TYPE_DETAILS_MORE_ACTIONS',
-  PageTypeOverviewCreate = 'PAGE_TYPE_OVERVIEW_CREATE',
-  PageTypeOverviewMoreActions = 'PAGE_TYPE_OVERVIEW_MORE_ACTIONS',
-  ProductDetailsMoreActions = 'PRODUCT_DETAILS_MORE_ACTIONS',
-  ProductDetailsWidgets = 'PRODUCT_DETAILS_WIDGETS',
-  ProductOverviewCreate = 'PRODUCT_OVERVIEW_CREATE',
-  ProductOverviewMoreActions = 'PRODUCT_OVERVIEW_MORE_ACTIONS',
-  TranslationsMoreActions = 'TRANSLATIONS_MORE_ACTIONS',
-  VoucherDetailsMoreActions = 'VOUCHER_DETAILS_MORE_ACTIONS',
-  VoucherDetailsWidgets = 'VOUCHER_DETAILS_WIDGETS',
-  VoucherOverviewCreate = 'VOUCHER_OVERVIEW_CREATE',
-  VoucherOverviewMoreActions = 'VOUCHER_OVERVIEW_MORE_ACTIONS'
-}
-
-/** Represents the options for an app extension. */
-export type AppExtensionOptionsNewTab = {
-  __typename?: 'AppExtensionOptionsNewTab';
-  /**
-   * Options controlling behavior of the NEW_TAB extension target
-   * @deprecated Use `settings` field directly.
-   */
-  newTabTarget?: Maybe<NewTabTargetOptions>;
-};
-
-/** Represents the options for an app extension. */
-export type AppExtensionOptionsWidget = {
-  __typename?: 'AppExtensionOptionsWidget';
-  /**
-   * Options for displaying a Widget
-   * @deprecated Use `settings` field directly.
-   */
-  widgetTarget?: Maybe<WidgetTargetOptions>;
-};
-
-export type AppExtensionPossibleOptions = AppExtensionOptionsNewTab | AppExtensionOptionsWidget;
-
-/**
- * All available ways of opening an app extension.
- *
- *     POPUP - app's extension will be mounted as a popup window
- *     APP_PAGE - redirect to app's page
- */
-export enum AppExtensionTargetEnum {
-  AppPage = 'APP_PAGE',
-  NewTab = 'NEW_TAB',
-  Popup = 'POPUP',
-  Widget = 'WIDGET'
-}
 
 /**
  * Fetch and validate manifest.
@@ -1350,9 +1236,9 @@ export type AppInstallInput = {
   /** Determine if app will be set active or not. */
   activateAfterInstallation?: InputMaybe<Scalars['Boolean']>;
   /** Name of the app to install. */
-  appName?: InputMaybe<Scalars['String']>;
+  appName: Scalars['String'];
   /** URL to app's manifest in JSON format. */
-  manifestUrl?: InputMaybe<Scalars['String']>;
+  manifestUrl: Scalars['String'];
   /** List of permission code names to assign to this app. */
   permissions?: InputMaybe<Array<PermissionEnum>>;
 };
@@ -1419,12 +1305,7 @@ export type AppManifestExtension = {
   /** Label of the extension to show in the dashboard. */
   label: Scalars['String'];
   /**
-   * Place where given extension will be mounted.
-   * @deprecated Use `mountName` instead.
-   */
-  mount: AppExtensionMountEnum;
-  /**
-   * Name of the extension mount point in the dashboard. Replaces `mount`
+   * Name of the extension mount point in the dashboard. Value returned in UPPERCASE.
    *
    * Added in Saleor 3.22.
    */
@@ -1432,18 +1313,13 @@ export type AppManifestExtension = {
   /** List of the app extension's permissions. */
   permissions: Array<Permission>;
   /**
-   * JSON object with settings for this extension.
+   * App extension settings.
    *
    * Added in Saleor 3.22.
    */
   settings: Scalars['JSON'];
   /**
-   * Type of way how app extension will be opened.
-   * @deprecated Use `targetName` instead.
-   */
-  target: AppExtensionTargetEnum;
-  /**
-   * Name of the extension target in the dashboard. Replaces `target`
+   * Name of the extension target in the dashboard. Value returned in UPPERCASE.
    *
    * Added in Saleor 3.22.
    */
@@ -2334,7 +2210,7 @@ export type Attribute = Node & ObjectWithMetadata & {
   /** Public metadata. Use `keys` to control which fields you want to include. The default is to include everything. */
   metafields?: Maybe<Scalars['Metadata']>;
   /** Name of an attribute displayed in the interface. */
-  name?: Maybe<Scalars['String']>;
+  name: Scalars['String'];
   /** List of private metadata items. Requires staff permissions to access. */
   privateMetadata: Array<MetadataItem>;
   /**
@@ -2356,7 +2232,7 @@ export type Attribute = Node & ObjectWithMetadata & {
    */
   referenceTypes?: Maybe<Array<ReferenceType>>;
   /** Internal representation of an attribute name. */
-  slug?: Maybe<Scalars['String']>;
+  slug: Scalars['String'];
   /**
    * The position of the attribute in the storefront navigation (0 by default). Requires one of the following permissions: MANAGE_PAGES, MANAGE_PAGE_TYPES_AND_ATTRIBUTES, MANAGE_PRODUCTS, MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES.
    * @deprecated Field no longer supported
@@ -2365,7 +2241,7 @@ export type Attribute = Node & ObjectWithMetadata & {
   /** Returns translated attribute fields for the given language code. */
   translation?: Maybe<AttributeTranslation>;
   /** The attribute type. */
-  type?: Maybe<AttributeTypeEnum>;
+  type: AttributeTypeEnum;
   /** The unit of attribute values. */
   unit?: Maybe<MeasurementUnitsEnum>;
   /** Whether the attribute requires values to be passed or not. Requires one of the following permissions: MANAGE_PAGES, MANAGE_PAGE_TYPES_AND_ATTRIBUTES, MANAGE_PRODUCTS, MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES. */
@@ -4566,9 +4442,16 @@ export type Checkout = Node & ObjectWithMetadata & {
   /**
    * The delivery method selected for this checkout.
    *
+   * Added in Saleor 3.23.
+   */
+  delivery?: Maybe<Delivery>;
+  /**
+   * The delivery method selected for this checkout.
+   *
    * Triggers the following webhook events:
    * - SHIPPING_LIST_METHODS_FOR_CHECKOUT (sync): Optionally triggered when cached external shipping methods are invalid.
    * - CHECKOUT_FILTER_SHIPPING_METHODS (sync): Optionally triggered when cached filtered shipping methods are invalid.
+   * @deprecated Use `delivery` instead.
    */
   deliveryMethod?: Maybe<DeliveryMethod>;
   /** The total discount applied to the checkout. Note: Only discount created via voucher are included in this field. */
@@ -4628,7 +4511,7 @@ export type Checkout = Node & ObjectWithMetadata & {
    * Triggers the following webhook events:
    * - SHIPPING_LIST_METHODS_FOR_CHECKOUT (sync): Optionally triggered when cached external shipping methods are invalid.
    * - CHECKOUT_FILTER_SHIPPING_METHODS (sync): Optionally triggered when cached filtered shipping methods are invalid.
-   * @deprecated Use `deliveryMethod` instead.
+   * @deprecated Use `delivery` instead.
    */
   shippingMethod?: Maybe<ShippingMethod>;
   /**
@@ -5045,10 +4928,33 @@ export type CheckoutCustomerNoteUpdate = {
 };
 
 /**
+ * Deletes a checkout.
+ *
+ * Added in Saleor 3.23.
+ *
+ * Requires one of the following permissions: MANAGE_CHECKOUTS.
+ */
+export type CheckoutDelete = {
+  __typename?: 'CheckoutDelete';
+  errors: Array<CheckoutDeleteError>;
+};
+
+export type CheckoutDeleteError = {
+  __typename?: 'CheckoutDeleteError';
+  /** The error code. */
+  code: CheckoutErrorCode;
+  /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
+  field?: Maybe<Scalars['String']>;
+  /** The error message. */
+  message?: Maybe<Scalars['String']>;
+};
+
+/**
  * Updates the delivery method (shipping method or pick up point) of the checkout. Updates the checkout shipping_address for click and collect delivery for a warehouse address.
  *
  * Triggers the following webhook events:
  * - SHIPPING_LIST_METHODS_FOR_CHECKOUT (sync): Triggered when updating the checkout delivery method with the external one.
+ * - CHECKOUT_FILTER_SHIPPING_METHODS (sync): Optionally triggered when cached filtered shipping methods are invalid.
  * - CHECKOUT_UPDATED (async): A checkout was updated.
  */
 export type CheckoutDeliveryMethodUpdate = {
@@ -5465,7 +5371,27 @@ export type CheckoutPaymentCreate = {
 };
 
 /** Represents an problem in the checkout. */
-export type CheckoutProblem = CheckoutLineProblemInsufficientStock | CheckoutLineProblemVariantNotAvailable;
+export type CheckoutProblem = CheckoutLineProblemInsufficientStock | CheckoutLineProblemVariantNotAvailable | CheckoutProblemDeliveryMethodInvalid | CheckoutProblemDeliveryMethodStale;
+
+/**
+ * Indicates that the selected delivery method is invalid.
+ *
+ * Added in Saleor 3.23.
+ */
+export type CheckoutProblemDeliveryMethodInvalid = {
+  __typename?: 'CheckoutProblemDeliveryMethodInvalid';
+  delivery: Delivery;
+};
+
+/**
+ * Indicates that the delivery methods are stale.
+ *
+ * Added in Saleor 3.23.
+ */
+export type CheckoutProblemDeliveryMethodStale = {
+  __typename?: 'CheckoutProblemDeliveryMethodStale';
+  delivery: Delivery;
+};
 
 /**
  * Remove a gift card or a voucher from a checkout.
@@ -5485,6 +5411,12 @@ export type CheckoutRemovePromoCode = {
 /** Represents the channel-specific checkout settings. */
 export type CheckoutSettings = {
   __typename?: 'CheckoutSettings';
+  /**
+   * Default to `true`. Determines whether gift cards can be attached to a Checkout via `addPromoCode` mutation. Usage of this mutation with gift cards is deprecated.
+   *
+   * Added in Saleor 3.23.
+   */
+  allowLegacyGiftCardUse: Scalars['Boolean'];
   /**
    * The date time defines the earliest checkout creation date on which fully paid checkouts can begin to be automatically completed.
    *
@@ -5508,6 +5440,12 @@ export type CheckoutSettings = {
 };
 
 export type CheckoutSettingsInput = {
+  /**
+   * Default to `true`. Determines whether gift cards can be attached to a Checkout via `addPromoCode` mutation. Usage of this mutation with gift cards is deprecated.
+   *
+   * Added in Saleor 3.23.
+   */
+  allowLegacyGiftCardUse?: InputMaybe<Scalars['Boolean']>;
   /**
    * Settings for automatic completion of fully paid checkouts.
    *
@@ -5548,6 +5486,7 @@ export type CheckoutShippingAddressUpdate = {
  *
  * Triggers the following webhook events:
  * - SHIPPING_LIST_METHODS_FOR_CHECKOUT (sync): Triggered when updating the checkout shipping method with the external one.
+ * - CHECKOUT_FILTER_SHIPPING_METHODS (sync): Optionally triggered when cached filtered shipping methods are invalid.
  * - CHECKOUT_UPDATED (async): A checkout was updated.
  */
 export type CheckoutShippingMethodUpdate = {
@@ -5565,7 +5504,9 @@ export enum CheckoutSortField {
   /** Sort checkouts by customer. */
   Customer = 'CUSTOMER',
   /** Sort checkouts by payment. */
-  Payment = 'PAYMENT'
+  Payment = 'PAYMENT',
+  /** Sort checkouts by rank. Note: This option is available only with the `search` filter. */
+  Rank = 'RANK'
 }
 
 export type CheckoutSortingInput = {
@@ -5946,8 +5887,10 @@ export type CollectionError = {
 };
 
 export enum CollectionErrorCode {
+  /** @deprecated Products without variants can now be assigned to collections. This error will never be returned. */
   CannotManageProductWithoutVariant = 'CANNOT_MANAGE_PRODUCT_WITHOUT_VARIANT',
   DuplicatedInputItem = 'DUPLICATED_INPUT_ITEM',
+  FileSizeLimitExceeded = 'FILE_SIZE_LIMIT_EXCEEDED',
   GraphqlError = 'GRAPHQL_ERROR',
   Invalid = 'INVALID',
   NotFound = 'NOT_FOUND',
@@ -7016,6 +6959,25 @@ export type CustomerDelete = {
   user?: Maybe<User>;
 };
 
+/**
+ * Event sent when customer user is deleted.
+ *
+ * Added in Saleor 3.23.
+ */
+export type CustomerDeleted = Event & {
+  __typename?: 'CustomerDeleted';
+  /** Time of the event. */
+  issuedAt?: Maybe<Scalars['DateTime']>;
+  /** The user or application that triggered the event. */
+  issuingPrincipal?: Maybe<IssuingPrincipal>;
+  /** The application receiving the webhook. */
+  recipient?: Maybe<App>;
+  /** The user the event relates to. */
+  user?: Maybe<User>;
+  /** Saleor version that triggered the event. */
+  version?: Maybe<Scalars['String']>;
+};
+
 /** History log of the customer. */
 export type CustomerEvent = Node & {
   __typename?: 'CustomerEvent';
@@ -7031,8 +6993,6 @@ export type CustomerEvent = Node & {
   message?: Maybe<Scalars['String']>;
   /** The concerned order. */
   order?: Maybe<Order>;
-  /** The concerned order line. */
-  orderLine?: Maybe<OrderLine>;
   /** Customer event type. */
   type?: Maybe<CustomerEventsEnum>;
   /** User who performed the action. */
@@ -7305,215 +7265,53 @@ export type DeletePrivateMetadata = {
   metadataErrors: Array<MetadataError>;
 };
 
+/**
+ * Represents a delivery option for the checkout.
+ *
+ * Added in Saleor 3.23.
+ */
+export type Delivery = {
+  __typename?: 'Delivery';
+  /** The ID of the delivery. */
+  id: Scalars['ID'];
+  /** Shipping method represented by the delivery. */
+  shippingMethod?: Maybe<ShippingMethod>;
+};
+
 /** Represents a delivery method chosen for the checkout. `Warehouse` type is used when checkout is marked as "click and collect" and `ShippingMethod` otherwise. */
 export type DeliveryMethod = ShippingMethod | Warehouse;
 
-/** Represents digital content associated with a product variant. */
-export type DigitalContent = Node & ObjectWithMetadata & {
-  __typename?: 'DigitalContent';
-  /** Indicator for automatic fulfillment of digital content. */
-  automaticFulfillment: Scalars['Boolean'];
-  /** File associated with digital content. */
-  contentFile: Scalars['String'];
-  /** The ID of the digital content. */
-  id: Scalars['ID'];
-  /** Maximum number of allowed downloads for the digital content. */
-  maxDownloads?: Maybe<Scalars['Int']>;
-  /** List of public metadata items. Can be accessed without permissions. */
-  metadata: Array<MetadataItem>;
-  /**
-   * A single key from public metadata.
-   *
-   * Tip: Use GraphQL aliases to fetch multiple keys.
-   */
-  metafield?: Maybe<Scalars['String']>;
-  /** Public metadata. Use `keys` to control which fields you want to include. The default is to include everything. */
-  metafields?: Maybe<Scalars['Metadata']>;
-  /** List of private metadata items. Requires staff permissions to access. */
-  privateMetadata: Array<MetadataItem>;
-  /**
-   * A single key from private metadata. Requires staff permissions to access.
-   *
-   * Tip: Use GraphQL aliases to fetch multiple keys.
-   */
-  privateMetafield?: Maybe<Scalars['String']>;
-  /** Private metadata. Requires staff permissions to access. Use `keys` to control which fields you want to include. The default is to include everything. */
-  privateMetafields?: Maybe<Scalars['Metadata']>;
-  /** Product variant assigned to digital content. */
-  productVariant: ProductVariant;
-  /** Number of days the URL for the digital content remains valid. */
-  urlValidDays?: Maybe<Scalars['Int']>;
-  /** List of URLs for the digital variant. */
-  urls?: Maybe<Array<DigitalContentUrl>>;
-  /** Default settings indicator for digital content. */
-  useDefaultSettings: Scalars['Boolean'];
-};
-
-
-/** Represents digital content associated with a product variant. */
-export type DigitalContentMetafieldArgs = {
-  key: Scalars['String'];
-};
-
-
-/** Represents digital content associated with a product variant. */
-export type DigitalContentMetafieldsArgs = {
-  keys?: InputMaybe<Array<Scalars['String']>>;
-};
-
-
-/** Represents digital content associated with a product variant. */
-export type DigitalContentPrivateMetafieldArgs = {
-  key: Scalars['String'];
-};
-
-
-/** Represents digital content associated with a product variant. */
-export type DigitalContentPrivateMetafieldsArgs = {
-  keys?: InputMaybe<Array<Scalars['String']>>;
-};
-
-/** A connection to a list of digital content items. */
-export type DigitalContentCountableConnection = {
-  __typename?: 'DigitalContentCountableConnection';
-  edges: Array<DigitalContentCountableEdge>;
-  /** Pagination data for this connection. */
-  pageInfo: PageInfo;
-  /** A total count of items in the collection. */
-  totalCount?: Maybe<Scalars['Int']>;
-};
-
-export type DigitalContentCountableEdge = {
-  __typename?: 'DigitalContentCountableEdge';
-  /** A cursor for use in pagination. */
-  cursor: Scalars['String'];
-  /** The item at the end of the edge. */
-  node: DigitalContent;
-};
-
 /**
- * Create new digital content. This mutation must be sent as a `multipart` request. More detailed specs of the upload format can be found here: https://github.com/jaydenseric/graphql-multipart-request-spec
+ * Calculates available delivery options for a checkout.
  *
- * Requires one of the following permissions: MANAGE_PRODUCTS.
- */
-export type DigitalContentCreate = {
-  __typename?: 'DigitalContentCreate';
-  content?: Maybe<DigitalContent>;
-  errors: Array<ProductError>;
-  /** @deprecated Use `errors` field instead. */
-  productErrors: Array<ProductError>;
-  variant?: Maybe<ProductVariant>;
-};
-
-/**
- * Remove digital content assigned to given variant.
+ * Added in Saleor 3.23.
  *
- * Requires one of the following permissions: MANAGE_PRODUCTS.
+ * Triggers the following webhook events:
+ * - SHIPPING_LIST_METHODS_FOR_CHECKOUT (sync): Triggered to fetch external shipping methods.
+ * - CHECKOUT_FILTER_SHIPPING_METHODS (sync): Triggered to filter shipping methods.
  */
-export type DigitalContentDelete = {
-  __typename?: 'DigitalContentDelete';
-  errors: Array<ProductError>;
-  /** @deprecated Use `errors` field instead. */
-  productErrors: Array<ProductError>;
-  variant?: Maybe<ProductVariant>;
+export type DeliveryOptionsCalculate = {
+  __typename?: 'DeliveryOptionsCalculate';
+  /** List of the available deliveries. */
+  deliveries: Array<Delivery>;
+  errors: Array<DeliveryOptionsCalculateError>;
 };
 
-export type DigitalContentInput = {
-  /** Overwrite default automatic_fulfillment setting for variant. */
-  automaticFulfillment?: InputMaybe<Scalars['Boolean']>;
-  /** Determines how many times a download link can be accessed by a customer. */
-  maxDownloads?: InputMaybe<Scalars['Int']>;
-  /**
-   * Fields required to update the digital content metadata. Can be read by any API client authorized to read the object it's attached to.
-   *
-   * Warning: never store sensitive information, including financial data such as credit card details.
-   */
-  metadata?: InputMaybe<Array<MetadataInput>>;
-  /**
-   * Fields required to update the digital content private metadata. Requires permissions to modify and to read the metadata of the object it's attached to.
-   *
-   * Warning: never store sensitive information, including financial data such as credit card details.
-   */
-  privateMetadata?: InputMaybe<Array<MetadataInput>>;
-  /** Determines for how many days a download link is active since it was generated. */
-  urlValidDays?: InputMaybe<Scalars['Int']>;
-  /** Use default digital content settings for this product. */
-  useDefaultSettings: Scalars['Boolean'];
+export type DeliveryOptionsCalculateError = {
+  __typename?: 'DeliveryOptionsCalculateError';
+  /** The error code. */
+  code: DeliveryOptionsCalculateErrorCode;
+  /** Name of a field that caused the error. A value of `null` indicates that the error isn't associated with a particular field. */
+  field?: Maybe<Scalars['String']>;
+  /** The error message. */
+  message?: Maybe<Scalars['String']>;
 };
 
-/**
- * Updates digital content.
- *
- * Requires one of the following permissions: MANAGE_PRODUCTS.
- */
-export type DigitalContentUpdate = {
-  __typename?: 'DigitalContentUpdate';
-  content?: Maybe<DigitalContent>;
-  errors: Array<ProductError>;
-  /** @deprecated Use `errors` field instead. */
-  productErrors: Array<ProductError>;
-  variant?: Maybe<ProductVariant>;
-};
-
-export type DigitalContentUploadInput = {
-  /** Overwrite default automatic_fulfillment setting for variant. */
-  automaticFulfillment?: InputMaybe<Scalars['Boolean']>;
-  /** Represents an file in a multipart request. */
-  contentFile: Scalars['Upload'];
-  /** Determines how many times a download link can be accessed by a customer. */
-  maxDownloads?: InputMaybe<Scalars['Int']>;
-  /**
-   * Fields required to update the digital content metadata. Can be read by any API client authorized to read the object it's attached to.
-   *
-   * Warning: never store sensitive information, including financial data such as credit card details.
-   */
-  metadata?: InputMaybe<Array<MetadataInput>>;
-  /**
-   * Fields required to update the digital content private metadata. Requires permissions to modify and to read the metadata of the object it's attached to.
-   *
-   * Warning: never store sensitive information, including financial data such as credit card details.
-   */
-  privateMetadata?: InputMaybe<Array<MetadataInput>>;
-  /** Determines for how many days a download link is active since it was generated. */
-  urlValidDays?: InputMaybe<Scalars['Int']>;
-  /** Use default digital content settings for this product. */
-  useDefaultSettings: Scalars['Boolean'];
-};
-
-/** Represents a URL for digital content. */
-export type DigitalContentUrl = Node & {
-  __typename?: 'DigitalContentUrl';
-  /** Digital content associated with the URL. */
-  content: DigitalContent;
-  /** Date and time when the digital content URL was created. */
-  created: Scalars['DateTime'];
-  /** Number of times digital content has been downloaded. */
-  downloadNum: Scalars['Int'];
-  /** The ID of the digital content URL. */
-  id: Scalars['ID'];
-  /** UUID of digital content. */
-  token: Scalars['UUID'];
-  /** URL for digital content. */
-  url?: Maybe<Scalars['String']>;
-};
-
-/**
- * Generate new URL to digital content.
- *
- * Requires one of the following permissions: MANAGE_PRODUCTS.
- */
-export type DigitalContentUrlCreate = {
-  __typename?: 'DigitalContentUrlCreate';
-  digitalContentUrl?: Maybe<DigitalContentUrl>;
-  errors: Array<ProductError>;
-  /** @deprecated Use `errors` field instead. */
-  productErrors: Array<ProductError>;
-};
-
-export type DigitalContentUrlCreateInput = {
-  /** Digital content ID which URL will belong to. */
-  content: Scalars['ID'];
-};
+export enum DeliveryOptionsCalculateErrorCode {
+  GraphqlError = 'GRAPHQL_ERROR',
+  Invalid = 'INVALID',
+  NotFound = 'NOT_FOUND'
+}
 
 export type DiscountError = {
   __typename?: 'DiscountError';
@@ -7692,7 +7490,10 @@ export type DraftOrderCreateInput = {
   user?: InputMaybe<Scalars['ID']>;
   /** Email address of the customer. */
   userEmail?: InputMaybe<Scalars['String']>;
-  /** ID of the voucher associated with the order. */
+  /**
+   * ID of the voucher associated with the order.
+   * @deprecated Use `voucherCode` instead.
+   */
   voucher?: InputMaybe<Scalars['ID']>;
   /**
    * A code of the voucher associated with the order.
@@ -7803,7 +7604,10 @@ export type DraftOrderInput = {
   user?: InputMaybe<Scalars['ID']>;
   /** Email address of the customer. */
   userEmail?: InputMaybe<Scalars['String']>;
-  /** ID of the voucher associated with the order. */
+  /**
+   * ID of the voucher associated with the order.
+   * @deprecated Use `voucherCode` instead.
+   */
   voucher?: InputMaybe<Scalars['ID']>;
   /**
    * A code of the voucher associated with the order.
@@ -8242,8 +8046,6 @@ export enum ExportScope {
  * Export voucher codes to csv/xlsx file.
  *
  * Added in Saleor 3.18.
- *
- * Note: this API is currently in Feature Preview and can be subject to changes at later point.
  *
  * Requires one of the following permissions: MANAGE_DISCOUNTS.
  *
@@ -8753,7 +8555,7 @@ export type GiftCard = Node & ObjectWithMetadata & {
    */
   endDate?: Maybe<Scalars['DateTime']>;
   /**
-   * List of events associated with the gift card. Requires MANAGE_GIFT_CARD permission to access all events. Users with MANAGE_ORDERS permission can access only USED_IN_ORDER events.
+   * List of events associated with the gift card. Requires MANAGE_GIFT_CARD permission to access all events. Users with MANAGE_ORDERS permission can access only USED_IN_ORDER and REFUNDED_IN_ORDER events.
    *
    * Requires one of the following permissions: MANAGE_GIFT_CARD, MANAGE_ORDERS.
    */
@@ -9189,6 +8991,7 @@ export enum GiftCardEventsEnum {
   ExpiryDateUpdated = 'EXPIRY_DATE_UPDATED',
   Issued = 'ISSUED',
   NoteAdded = 'NOTE_ADDED',
+  RefundedInOrder = 'REFUNDED_IN_ORDER',
   Resent = 'RESENT',
   SentToCustomer = 'SENT_TO_CUSTOMER',
   TagsUpdated = 'TAGS_UPDATED',
@@ -9238,6 +9041,56 @@ export type GiftCardMetadataUpdated = Event & {
   recipient?: Maybe<App>;
   /** Saleor version that triggered the event. */
   version?: Maybe<Scalars['String']>;
+};
+
+/**
+ * Represents a gift card payment method used for a transaction.
+ *
+ * Added in Saleor 3.23.
+ */
+export type GiftCardPaymentMethodDetails = PaymentMethodDetails & {
+  __typename?: 'GiftCardPaymentMethodDetails';
+  /**
+   * Brand of the gift card.
+   *
+   * Added in Saleor 3.23.
+   */
+  brand?: Maybe<Scalars['String']>;
+  /**
+   * Indicates whether the gift card is a built-in Saleor gift card.
+   *
+   * Added in Saleor 3.23.
+   */
+  isSaleorGiftcard: Scalars['Boolean'];
+  /**
+   * Last characters of the gift card code. Max 4 characters.
+   *
+   * Added in Saleor 3.23.
+   */
+  lastChars?: Maybe<Scalars['String']>;
+  /** Name of the gift card. */
+  name: Scalars['String'];
+};
+
+export type GiftCardPaymentMethodDetailsInput = {
+  /**
+   * Brand of the gift card used for the transaction. Max length is 40 characters.
+   *
+   * Added in Saleor 3.23.
+   */
+  brand?: InputMaybe<Scalars['String']>;
+  /**
+   * Last characters of the gift card used for the transaction. Max length is 4 characters.
+   *
+   * Added in Saleor 3.23.
+   */
+  lastChars?: InputMaybe<Scalars['String']>;
+  /**
+   * Name of the payment method used for the transaction. Max length is 256 characters.
+   *
+   * Added in Saleor 3.23.
+   */
+  name: Scalars['String'];
 };
 
 /**
@@ -9339,6 +9192,8 @@ export enum GiftCardSortField {
   CurrentBalance = 'CURRENT_BALANCE',
   /** Sort gift cards by product. */
   Product = 'PRODUCT',
+  /** Sort gift cards by rank. Note: This option is available only with the `search` filter. */
+  Rank = 'RANK',
   /** Sort gift cards by used by. */
   UsedBy = 'USED_BY'
 }
@@ -9510,11 +9365,6 @@ export type GroupCountableEdge = {
   /** The item at the end of the edge. */
   node: Group;
 };
-
-export enum HttpMethod {
-  Get = 'GET',
-  Post = 'POST'
-}
 
 /** Thumbnail formats for icon images. */
 export enum IconThumbnailFormatEnum {
@@ -12791,10 +12641,19 @@ export type Mutation = {
    */
   checkoutCustomerNoteUpdate?: Maybe<CheckoutCustomerNoteUpdate>;
   /**
+   * Deletes a checkout.
+   *
+   * Added in Saleor 3.23.
+   *
+   * Requires one of the following permissions: MANAGE_CHECKOUTS.
+   */
+  checkoutDelete?: Maybe<CheckoutDelete>;
+  /**
    * Updates the delivery method (shipping method or pick up point) of the checkout. Updates the checkout shipping_address for click and collect delivery for a warehouse address.
    *
    * Triggers the following webhook events:
    * - SHIPPING_LIST_METHODS_FOR_CHECKOUT (sync): Triggered when updating the checkout delivery method with the external one.
+   * - CHECKOUT_FILTER_SHIPPING_METHODS (sync): Optionally triggered when cached filtered shipping methods are invalid.
    * - CHECKOUT_UPDATED (async): A checkout was updated.
    */
   checkoutDeliveryMethodUpdate?: Maybe<CheckoutDeliveryMethodUpdate>;
@@ -12862,6 +12721,7 @@ export type Mutation = {
    *
    * Triggers the following webhook events:
    * - SHIPPING_LIST_METHODS_FOR_CHECKOUT (sync): Triggered when updating the checkout shipping method with the external one.
+   * - CHECKOUT_FILTER_SHIPPING_METHODS (sync): Optionally triggered when cached filtered shipping methods are invalid.
    * - CHECKOUT_UPDATED (async): A checkout was updated.
    * @deprecated Use `checkoutDeliveryMethodUpdate` instead.
    */
@@ -13002,36 +12862,28 @@ export type Mutation = {
    * Deletes selected warehouse.
    *
    * Requires one of the following permissions: MANAGE_PRODUCTS.
+   *
+   * Triggers the following webhook events:
+   * - WAREHOUSE_DELETED (async): A warehouse is deleted.
+   * - PRODUCT_VARIANT_OUT_OF_STOCK (async): A product variant stock is removed together with the deleted warehouse.
+   * - PRODUCT_VARIANT_OUT_OF_STOCK_IN_CHANNEL (async): A product variant is out of stock in a channel (non click-and-collect warehouses).
+   *
+   * Note: Triggered only when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+   * - PRODUCT_VARIANT_OUT_OF_STOCK_FOR_CLICK_AND_COLLECT (async): A product variant is out of stock in a channel (click-and-collect warehouses).
+   *
+   * Note: Triggered only when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
    */
   deleteWarehouse?: Maybe<WarehouseDelete>;
   /**
-   * Create new digital content. This mutation must be sent as a `multipart` request. More detailed specs of the upload format can be found here: https://github.com/jaydenseric/graphql-multipart-request-spec
+   * Calculates available delivery options for a checkout.
    *
-   * Requires one of the following permissions: MANAGE_PRODUCTS.
-   * @deprecated Support for Digital Content is deprecated and will be removed in Saleor v3.23.0. This functionality is legacy and undocumented, and is not part of the supported API. Users should not rely on this behavior.
-   */
-  digitalContentCreate?: Maybe<DigitalContentCreate>;
-  /**
-   * Remove digital content assigned to given variant.
+   * Added in Saleor 3.23.
    *
-   * Requires one of the following permissions: MANAGE_PRODUCTS.
-   * @deprecated Support for Digital Content is deprecated and will be removed in Saleor v3.23.0. This functionality is legacy and undocumented, and is not part of the supported API. Users should not rely on this behavior.
+   * Triggers the following webhook events:
+   * - SHIPPING_LIST_METHODS_FOR_CHECKOUT (sync): Triggered to fetch external shipping methods.
+   * - CHECKOUT_FILTER_SHIPPING_METHODS (sync): Triggered to filter shipping methods.
    */
-  digitalContentDelete?: Maybe<DigitalContentDelete>;
-  /**
-   * Updates digital content.
-   *
-   * Requires one of the following permissions: MANAGE_PRODUCTS.
-   * @deprecated Support for Digital Content is deprecated and will be removed in Saleor v3.23.0. This functionality is legacy and undocumented, and is not part of the supported API. Users should not rely on this behavior.
-   */
-  digitalContentUpdate?: Maybe<DigitalContentUpdate>;
-  /**
-   * Generate new URL to digital content.
-   *
-   * Requires one of the following permissions: MANAGE_PRODUCTS.
-   * @deprecated Support for Digital Content is deprecated and will be removed in Saleor v3.23.0. This functionality is legacy and undocumented, and is not part of the supported API. Users should not rely on this behavior.
-   */
-  digitalContentUrlCreate?: Maybe<DigitalContentUrlCreate>;
+  deliveryOptionsCalculate?: Maybe<DeliveryOptionsCalculate>;
   /**
    * Deletes draft orders.
    *
@@ -13083,6 +12935,7 @@ export type Mutation = {
    * Triggers the following webhook events:
    * - NOTIFY_USER (async): A notification for the exported file.
    * - GIFT_CARD_EXPORT_COMPLETED (async): A notification for the exported file.
+   * @deprecated Export functionality is deprecated and will be removed. All data can be fetched via the GraphQL API and parsed into the desired format by apps or external tools.
    */
   exportGiftCards?: Maybe<ExportGiftCards>;
   /**
@@ -13093,6 +12946,7 @@ export type Mutation = {
    * Triggers the following webhook events:
    * - NOTIFY_USER (async): A notification for the exported file.
    * - PRODUCT_EXPORT_COMPLETED (async): A notification for the exported file.
+   * @deprecated Export functionality is deprecated and will be removed. All data can be fetched via the GraphQL API and parsed into the desired format by apps or external tools.
    */
   exportProducts?: Maybe<ExportProducts>;
   /**
@@ -13100,12 +12954,11 @@ export type Mutation = {
    *
    * Added in Saleor 3.18.
    *
-   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
-   *
    * Requires one of the following permissions: MANAGE_DISCOUNTS.
    *
    * Triggers the following webhook events:
    * - VOUCHER_CODE_EXPORT_COMPLETED (async): A notification for the exported file.
+   * @deprecated Export functionality is deprecated and will be removed. All data can be fetched via the GraphQL API and parsed into the desired format by apps or external tools.
    */
   exportVoucherCodes?: Maybe<ExportVoucherCodes>;
   /** Prepare external authentication URL for user by custom plugin. */
@@ -13963,18 +13816,53 @@ export type Mutation = {
    * Creates stocks for product variant.
    *
    * Requires one of the following permissions: MANAGE_PRODUCTS.
+   *
+   * Triggers the following webhook events:
+   * - PRODUCT_VARIANT_BACK_IN_STOCK (async): A product variant stock is created in a warehouse.
+   * - PRODUCT_VARIANT_BACK_IN_STOCK_IN_CHANNEL (async): A product variant is back in stock in a channel (non click-and-collect warehouses).
+   *
+   * Note: Triggered only when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+   * - PRODUCT_VARIANT_BACK_IN_STOCK_FOR_CLICK_AND_COLLECT (async): A product variant is back in stock in a channel (click-and-collect warehouses).
+   *
+   * Note: Triggered only when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
    */
   productVariantStocksCreate?: Maybe<ProductVariantStocksCreate>;
   /**
    * Deletes stocks from product variant.
    *
    * Requires one of the following permissions: MANAGE_PRODUCTS.
+   *
+   * Triggers the following webhook events:
+   * - PRODUCT_VARIANT_OUT_OF_STOCK (async): A product variant stock is deleted from a warehouse.
+   * - PRODUCT_VARIANT_OUT_OF_STOCK_IN_CHANNEL (async): A product variant is out of stock in a channel (non click-and-collect warehouses).
+   *
+   * Note: Triggered only when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+   * - PRODUCT_VARIANT_OUT_OF_STOCK_FOR_CLICK_AND_COLLECT (async): A product variant is out of stock in a channel (click-and-collect warehouses).
+   *
+   * Note: Triggered only when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
    */
   productVariantStocksDelete?: Maybe<ProductVariantStocksDelete>;
   /**
    * Updates stocks for product variant.
    *
    * Requires one of the following permissions: MANAGE_PRODUCTS.
+   *
+   * Triggers the following webhook events:
+   * - PRODUCT_VARIANT_STOCK_UPDATED (async): A product variant stock is updated.
+   * - PRODUCT_VARIANT_BACK_IN_STOCK (async): A product variant stock transitioned from no availability to available quantity.
+   * - PRODUCT_VARIANT_OUT_OF_STOCK (async): A product variant stock transitioned from available quantity to no availability.
+   * - PRODUCT_VARIANT_BACK_IN_STOCK_IN_CHANNEL (async): A product variant is back in stock in a channel (non click-and-collect warehouses).
+   *
+   * Note: Triggered only when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+   * - PRODUCT_VARIANT_OUT_OF_STOCK_IN_CHANNEL (async): A product variant is out of stock in a channel (non click-and-collect warehouses).
+   *
+   * Note: Triggered only when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+   * - PRODUCT_VARIANT_BACK_IN_STOCK_FOR_CLICK_AND_COLLECT (async): A product variant is back in stock in a channel (click-and-collect warehouses).
+   *
+   * Note: Triggered only when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+   * - PRODUCT_VARIANT_OUT_OF_STOCK_FOR_CLICK_AND_COLLECT (async): A product variant is out of stock in a channel (click-and-collect warehouses).
+   *
+   * Note: Triggered only when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
    */
   productVariantStocksUpdate?: Maybe<ProductVariantStocksUpdate>;
   /**
@@ -15003,6 +14891,11 @@ export type MutationCheckoutCustomerNoteUpdateArgs = {
 };
 
 
+export type MutationCheckoutDeleteArgs = {
+  id: Scalars['ID'];
+};
+
+
 export type MutationCheckoutDeliveryMethodUpdateArgs = {
   deliveryMethodId?: InputMaybe<Scalars['ID']>;
   id?: InputMaybe<Scalars['ID']>;
@@ -15207,25 +15100,8 @@ export type MutationDeleteWarehouseArgs = {
 };
 
 
-export type MutationDigitalContentCreateArgs = {
-  input: DigitalContentUploadInput;
-  variantId: Scalars['ID'];
-};
-
-
-export type MutationDigitalContentDeleteArgs = {
-  variantId: Scalars['ID'];
-};
-
-
-export type MutationDigitalContentUpdateArgs = {
-  input: DigitalContentInput;
-  variantId: Scalars['ID'];
-};
-
-
-export type MutationDigitalContentUrlCreateArgs = {
-  input: DigitalContentUrlCreateInput;
+export type MutationDeliveryOptionsCalculateArgs = {
+  id: Scalars['ID'];
 };
 
 
@@ -16582,16 +16458,6 @@ export enum NavigationType {
   /** Secondary storefront navigation. */
   Secondary = 'SECONDARY'
 }
-
-/** Represents the NEW_TAB target options for an app extension. */
-export type NewTabTargetOptions = {
-  __typename?: 'NewTabTargetOptions';
-  /**
-   * HTTP method for New Tab target (GET or POST)
-   * @deprecated Use `settings` field directly.
-   */
-  method: HttpMethod;
-};
 
 /** An object with an ID */
 export type Node = {
@@ -18285,7 +18151,6 @@ export type OrderLine = Node & ObjectWithMetadata & {
    * Requires one of the following permissions: MANAGE_PRODUCTS, MANAGE_ORDERS.
    */
   allocations?: Maybe<Array<Allocation>>;
-  digitalContentUrl?: Maybe<DigitalContentUrl>;
   /**
    * List of applied discounts
    *
@@ -19505,6 +19370,8 @@ export enum PageSortField {
   PublicationDate = 'PUBLICATION_DATE',
   /** Sort pages by publication date. */
   PublishedAt = 'PUBLISHED_AT',
+  /** Sort pages by rank. Note: This option is available only with the `search` filter. */
+  Rank = 'RANK',
   /** Sort pages by slug. */
   Slug = 'SLUG',
   /** Sort pages by title. */
@@ -19859,7 +19726,7 @@ export type PageTypeUpdateInput = {
   addAttributes?: InputMaybe<Array<Scalars['ID']>>;
   /** Name of the page type. */
   name?: InputMaybe<Scalars['String']>;
-  /** List of attribute IDs to be assigned to the page type. */
+  /** List of attribute IDs to be unassigned from the page type. */
   removeAttributes?: InputMaybe<Array<Scalars['ID']>>;
   /** Page type slug. */
   slug?: InputMaybe<Scalars['String']>;
@@ -19938,6 +19805,21 @@ export type PasswordChange = {
   user?: Maybe<User>;
 };
 
+/**
+ * Controls whether password-based authentication is allowed.
+ *
+ *     ENABLED - any user can log in with a password. This is the default behavior.
+ *     CUSTOMERS_ONLY - only customer users can log in with a password.
+ *         If a staff user logs in with a password, they will be treated as a customer
+ *         — the issued token will not contain any staff permissions.
+ *     DISABLED - no user can log in with a password.
+ */
+export enum PasswordLoginModeEnum {
+  CustomersOnly = 'CUSTOMERS_ONLY',
+  Disabled = 'DISABLED',
+  Enabled = 'ENABLED'
+}
+
 /** Represents a payment of a given type. */
 export type Payment = Node & ObjectWithMetadata & {
   __typename?: 'Payment';
@@ -19995,8 +19877,6 @@ export type Payment = Node & ObjectWithMetadata & {
   modified: Scalars['DateTime'];
   /** Order associated with a payment. */
   order?: Maybe<Order>;
-  /** Informs whether this is a partial payment. */
-  partial: Scalars['Boolean'];
   /** Type of method used for payment. */
   paymentMethodType: Scalars['String'];
   /** List of private metadata items. Requires staff permissions to access. */
@@ -20429,13 +20309,19 @@ export type PaymentMethodDetailsFilterInput = {
 };
 
 /**
- * Details of the payment method used for the transaction. One of `card` or `other` is required.
+ * Details of the payment method used for the transaction. One of `card`, `other`, or `giftCard` is required.
  *
  * Added in Saleor 3.22.
  */
 export type PaymentMethodDetailsInput = {
   /** Details of the card payment method used for the transaction. */
   card?: InputMaybe<CardPaymentMethodDetailsInput>;
+  /**
+   * Details of the gift card payment method used for the transaction.
+   *
+   * Added in Saleor 3.23.
+   */
+  giftCard?: InputMaybe<GiftCardPaymentMethodDetailsInput>;
   /** Details of the non-card payment method used for this transaction. */
   other?: InputMaybe<OtherPaymentMethodDetailsInput>;
 };
@@ -20590,9 +20476,11 @@ export enum PaymentMethodTokenizationResult {
  *     The following types are possible:
  *     CARD - represents a card payment method.
  *     OTHER - represents any payment method that is not a card payment.
+ *     GIFT_CARD - represents a gift card payment method.
  */
 export enum PaymentMethodTypeEnum {
   Card = 'CARD',
+  GiftCard = 'GIFT_CARD',
   Other = 'OTHER'
 }
 
@@ -21479,6 +21367,7 @@ export enum ProductBulkCreateErrorCode {
   AttributeVariantsDisabled = 'ATTRIBUTE_VARIANTS_DISABLED',
   Blank = 'BLANK',
   DuplicatedInputItem = 'DUPLICATED_INPUT_ITEM',
+  FileSizeLimitExceeded = 'FILE_SIZE_LIMIT_EXCEEDED',
   GraphqlError = 'GRAPHQL_ERROR',
   Invalid = 'INVALID',
   InvalidPrice = 'INVALID_PRICE',
@@ -21910,6 +21799,7 @@ export enum ProductErrorCode {
   AttributeVariantsDisabled = 'ATTRIBUTE_VARIANTS_DISABLED',
   CannotManageProductWithoutVariant = 'CANNOT_MANAGE_PRODUCT_WITHOUT_VARIANT',
   DuplicatedInputItem = 'DUPLICATED_INPUT_ITEM',
+  FileSizeLimitExceeded = 'FILE_SIZE_LIMIT_EXCEEDED',
   GraphqlError = 'GRAPHQL_ERROR',
   Invalid = 'INVALID',
   InvalidFileType = 'INVALID_FILE_TYPE',
@@ -21924,8 +21814,7 @@ export enum ProductErrorCode {
   Required = 'REQUIRED',
   Unique = 'UNIQUE',
   UnsupportedMediaProvider = 'UNSUPPORTED_MEDIA_PROVIDER',
-  UnsupportedMimeType = 'UNSUPPORTED_MIME_TYPE',
-  VariantNoDigitalContent = 'VARIANT_NO_DIGITAL_CONTENT'
+  UnsupportedMimeType = 'UNSUPPORTED_MIME_TYPE'
 }
 
 /** Event sent when product export is completed. */
@@ -22546,11 +22435,17 @@ export type ProductType = Node & ObjectWithMetadata & {
    * Requires one of the following permissions: MANAGE_PRODUCTS.
    */
   availableAttributes?: Maybe<AttributeCountableConnection>;
-  /** Whether the product type has variants. */
+  /**
+   * Whether the product type has variants.
+   * @deprecated This is a leftover from the past Simple/Configurable product distinction. Products can have multiple variants regardless of this setting.
+   */
   hasVariants: Scalars['Boolean'];
   /** The ID of the product type. */
   id: Scalars['ID'];
-  /** Whether the product type is digital. */
+  /**
+   * Whether the product type is digital - doesn't have any effect, it's present for backward-compatibility.
+   * @deprecated Will be removed in v3.24.0, use metadata or attributes instead.
+   */
   isDigital: Scalars['Boolean'];
   /** Whether shipping is required for this product type. */
   isShippingRequired: Scalars['Boolean'];
@@ -22728,11 +22623,13 @@ export type ProductTypeDelete = {
 };
 
 export enum ProductTypeEnum {
+  /** @deprecated DIGITAL will removed in Saleor 3.24.0, use metadata or attributes instead. */
   Digital = 'DIGITAL',
   Shippable = 'SHIPPABLE'
 }
 
 export type ProductTypeFilterInput = {
+  /** @deprecated The field has no effect on the API behavior. This is a leftover from the past Simple/Configurable product distinction. Products can have multiple variants regardless of this setting. */
   configurable?: InputMaybe<ProductTypeConfigurable>;
   ids?: InputMaybe<Array<Scalars['ID']>>;
   kind?: InputMaybe<ProductTypeKindEnum>;
@@ -22743,9 +22640,12 @@ export type ProductTypeFilterInput = {
 };
 
 export type ProductTypeInput = {
-  /** Determines if product of this type has multiple variants. This option mainly simplifies product management in the dashboard. There is always at least one variant created under the hood. */
+  /**
+   * Determines if product of this type has multiple variants. This option mainly simplifies product management in the dashboard. There is always at least one variant created under the hood.
+   * @deprecated The field has no effect on the API behavior. This is a leftover from the past Simple/Configurable product distinction. Products can have multiple variants regardless of this setting.
+   */
   hasVariants?: InputMaybe<Scalars['Boolean']>;
-  /** Determines if products are digital. */
+  /** Determines if products are digital - doesn't have any effect, it's present for backward-compatibility. */
   isDigital?: InputMaybe<Scalars['Boolean']>;
   /** Determines if shipping is required for products of this variant. */
   isShippingRequired?: InputMaybe<Scalars['Boolean']>;
@@ -22790,7 +22690,10 @@ export type ProductTypeReorderAttributes = {
 };
 
 export enum ProductTypeSortField {
-  /** Sort products by type. */
+  /**
+   * Sort products by type.
+   * @deprecated DIGITAL will removed in Saleor 3.24.0. Use SHIPPING_REQUIRED instead.
+   */
   Digital = 'DIGITAL',
   /** Sort products by name. */
   Name = 'NAME',
@@ -22884,12 +22787,6 @@ export type ProductVariant = Node & ObjectWithAttributes & ObjectWithMetadata & 
   channelListings?: Maybe<Array<ProductVariantChannelListing>>;
   /** The date and time when the product variant was created. */
   created: Scalars['DateTime'];
-  /**
-   * Digital content for the product variant.
-   *
-   * Requires one of the following permissions: MANAGE_PRODUCTS.
-   */
-  digitalContent?: Maybe<DigitalContent>;
   /** External ID of this product. */
   externalReference?: Maybe<Scalars['String']>;
   /** The ID of the product variant. */
@@ -23060,6 +22957,52 @@ export type ProductVariantBackInStock = Event & {
 /** Event sent when product variant is back in stock. */
 export type ProductVariantBackInStockProductVariantArgs = {
   channel?: InputMaybe<Scalars['String']>;
+};
+
+/**
+ * Event sent when a product variant becomes available again across click-and-collect warehouses in a channel.
+ *
+ * Note: Only triggered when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+ *
+ * Added in Saleor 3.23.
+ */
+export type ProductVariantBackInStockForClickAndCollect = Event & {
+  __typename?: 'ProductVariantBackInStockForClickAndCollect';
+  /** The channel the stock availability changed in. */
+  channel: Channel;
+  /** Time of the event. */
+  issuedAt?: Maybe<Scalars['DateTime']>;
+  /** The user or application that triggered the event. */
+  issuingPrincipal?: Maybe<IssuingPrincipal>;
+  /** The product variant the event relates to. */
+  productVariant: ProductVariant;
+  /** The application receiving the webhook. */
+  recipient?: Maybe<App>;
+  /** Saleor version that triggered the event. */
+  version?: Maybe<Scalars['String']>;
+};
+
+/**
+ * Event sent when a product variant becomes available again across non click-and-collect warehouses in a channel.
+ *
+ * Note: Only triggered when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+ *
+ * Added in Saleor 3.23.
+ */
+export type ProductVariantBackInStockInChannel = Event & {
+  __typename?: 'ProductVariantBackInStockInChannel';
+  /** The channel the stock availability changed in. */
+  channel: Channel;
+  /** Time of the event. */
+  issuedAt?: Maybe<Scalars['DateTime']>;
+  /** The user or application that triggered the event. */
+  issuingPrincipal?: Maybe<IssuingPrincipal>;
+  /** The product variant the event relates to. */
+  productVariant: ProductVariant;
+  /** The application receiving the webhook. */
+  recipient?: Maybe<App>;
+  /** Saleor version that triggered the event. */
+  version?: Maybe<Scalars['String']>;
 };
 
 /**
@@ -23296,7 +23239,9 @@ export type ProductVariantChannelListing = Node & {
   /** The price of the variant. */
   price?: Maybe<Money>;
   /**
-   * Prior price of the variant used for discount calculations.
+   * Previous price of the variant in channel. Useful for providing promotion information required by customer protection laws such as EU Omnibus directive.
+   *
+   *  Warning: This field is not updated automatically. Use Channel Listings mutation to update it manually.
    *
    * Added in Saleor 3.21.
    */
@@ -23463,6 +23408,31 @@ export type ProductVariantDeletedProductVariantArgs = {
   channel?: InputMaybe<Scalars['String']>;
 };
 
+/**
+ * Event sent when product variant discounted price is recalculated.
+ *
+ * Added in Saleor 3.22.
+ */
+export type ProductVariantDiscountedPriceUpdated = Event & {
+  __typename?: 'ProductVariantDiscountedPriceUpdated';
+  /** The channel where the price changed. */
+  channel: Channel;
+  /** Time of the event. */
+  issuedAt?: Maybe<Scalars['DateTime']>;
+  /** The user or application that triggered the event. */
+  issuingPrincipal?: Maybe<IssuingPrincipal>;
+  /** The new discounted price. */
+  newPrice: Money;
+  /** The previous discounted price. */
+  previousPrice: Money;
+  /** The product variant the event relates to. */
+  productVariant: ProductVariant;
+  /** The application receiving the webhook. */
+  recipient?: Maybe<App>;
+  /** Saleor version that triggered the event. */
+  version?: Maybe<Scalars['String']>;
+};
+
 export type ProductVariantFilterInput = {
   isPreorder?: InputMaybe<Scalars['Boolean']>;
   metadata?: InputMaybe<Array<MetadataFilter>>;
@@ -23544,6 +23514,52 @@ export type ProductVariantOutOfStock = Event & {
 /** Event sent when product variant is out of stock. */
 export type ProductVariantOutOfStockProductVariantArgs = {
   channel?: InputMaybe<Scalars['String']>;
+};
+
+/**
+ * Event sent when a product variant becomes out of stock across all click-and-collect warehouses in a channel.
+ *
+ * Note: Only triggered when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+ *
+ * Added in Saleor 3.23.
+ */
+export type ProductVariantOutOfStockForClickAndCollect = Event & {
+  __typename?: 'ProductVariantOutOfStockForClickAndCollect';
+  /** The channel the stock availability changed in. */
+  channel: Channel;
+  /** Time of the event. */
+  issuedAt?: Maybe<Scalars['DateTime']>;
+  /** The user or application that triggered the event. */
+  issuingPrincipal?: Maybe<IssuingPrincipal>;
+  /** The product variant the event relates to. */
+  productVariant: ProductVariant;
+  /** The application receiving the webhook. */
+  recipient?: Maybe<App>;
+  /** Saleor version that triggered the event. */
+  version?: Maybe<Scalars['String']>;
+};
+
+/**
+ * Event sent when a product variant becomes out of stock across all non click-and-collect warehouses in a channel.
+ *
+ * Note: Only triggered when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+ *
+ * Added in Saleor 3.23.
+ */
+export type ProductVariantOutOfStockInChannel = Event & {
+  __typename?: 'ProductVariantOutOfStockInChannel';
+  /** The channel the stock availability changed in. */
+  channel: Channel;
+  /** Time of the event. */
+  issuedAt?: Maybe<Scalars['DateTime']>;
+  /** The user or application that triggered the event. */
+  issuingPrincipal?: Maybe<IssuingPrincipal>;
+  /** The product variant the event relates to. */
+  productVariant: ProductVariant;
+  /** The application receiving the webhook. */
+  recipient?: Maybe<App>;
+  /** Saleor version that triggered the event. */
+  version?: Maybe<Scalars['String']>;
 };
 
 /**
@@ -23637,6 +23653,15 @@ export type ProductVariantStockUpdatedProductVariantArgs = {
  * Creates stocks for product variant.
  *
  * Requires one of the following permissions: MANAGE_PRODUCTS.
+ *
+ * Triggers the following webhook events:
+ * - PRODUCT_VARIANT_BACK_IN_STOCK (async): A product variant stock is created in a warehouse.
+ * - PRODUCT_VARIANT_BACK_IN_STOCK_IN_CHANNEL (async): A product variant is back in stock in a channel (non click-and-collect warehouses).
+ *
+ * Note: Triggered only when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+ * - PRODUCT_VARIANT_BACK_IN_STOCK_FOR_CLICK_AND_COLLECT (async): A product variant is back in stock in a channel (click-and-collect warehouses).
+ *
+ * Note: Triggered only when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
  */
 export type ProductVariantStocksCreate = {
   __typename?: 'ProductVariantStocksCreate';
@@ -23651,6 +23676,15 @@ export type ProductVariantStocksCreate = {
  * Deletes stocks from product variant.
  *
  * Requires one of the following permissions: MANAGE_PRODUCTS.
+ *
+ * Triggers the following webhook events:
+ * - PRODUCT_VARIANT_OUT_OF_STOCK (async): A product variant stock is deleted from a warehouse.
+ * - PRODUCT_VARIANT_OUT_OF_STOCK_IN_CHANNEL (async): A product variant is out of stock in a channel (non click-and-collect warehouses).
+ *
+ * Note: Triggered only when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+ * - PRODUCT_VARIANT_OUT_OF_STOCK_FOR_CLICK_AND_COLLECT (async): A product variant is out of stock in a channel (click-and-collect warehouses).
+ *
+ * Note: Triggered only when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
  */
 export type ProductVariantStocksDelete = {
   __typename?: 'ProductVariantStocksDelete';
@@ -23665,6 +23699,23 @@ export type ProductVariantStocksDelete = {
  * Updates stocks for product variant.
  *
  * Requires one of the following permissions: MANAGE_PRODUCTS.
+ *
+ * Triggers the following webhook events:
+ * - PRODUCT_VARIANT_STOCK_UPDATED (async): A product variant stock is updated.
+ * - PRODUCT_VARIANT_BACK_IN_STOCK (async): A product variant stock transitioned from no availability to available quantity.
+ * - PRODUCT_VARIANT_OUT_OF_STOCK (async): A product variant stock transitioned from available quantity to no availability.
+ * - PRODUCT_VARIANT_BACK_IN_STOCK_IN_CHANNEL (async): A product variant is back in stock in a channel (non click-and-collect warehouses).
+ *
+ * Note: Triggered only when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+ * - PRODUCT_VARIANT_OUT_OF_STOCK_IN_CHANNEL (async): A product variant is out of stock in a channel (non click-and-collect warehouses).
+ *
+ * Note: Triggered only when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+ * - PRODUCT_VARIANT_BACK_IN_STOCK_FOR_CLICK_AND_COLLECT (async): A product variant is back in stock in a channel (click-and-collect warehouses).
+ *
+ * Note: Triggered only when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+ * - PRODUCT_VARIANT_OUT_OF_STOCK_FOR_CLICK_AND_COLLECT (async): A product variant is out of stock in a channel (click-and-collect warehouses).
+ *
+ * Note: Triggered only when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
  */
 export type ProductVariantStocksUpdate = {
   __typename?: 'ProductVariantStocksUpdate';
@@ -24969,20 +25020,6 @@ export type Query = {
    */
   customers?: Maybe<UserCountableConnection>;
   /**
-   * Look up digital content by ID.
-   *
-   * Requires one of the following permissions: MANAGE_PRODUCTS.
-   * @deprecated Support for Digital Content is deprecated and will be removed in Saleor v3.23.0. This functionality is legacy and undocumented, and is not part of the supported API. Users should not rely on this behavior.
-   */
-  digitalContent?: Maybe<DigitalContent>;
-  /**
-   * List of digital content.
-   *
-   * Requires one of the following permissions: MANAGE_PRODUCTS.
-   * @deprecated Support for Digital Content is deprecated and will be removed in Saleor v3.23.0. This functionality is legacy and undocumented, and is not part of the supported API. Users should not rely on this behavior.
-   */
-  digitalContents?: Maybe<DigitalContentCountableConnection>;
-  /**
    * List of draft orders. The query will not initiate any external requests, including filtering available shipping methods, or performing external tax calculations.
    *
    * Requires one of the following permissions: MANAGE_ORDERS.
@@ -25305,7 +25342,7 @@ export type Query = {
 
 
 export type Query_EntitiesArgs = {
-  representations?: InputMaybe<Array<InputMaybe<Scalars['_Any']>>>;
+  representations: Array<Scalars['_Any']>;
 };
 
 
@@ -25450,19 +25487,6 @@ export type QueryCustomersArgs = {
   search?: InputMaybe<Scalars['String']>;
   sortBy?: InputMaybe<UserSortingInput>;
   where?: InputMaybe<CustomerWhereInput>;
-};
-
-
-export type QueryDigitalContentArgs = {
-  id: Scalars['ID'];
-};
-
-
-export type QueryDigitalContentsArgs = {
-  after?: InputMaybe<Scalars['String']>;
-  before?: InputMaybe<Scalars['String']>;
-  first?: InputMaybe<Scalars['Int']>;
-  last?: InputMaybe<Scalars['Int']>;
 };
 
 
@@ -25859,6 +25883,7 @@ export type QueryTransactionsArgs = {
   before?: InputMaybe<Scalars['String']>;
   first?: InputMaybe<Scalars['Int']>;
   last?: InputMaybe<Scalars['Int']>;
+  sortBy?: InputMaybe<TransactionSortingInput>;
   where?: InputMaybe<TransactionWhereInput>;
 };
 
@@ -26010,7 +26035,7 @@ export type RefundSettingsUpdate = {
   __typename?: 'RefundSettingsUpdate';
   errors: Array<RefundSettingsUpdateError>;
   /** Refund settings. */
-  refundSettings: RefundSettings;
+  refundSettings?: Maybe<RefundSettings>;
   /** @deprecated Use `errors` field instead. */
   refundSettingsErrors: Array<RefundSettingsUpdateError>;
 };
@@ -26795,7 +26820,10 @@ export type ShippingMethod = Node & ObjectWithMetadata & {
   id: Scalars['ID'];
   /** Maximum delivery days for this shipping method. */
   maximumDeliveryDays?: Maybe<Scalars['Int']>;
-  /** Maximum order price for this shipping method. */
+  /**
+   * Maximum order price for this shipping method.
+   * @deprecated Field no longer supported
+   */
   maximumOrderPrice?: Maybe<Money>;
   /**
    * Maximum order weight for this shipping method.
@@ -26816,7 +26844,10 @@ export type ShippingMethod = Node & ObjectWithMetadata & {
   metafields?: Maybe<Scalars['Metadata']>;
   /** Minimum delivery days for this shipping method. */
   minimumDeliveryDays?: Maybe<Scalars['Int']>;
-  /** Minimal order price for this shipping method. */
+  /**
+   * Minimal order price for this shipping method.
+   * @deprecated Field no longer supported
+   */
   minimumOrderPrice?: Maybe<Money>;
   /**
    * Minimum order weight for this shipping method.
@@ -27617,12 +27648,6 @@ export type Shop = ObjectWithMetadata & {
    * Requires one of the following permissions: MANAGE_SETTINGS.
    */
   allowLoginWithoutConfirmation?: Maybe<Scalars['Boolean']>;
-  /**
-   * Enable automatic fulfillment for all digital products.
-   *
-   * Requires one of the following permissions: MANAGE_SETTINGS.
-   */
-  automaticFulfillmentDigitalProducts?: Maybe<Scalars['Boolean']>;
   /** List of available external authentications. */
   availableExternalAuthentications: Array<ExternalAuthentication>;
   /** List of available payment gateways. */
@@ -27656,18 +27681,6 @@ export type Shop = ObjectWithMetadata & {
   customerSetPasswordUrl?: Maybe<Scalars['String']>;
   /** Shop's default country. */
   defaultCountry?: Maybe<CountryDisplay>;
-  /**
-   * Default number of max downloads per digital content URL.
-   *
-   * Requires one of the following permissions: MANAGE_SETTINGS.
-   */
-  defaultDigitalMaxDownloads?: Maybe<Scalars['Int']>;
-  /**
-   * Default number of days which digital content URL will be valid.
-   *
-   * Requires one of the following permissions: MANAGE_SETTINGS.
-   */
-  defaultDigitalUrlValidDays?: Maybe<Scalars['Int']>;
   /**
    * Default shop's email sender's address.
    *
@@ -27737,6 +27750,12 @@ export type Shop = ObjectWithMetadata & {
   metafields?: Maybe<Scalars['Metadata']>;
   /** Shop's name. */
   name: Scalars['String'];
+  /**
+   * Controls whether password-based authentication is allowed.
+   *
+   * Added in Saleor 3.23.
+   */
+  passwordLoginMode: PasswordLoginModeEnum;
   /** List of available permissions. */
   permissions: Array<Permission>;
   /** List of possible phone prefixes. */
@@ -27783,6 +27802,12 @@ export type Shop = ObjectWithMetadata & {
   trackInventoryByDefault?: Maybe<Scalars['Boolean']>;
   /** Returns translated shop fields for the given language code. */
   translation?: Maybe<ShopTranslation>;
+  /**
+   * When enabled, stock availability is filtered by shipping zones and the destination address (legacy behavior). When disabled, stock availability is determined only by the direct warehouse-channel link, ignoring shipping zones.
+   *
+   * Added in Saleor 3.23.
+   */
+  useLegacyShippingZoneStockAvailability: Scalars['Boolean'];
   /**
    * Use legacy update webhook emission. When enabled, update webhooks (e.g. `customerUpdated`,`productVariantUpdated`) are sent even when only metadata changes. When disabled, update webhooks are not sent for metadata-only changes; only metadata-specific webhooks (e.g., `customerMetadataUpdated`, `productVariantMetadataUpdated`) are sent.
    *
@@ -27893,6 +27918,7 @@ export enum ShopErrorCode {
   GraphqlError = 'GRAPHQL_ERROR',
   Invalid = 'INVALID',
   NotFound = 'NOT_FOUND',
+  PasswordAuthRestriction = 'PASSWORD_AUTH_RESTRICTION',
   Required = 'REQUIRED',
   Unique = 'UNIQUE'
 }
@@ -27929,8 +27955,6 @@ export type ShopMetadataUpdated = Event & {
 export type ShopSettingsInput = {
   /** Enable possibility to login without account confirmation. */
   allowLoginWithoutConfirmation?: InputMaybe<Scalars['Boolean']>;
-  /** Enable automatic fulfillment for all digital products. */
-  automaticFulfillmentDigitalProducts?: InputMaybe<Scalars['Boolean']>;
   /**
    * Charge taxes on shipping.
    * @deprecated To enable taxes for a shipping method, assign a tax class to the shipping method with `shippingPriceCreate` or `shippingPriceUpdate` mutations.
@@ -27938,10 +27962,6 @@ export type ShopSettingsInput = {
   chargeTaxesOnShipping?: InputMaybe<Scalars['Boolean']>;
   /** URL of a view where customers can set their password. */
   customerSetPasswordUrl?: InputMaybe<Scalars['String']>;
-  /** Default number of max downloads per digital content URL. */
-  defaultDigitalMaxDownloads?: InputMaybe<Scalars['Int']>;
-  /** Default number of days which digital content URL will be valid. */
-  defaultDigitalUrlValidDays?: InputMaybe<Scalars['Int']>;
   /** Default email sender's address. */
   defaultMailSenderAddress?: InputMaybe<Scalars['String']>;
   /** Default email sender's name. */
@@ -27977,6 +27997,12 @@ export type ShopSettingsInput = {
    */
   metadata?: InputMaybe<Array<MetadataInput>>;
   /**
+   * Controls whether password-based authentication is allowed.
+   *
+   * Added in Saleor 3.23.
+   */
+  passwordLoginMode?: InputMaybe<PasswordLoginModeEnum>;
+  /**
    * When enabled, address fields that are not valid for a given country (according to Google's i18n address data) will be preserved instead of being removed during validation. Validation errors are still returned.
    *
    * Added in Saleor 3.22.
@@ -27994,6 +28020,12 @@ export type ShopSettingsInput = {
   reserveStockDurationAuthenticatedUser?: InputMaybe<Scalars['Int']>;
   /** This field is used as a default value for `ProductVariant.trackInventory`. */
   trackInventoryByDefault?: InputMaybe<Scalars['Boolean']>;
+  /**
+   * When enabled, stock availability is filtered by shipping zones and the destination address (legacy behavior). When disabled, stock availability is determined only by the direct warehouse-channel link, ignoring shipping zones.
+   *
+   * Added in Saleor 3.23.
+   */
+  useLegacyShippingZoneStockAvailability?: InputMaybe<Scalars['Boolean']>;
   /**
    * Use legacy update webhook emission. When enabled, update webhooks (e.g. `customerUpdated`,`productVariantUpdated`) are sent even when only metadata changes. When disabled, update webhooks are not sent for metadata-only changes; only metadata-specific webhooks (e.g., `customerMetadataUpdated`, `productVariantMetadataUpdated`) are sent.
    *
@@ -28775,6 +28807,54 @@ export type Subscription = {
    * Note: this API is currently in Feature Preview and can be subject to changes at later point.
    */
   orderUpdated?: Maybe<OrderUpdated>;
+  /**
+   * Event sent when a product variant becomes available again across click-and-collect warehouses in a channel.
+   *
+   * Note: Only triggered when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+   *
+   * Added in Saleor 3.23.
+   *
+   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   */
+  productVariantBackInStockForClickAndCollect?: Maybe<ProductVariantBackInStockForClickAndCollect>;
+  /**
+   * Event sent when a product variant becomes available again across non click-and-collect warehouses in a channel.
+   *
+   * Note: Only triggered when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+   *
+   * Added in Saleor 3.23.
+   *
+   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   */
+  productVariantBackInStockInChannel?: Maybe<ProductVariantBackInStockInChannel>;
+  /**
+   * Event sent when product variant discounted price is recalculated.
+   *
+   * Added in Saleor 3.22.
+   *
+   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   */
+  productVariantDiscountedPriceUpdated?: Maybe<ProductVariantDiscountedPriceUpdated>;
+  /**
+   * Event sent when a product variant becomes out of stock across all click-and-collect warehouses in a channel.
+   *
+   * Note: Only triggered when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+   *
+   * Added in Saleor 3.23.
+   *
+   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   */
+  productVariantOutOfStockForClickAndCollect?: Maybe<ProductVariantOutOfStockForClickAndCollect>;
+  /**
+   * Event sent when a product variant becomes out of stock across all non click-and-collect warehouses in a channel.
+   *
+   * Note: Only triggered when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+   *
+   * Added in Saleor 3.23.
+   *
+   * Note: this API is currently in Feature Preview and can be subject to changes at later point.
+   */
+  productVariantOutOfStockInChannel?: Maybe<ProductVariantOutOfStockInChannel>;
 };
 
 
@@ -28874,6 +28954,31 @@ export type SubscriptionOrderRefundedArgs = {
 
 
 export type SubscriptionOrderUpdatedArgs = {
+  channels?: InputMaybe<Array<Scalars['String']>>;
+};
+
+
+export type SubscriptionProductVariantBackInStockForClickAndCollectArgs = {
+  channels?: InputMaybe<Array<Scalars['String']>>;
+};
+
+
+export type SubscriptionProductVariantBackInStockInChannelArgs = {
+  channels?: InputMaybe<Array<Scalars['String']>>;
+};
+
+
+export type SubscriptionProductVariantDiscountedPriceUpdatedArgs = {
+  channels?: InputMaybe<Array<Scalars['String']>>;
+};
+
+
+export type SubscriptionProductVariantOutOfStockForClickAndCollectArgs = {
+  channels?: InputMaybe<Array<Scalars['String']>>;
+};
+
+
+export type SubscriptionProductVariantOutOfStockInChannelArgs = {
   channels?: InputMaybe<Array<Scalars['String']>>;
 };
 
@@ -29749,6 +29854,26 @@ export type TransactionEvent = Node & {
   type?: Maybe<TransactionEventTypeEnum>;
 };
 
+/**
+ * Filter input for transaction events data.
+ *
+ * Added in Saleor 3.23.
+ */
+export type TransactionEventFilterInput = {
+  /**
+   * Filter transaction events by created at date.
+   *
+   * Added in Saleor 3.23.
+   */
+  createdAt?: InputMaybe<DateTimeRangeInput>;
+  /**
+   * Filter transaction events by type.
+   *
+   * Added in Saleor 3.23.
+   */
+  type?: InputMaybe<TransactionEventTypeEnumFilterInput>;
+};
+
 export type TransactionEventInput = {
   /** The message related to the event. */
   message?: InputMaybe<Scalars['String']>;
@@ -29843,6 +29968,13 @@ export enum TransactionEventTypeEnum {
   RefundReverse = 'REFUND_REVERSE',
   RefundSuccess = 'REFUND_SUCCESS'
 }
+
+export type TransactionEventTypeEnumFilterInput = {
+  /** The value equal to. */
+  eq?: InputMaybe<TransactionEventTypeEnum>;
+  /** The value included in. */
+  oneOf?: InputMaybe<Array<TransactionEventTypeEnum>>;
+};
 
 /** Filter input for transactions. */
 export type TransactionFilterInput = {
@@ -30212,6 +30344,28 @@ export enum TransactionRequestRefundForGrantedRefundErrorCode {
   RefundIsPending = 'REFUND_IS_PENDING'
 }
 
+export enum TransactionSortField {
+  /**
+   * Sort transactions by creation date.
+   *
+   * Added in Saleor 3.23.
+   */
+  CreatedAt = 'CREATED_AT',
+  /**
+   * Sort transactions by modification date.
+   *
+   * Added in Saleor 3.23.
+   */
+  ModifiedAt = 'MODIFIED_AT'
+}
+
+export type TransactionSortingInput = {
+  /** Specifies the direction in which to sort transactions. */
+  direction: OrderDirection;
+  /** Sort transactions by the selected field. */
+  field: TransactionSortField;
+};
+
 /**
  * Update transaction.
  *
@@ -30288,7 +30442,25 @@ export type TransactionWhereInput = {
   OR?: InputMaybe<Array<TransactionWhereInput>>;
   /** Filter by app identifier. */
   appIdentifier?: InputMaybe<StringFilterInput>;
+  /**
+   * Filter transactions by created at date.
+   *
+   * Added in Saleor 3.23.
+   */
+  createdAt?: InputMaybe<DateTimeRangeInput>;
+  /**
+   * Filter by transaction events. Each list item represents conditions that must be satisfied by a single event. The filter matches transactions that have related events meeting all specified groups of conditions.
+   *
+   * Added in Saleor 3.23.
+   */
+  events?: InputMaybe<Array<TransactionEventFilterInput>>;
   ids?: InputMaybe<Array<Scalars['ID']>>;
+  /**
+   * Filter transactions by modified at date.
+   *
+   * Added in Saleor 3.23.
+   */
+  modifiedAt?: InputMaybe<DateTimeRangeInput>;
   /** Filter by PSP reference. */
   pspReference?: InputMaybe<StringFilterInput>;
 };
@@ -30777,7 +30949,9 @@ export enum UserSortField {
   /** Sort users by last name. */
   LastName = 'LAST_NAME',
   /** Sort users by order count. */
-  OrderCount = 'ORDER_COUNT'
+  OrderCount = 'ORDER_COUNT',
+  /** Sort users by rank. Note: This option is available only with the `search` filter. */
+  Rank = 'RANK'
 }
 
 export type UserSortingInput = {
@@ -31800,6 +31974,16 @@ export type WarehouseCreated = Event & {
  * Deletes selected warehouse.
  *
  * Requires one of the following permissions: MANAGE_PRODUCTS.
+ *
+ * Triggers the following webhook events:
+ * - WAREHOUSE_DELETED (async): A warehouse is deleted.
+ * - PRODUCT_VARIANT_OUT_OF_STOCK (async): A product variant stock is removed together with the deleted warehouse.
+ * - PRODUCT_VARIANT_OUT_OF_STOCK_IN_CHANNEL (async): A product variant is out of stock in a channel (non click-and-collect warehouses).
+ *
+ * Note: Triggered only when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+ * - PRODUCT_VARIANT_OUT_OF_STOCK_FOR_CLICK_AND_COLLECT (async): A product variant is out of stock in a channel (click-and-collect warehouses).
+ *
+ * Note: Triggered only when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
  */
 export type WarehouseDelete = {
   __typename?: 'WarehouseDelete';
@@ -32351,14 +32535,39 @@ export enum WebhookEventTypeAsyncEnum {
   ProductUpdated = 'PRODUCT_UPDATED',
   /** A product variant is back in stock. */
   ProductVariantBackInStock = 'PRODUCT_VARIANT_BACK_IN_STOCK',
+  /**
+   * A product variant becomes available again across click-and-collect warehouses in a channel.
+   *
+   * Note: Only triggered when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+   */
+  ProductVariantBackInStockForClickAndCollect = 'PRODUCT_VARIANT_BACK_IN_STOCK_FOR_CLICK_AND_COLLECT',
+  /**
+   * A product variant becomes available again across non click-and-collect warehouses in a channel.
+   *
+   * Note: Only triggered when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+   */
+  ProductVariantBackInStockInChannel = 'PRODUCT_VARIANT_BACK_IN_STOCK_IN_CHANNEL',
   /** A new product variant is created. */
   ProductVariantCreated = 'PRODUCT_VARIANT_CREATED',
   /** A product variant is deleted. Warning: this event will not be executed when parent product has been deleted. Check PRODUCT_DELETED. */
   ProductVariantDeleted = 'PRODUCT_VARIANT_DELETED',
+  ProductVariantDiscountedPriceUpdated = 'PRODUCT_VARIANT_DISCOUNTED_PRICE_UPDATED',
   /** A product variant metadata is updated. */
   ProductVariantMetadataUpdated = 'PRODUCT_VARIANT_METADATA_UPDATED',
   /** A product variant is out of stock. */
   ProductVariantOutOfStock = 'PRODUCT_VARIANT_OUT_OF_STOCK',
+  /**
+   * A product variant becomes out of stock across all click-and-collect warehouses in a channel.
+   *
+   * Note: Only triggered when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+   */
+  ProductVariantOutOfStockForClickAndCollect = 'PRODUCT_VARIANT_OUT_OF_STOCK_FOR_CLICK_AND_COLLECT',
+  /**
+   * A product variant becomes out of stock across all non click-and-collect warehouses in a channel.
+   *
+   * Note: Only triggered when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+   */
+  ProductVariantOutOfStockInChannel = 'PRODUCT_VARIANT_OUT_OF_STOCK_IN_CHANNEL',
   /** A product variant stock is updated */
   ProductVariantStockUpdated = 'PRODUCT_VARIANT_STOCK_UPDATED',
   /** A product variant is updated. */
@@ -32683,14 +32892,39 @@ export enum WebhookEventTypeEnum {
   ProductUpdated = 'PRODUCT_UPDATED',
   /** A product variant is back in stock. */
   ProductVariantBackInStock = 'PRODUCT_VARIANT_BACK_IN_STOCK',
+  /**
+   * A product variant becomes available again across click-and-collect warehouses in a channel.
+   *
+   * Note: Only triggered when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+   */
+  ProductVariantBackInStockForClickAndCollect = 'PRODUCT_VARIANT_BACK_IN_STOCK_FOR_CLICK_AND_COLLECT',
+  /**
+   * A product variant becomes available again across non click-and-collect warehouses in a channel.
+   *
+   * Note: Only triggered when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+   */
+  ProductVariantBackInStockInChannel = 'PRODUCT_VARIANT_BACK_IN_STOCK_IN_CHANNEL',
   /** A new product variant is created. */
   ProductVariantCreated = 'PRODUCT_VARIANT_CREATED',
   /** A product variant is deleted. Warning: this event will not be executed when parent product has been deleted. Check PRODUCT_DELETED. */
   ProductVariantDeleted = 'PRODUCT_VARIANT_DELETED',
+  ProductVariantDiscountedPriceUpdated = 'PRODUCT_VARIANT_DISCOUNTED_PRICE_UPDATED',
   /** A product variant metadata is updated. */
   ProductVariantMetadataUpdated = 'PRODUCT_VARIANT_METADATA_UPDATED',
   /** A product variant is out of stock. */
   ProductVariantOutOfStock = 'PRODUCT_VARIANT_OUT_OF_STOCK',
+  /**
+   * A product variant becomes out of stock across all click-and-collect warehouses in a channel.
+   *
+   * Note: Only triggered when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+   */
+  ProductVariantOutOfStockForClickAndCollect = 'PRODUCT_VARIANT_OUT_OF_STOCK_FOR_CLICK_AND_COLLECT',
+  /**
+   * A product variant becomes out of stock across all non click-and-collect warehouses in a channel.
+   *
+   * Note: Only triggered when the `useLegacyShippingZoneStockAvailability` shop setting is disabled.
+   */
+  ProductVariantOutOfStockInChannel = 'PRODUCT_VARIANT_OUT_OF_STOCK_IN_CHANNEL',
   /** A product variant stock is updated */
   ProductVariantStockUpdated = 'PRODUCT_VARIANT_STOCK_UPDATED',
   /** A product variant is updated. */
@@ -32928,10 +33162,15 @@ export enum WebhookSampleEventTypeEnum {
   ProductMetadataUpdated = 'PRODUCT_METADATA_UPDATED',
   ProductUpdated = 'PRODUCT_UPDATED',
   ProductVariantBackInStock = 'PRODUCT_VARIANT_BACK_IN_STOCK',
+  ProductVariantBackInStockForClickAndCollect = 'PRODUCT_VARIANT_BACK_IN_STOCK_FOR_CLICK_AND_COLLECT',
+  ProductVariantBackInStockInChannel = 'PRODUCT_VARIANT_BACK_IN_STOCK_IN_CHANNEL',
   ProductVariantCreated = 'PRODUCT_VARIANT_CREATED',
   ProductVariantDeleted = 'PRODUCT_VARIANT_DELETED',
+  ProductVariantDiscountedPriceUpdated = 'PRODUCT_VARIANT_DISCOUNTED_PRICE_UPDATED',
   ProductVariantMetadataUpdated = 'PRODUCT_VARIANT_METADATA_UPDATED',
   ProductVariantOutOfStock = 'PRODUCT_VARIANT_OUT_OF_STOCK',
+  ProductVariantOutOfStockForClickAndCollect = 'PRODUCT_VARIANT_OUT_OF_STOCK_FOR_CLICK_AND_COLLECT',
+  ProductVariantOutOfStockInChannel = 'PRODUCT_VARIANT_OUT_OF_STOCK_IN_CHANNEL',
   ProductVariantStockUpdated = 'PRODUCT_VARIANT_STOCK_UPDATED',
   ProductVariantUpdated = 'PRODUCT_VARIANT_UPDATED',
   PromotionCreated = 'PROMOTION_CREATED',
@@ -33068,16 +33307,6 @@ export enum WeightUnitsEnum {
   Tonne = 'TONNE'
 }
 
-/** Represents the WIDGET target options for an app extension. */
-export type WidgetTargetOptions = {
-  __typename?: 'WidgetTargetOptions';
-  /**
-   * HTTP method for Widget target (GET or POST)
-   * @deprecated Use `settings` field directly.
-   */
-  method: HttpMethod;
-};
-
 /** _Entity union as defined by Federation spec. */
 export type _Entity = Address | App | Category | Collection | Group | Order | PageType | Product | ProductMedia | ProductType | ProductVariant | User;
 
@@ -33166,6 +33395,8 @@ type BasicWebhookMetadata_CollectionMetadataUpdated_Fragment = { __typename?: 'C
 type BasicWebhookMetadata_CollectionUpdated_Fragment = { __typename?: 'CollectionUpdated', issuedAt?: any | null, version?: string | null };
 
 type BasicWebhookMetadata_CustomerCreated_Fragment = { __typename?: 'CustomerCreated', issuedAt?: any | null, version?: string | null };
+
+type BasicWebhookMetadata_CustomerDeleted_Fragment = { __typename?: 'CustomerDeleted', issuedAt?: any | null, version?: string | null };
 
 type BasicWebhookMetadata_CustomerMetadataUpdated_Fragment = { __typename?: 'CustomerMetadataUpdated', issuedAt?: any | null, version?: string | null };
 
@@ -33305,13 +33536,23 @@ type BasicWebhookMetadata_ProductUpdated_Fragment = { __typename?: 'ProductUpdat
 
 type BasicWebhookMetadata_ProductVariantBackInStock_Fragment = { __typename?: 'ProductVariantBackInStock', issuedAt?: any | null, version?: string | null };
 
+type BasicWebhookMetadata_ProductVariantBackInStockForClickAndCollect_Fragment = { __typename?: 'ProductVariantBackInStockForClickAndCollect', issuedAt?: any | null, version?: string | null };
+
+type BasicWebhookMetadata_ProductVariantBackInStockInChannel_Fragment = { __typename?: 'ProductVariantBackInStockInChannel', issuedAt?: any | null, version?: string | null };
+
 type BasicWebhookMetadata_ProductVariantCreated_Fragment = { __typename?: 'ProductVariantCreated', issuedAt?: any | null, version?: string | null };
 
 type BasicWebhookMetadata_ProductVariantDeleted_Fragment = { __typename?: 'ProductVariantDeleted', issuedAt?: any | null, version?: string | null };
 
+type BasicWebhookMetadata_ProductVariantDiscountedPriceUpdated_Fragment = { __typename?: 'ProductVariantDiscountedPriceUpdated', issuedAt?: any | null, version?: string | null };
+
 type BasicWebhookMetadata_ProductVariantMetadataUpdated_Fragment = { __typename?: 'ProductVariantMetadataUpdated', issuedAt?: any | null, version?: string | null };
 
 type BasicWebhookMetadata_ProductVariantOutOfStock_Fragment = { __typename?: 'ProductVariantOutOfStock', issuedAt?: any | null, version?: string | null };
+
+type BasicWebhookMetadata_ProductVariantOutOfStockForClickAndCollect_Fragment = { __typename?: 'ProductVariantOutOfStockForClickAndCollect', issuedAt?: any | null, version?: string | null };
+
+type BasicWebhookMetadata_ProductVariantOutOfStockInChannel_Fragment = { __typename?: 'ProductVariantOutOfStockInChannel', issuedAt?: any | null, version?: string | null };
 
 type BasicWebhookMetadata_ProductVariantStockUpdated_Fragment = { __typename?: 'ProductVariantStockUpdated', issuedAt?: any | null, version?: string | null };
 
@@ -33409,7 +33650,7 @@ type BasicWebhookMetadata_WarehouseMetadataUpdated_Fragment = { __typename?: 'Wa
 
 type BasicWebhookMetadata_WarehouseUpdated_Fragment = { __typename?: 'WarehouseUpdated', issuedAt?: any | null, version?: string | null };
 
-export type BasicWebhookMetadataFragment = BasicWebhookMetadata_AccountChangeEmailRequested_Fragment | BasicWebhookMetadata_AccountConfirmationRequested_Fragment | BasicWebhookMetadata_AccountConfirmed_Fragment | BasicWebhookMetadata_AccountDeleteRequested_Fragment | BasicWebhookMetadata_AccountDeleted_Fragment | BasicWebhookMetadata_AccountEmailChanged_Fragment | BasicWebhookMetadata_AccountSetPasswordRequested_Fragment | BasicWebhookMetadata_AddressCreated_Fragment | BasicWebhookMetadata_AddressDeleted_Fragment | BasicWebhookMetadata_AddressUpdated_Fragment | BasicWebhookMetadata_AppDeleted_Fragment | BasicWebhookMetadata_AppInstalled_Fragment | BasicWebhookMetadata_AppStatusChanged_Fragment | BasicWebhookMetadata_AppUpdated_Fragment | BasicWebhookMetadata_AttributeCreated_Fragment | BasicWebhookMetadata_AttributeDeleted_Fragment | BasicWebhookMetadata_AttributeUpdated_Fragment | BasicWebhookMetadata_AttributeValueCreated_Fragment | BasicWebhookMetadata_AttributeValueDeleted_Fragment | BasicWebhookMetadata_AttributeValueUpdated_Fragment | BasicWebhookMetadata_CalculateTaxes_Fragment | BasicWebhookMetadata_CategoryCreated_Fragment | BasicWebhookMetadata_CategoryDeleted_Fragment | BasicWebhookMetadata_CategoryUpdated_Fragment | BasicWebhookMetadata_ChannelCreated_Fragment | BasicWebhookMetadata_ChannelDeleted_Fragment | BasicWebhookMetadata_ChannelMetadataUpdated_Fragment | BasicWebhookMetadata_ChannelStatusChanged_Fragment | BasicWebhookMetadata_ChannelUpdated_Fragment | BasicWebhookMetadata_CheckoutCreated_Fragment | BasicWebhookMetadata_CheckoutFilterShippingMethods_Fragment | BasicWebhookMetadata_CheckoutFullyAuthorized_Fragment | BasicWebhookMetadata_CheckoutFullyPaid_Fragment | BasicWebhookMetadata_CheckoutMetadataUpdated_Fragment | BasicWebhookMetadata_CheckoutUpdated_Fragment | BasicWebhookMetadata_CollectionCreated_Fragment | BasicWebhookMetadata_CollectionDeleted_Fragment | BasicWebhookMetadata_CollectionMetadataUpdated_Fragment | BasicWebhookMetadata_CollectionUpdated_Fragment | BasicWebhookMetadata_CustomerCreated_Fragment | BasicWebhookMetadata_CustomerMetadataUpdated_Fragment | BasicWebhookMetadata_CustomerUpdated_Fragment | BasicWebhookMetadata_DraftOrderCreated_Fragment | BasicWebhookMetadata_DraftOrderDeleted_Fragment | BasicWebhookMetadata_DraftOrderUpdated_Fragment | BasicWebhookMetadata_FulfillmentApproved_Fragment | BasicWebhookMetadata_FulfillmentCanceled_Fragment | BasicWebhookMetadata_FulfillmentCreated_Fragment | BasicWebhookMetadata_FulfillmentMetadataUpdated_Fragment | BasicWebhookMetadata_FulfillmentTrackingNumberUpdated_Fragment | BasicWebhookMetadata_GiftCardCreated_Fragment | BasicWebhookMetadata_GiftCardDeleted_Fragment | BasicWebhookMetadata_GiftCardExportCompleted_Fragment | BasicWebhookMetadata_GiftCardMetadataUpdated_Fragment | BasicWebhookMetadata_GiftCardSent_Fragment | BasicWebhookMetadata_GiftCardStatusChanged_Fragment | BasicWebhookMetadata_GiftCardUpdated_Fragment | BasicWebhookMetadata_InvoiceDeleted_Fragment | BasicWebhookMetadata_InvoiceRequested_Fragment | BasicWebhookMetadata_InvoiceSent_Fragment | BasicWebhookMetadata_ListStoredPaymentMethods_Fragment | BasicWebhookMetadata_MenuCreated_Fragment | BasicWebhookMetadata_MenuDeleted_Fragment | BasicWebhookMetadata_MenuItemCreated_Fragment | BasicWebhookMetadata_MenuItemDeleted_Fragment | BasicWebhookMetadata_MenuItemUpdated_Fragment | BasicWebhookMetadata_MenuUpdated_Fragment | BasicWebhookMetadata_OrderBulkCreated_Fragment | BasicWebhookMetadata_OrderCancelled_Fragment | BasicWebhookMetadata_OrderConfirmed_Fragment | BasicWebhookMetadata_OrderCreated_Fragment | BasicWebhookMetadata_OrderExpired_Fragment | BasicWebhookMetadata_OrderFilterShippingMethods_Fragment | BasicWebhookMetadata_OrderFulfilled_Fragment | BasicWebhookMetadata_OrderFullyPaid_Fragment | BasicWebhookMetadata_OrderFullyRefunded_Fragment | BasicWebhookMetadata_OrderMetadataUpdated_Fragment | BasicWebhookMetadata_OrderPaid_Fragment | BasicWebhookMetadata_OrderRefunded_Fragment | BasicWebhookMetadata_OrderUpdated_Fragment | BasicWebhookMetadata_PageCreated_Fragment | BasicWebhookMetadata_PageDeleted_Fragment | BasicWebhookMetadata_PageTypeCreated_Fragment | BasicWebhookMetadata_PageTypeDeleted_Fragment | BasicWebhookMetadata_PageTypeUpdated_Fragment | BasicWebhookMetadata_PageUpdated_Fragment | BasicWebhookMetadata_PaymentAuthorize_Fragment | BasicWebhookMetadata_PaymentCaptureEvent_Fragment | BasicWebhookMetadata_PaymentConfirmEvent_Fragment | BasicWebhookMetadata_PaymentGatewayInitializeSession_Fragment | BasicWebhookMetadata_PaymentGatewayInitializeTokenizationSession_Fragment | BasicWebhookMetadata_PaymentListGateways_Fragment | BasicWebhookMetadata_PaymentMethodInitializeTokenizationSession_Fragment | BasicWebhookMetadata_PaymentMethodProcessTokenizationSession_Fragment | BasicWebhookMetadata_PaymentProcessEvent_Fragment | BasicWebhookMetadata_PaymentRefundEvent_Fragment | BasicWebhookMetadata_PaymentVoidEvent_Fragment | BasicWebhookMetadata_PermissionGroupCreated_Fragment | BasicWebhookMetadata_PermissionGroupDeleted_Fragment | BasicWebhookMetadata_PermissionGroupUpdated_Fragment | BasicWebhookMetadata_ProductCreated_Fragment | BasicWebhookMetadata_ProductDeleted_Fragment | BasicWebhookMetadata_ProductExportCompleted_Fragment | BasicWebhookMetadata_ProductMediaCreated_Fragment | BasicWebhookMetadata_ProductMediaDeleted_Fragment | BasicWebhookMetadata_ProductMediaUpdated_Fragment | BasicWebhookMetadata_ProductMetadataUpdated_Fragment | BasicWebhookMetadata_ProductUpdated_Fragment | BasicWebhookMetadata_ProductVariantBackInStock_Fragment | BasicWebhookMetadata_ProductVariantCreated_Fragment | BasicWebhookMetadata_ProductVariantDeleted_Fragment | BasicWebhookMetadata_ProductVariantMetadataUpdated_Fragment | BasicWebhookMetadata_ProductVariantOutOfStock_Fragment | BasicWebhookMetadata_ProductVariantStockUpdated_Fragment | BasicWebhookMetadata_ProductVariantUpdated_Fragment | BasicWebhookMetadata_PromotionCreated_Fragment | BasicWebhookMetadata_PromotionDeleted_Fragment | BasicWebhookMetadata_PromotionEnded_Fragment | BasicWebhookMetadata_PromotionRuleCreated_Fragment | BasicWebhookMetadata_PromotionRuleDeleted_Fragment | BasicWebhookMetadata_PromotionRuleUpdated_Fragment | BasicWebhookMetadata_PromotionStarted_Fragment | BasicWebhookMetadata_PromotionUpdated_Fragment | BasicWebhookMetadata_SaleCreated_Fragment | BasicWebhookMetadata_SaleDeleted_Fragment | BasicWebhookMetadata_SaleToggle_Fragment | BasicWebhookMetadata_SaleUpdated_Fragment | BasicWebhookMetadata_ShippingListMethodsForCheckout_Fragment | BasicWebhookMetadata_ShippingPriceCreated_Fragment | BasicWebhookMetadata_ShippingPriceDeleted_Fragment | BasicWebhookMetadata_ShippingPriceUpdated_Fragment | BasicWebhookMetadata_ShippingZoneCreated_Fragment | BasicWebhookMetadata_ShippingZoneDeleted_Fragment | BasicWebhookMetadata_ShippingZoneMetadataUpdated_Fragment | BasicWebhookMetadata_ShippingZoneUpdated_Fragment | BasicWebhookMetadata_ShopMetadataUpdated_Fragment | BasicWebhookMetadata_StaffCreated_Fragment | BasicWebhookMetadata_StaffDeleted_Fragment | BasicWebhookMetadata_StaffSetPasswordRequested_Fragment | BasicWebhookMetadata_StaffUpdated_Fragment | BasicWebhookMetadata_StoredPaymentMethodDeleteRequested_Fragment | BasicWebhookMetadata_ThumbnailCreated_Fragment | BasicWebhookMetadata_TransactionCancelationRequested_Fragment | BasicWebhookMetadata_TransactionChargeRequested_Fragment | BasicWebhookMetadata_TransactionInitializeSession_Fragment | BasicWebhookMetadata_TransactionItemMetadataUpdated_Fragment | BasicWebhookMetadata_TransactionProcessSession_Fragment | BasicWebhookMetadata_TransactionRefundRequested_Fragment | BasicWebhookMetadata_TranslationCreated_Fragment | BasicWebhookMetadata_TranslationUpdated_Fragment | BasicWebhookMetadata_VoucherCodeExportCompleted_Fragment | BasicWebhookMetadata_VoucherCodesCreated_Fragment | BasicWebhookMetadata_VoucherCodesDeleted_Fragment | BasicWebhookMetadata_VoucherCreated_Fragment | BasicWebhookMetadata_VoucherDeleted_Fragment | BasicWebhookMetadata_VoucherMetadataUpdated_Fragment | BasicWebhookMetadata_VoucherUpdated_Fragment | BasicWebhookMetadata_WarehouseCreated_Fragment | BasicWebhookMetadata_WarehouseDeleted_Fragment | BasicWebhookMetadata_WarehouseMetadataUpdated_Fragment | BasicWebhookMetadata_WarehouseUpdated_Fragment;
+export type BasicWebhookMetadataFragment = BasicWebhookMetadata_AccountChangeEmailRequested_Fragment | BasicWebhookMetadata_AccountConfirmationRequested_Fragment | BasicWebhookMetadata_AccountConfirmed_Fragment | BasicWebhookMetadata_AccountDeleteRequested_Fragment | BasicWebhookMetadata_AccountDeleted_Fragment | BasicWebhookMetadata_AccountEmailChanged_Fragment | BasicWebhookMetadata_AccountSetPasswordRequested_Fragment | BasicWebhookMetadata_AddressCreated_Fragment | BasicWebhookMetadata_AddressDeleted_Fragment | BasicWebhookMetadata_AddressUpdated_Fragment | BasicWebhookMetadata_AppDeleted_Fragment | BasicWebhookMetadata_AppInstalled_Fragment | BasicWebhookMetadata_AppStatusChanged_Fragment | BasicWebhookMetadata_AppUpdated_Fragment | BasicWebhookMetadata_AttributeCreated_Fragment | BasicWebhookMetadata_AttributeDeleted_Fragment | BasicWebhookMetadata_AttributeUpdated_Fragment | BasicWebhookMetadata_AttributeValueCreated_Fragment | BasicWebhookMetadata_AttributeValueDeleted_Fragment | BasicWebhookMetadata_AttributeValueUpdated_Fragment | BasicWebhookMetadata_CalculateTaxes_Fragment | BasicWebhookMetadata_CategoryCreated_Fragment | BasicWebhookMetadata_CategoryDeleted_Fragment | BasicWebhookMetadata_CategoryUpdated_Fragment | BasicWebhookMetadata_ChannelCreated_Fragment | BasicWebhookMetadata_ChannelDeleted_Fragment | BasicWebhookMetadata_ChannelMetadataUpdated_Fragment | BasicWebhookMetadata_ChannelStatusChanged_Fragment | BasicWebhookMetadata_ChannelUpdated_Fragment | BasicWebhookMetadata_CheckoutCreated_Fragment | BasicWebhookMetadata_CheckoutFilterShippingMethods_Fragment | BasicWebhookMetadata_CheckoutFullyAuthorized_Fragment | BasicWebhookMetadata_CheckoutFullyPaid_Fragment | BasicWebhookMetadata_CheckoutMetadataUpdated_Fragment | BasicWebhookMetadata_CheckoutUpdated_Fragment | BasicWebhookMetadata_CollectionCreated_Fragment | BasicWebhookMetadata_CollectionDeleted_Fragment | BasicWebhookMetadata_CollectionMetadataUpdated_Fragment | BasicWebhookMetadata_CollectionUpdated_Fragment | BasicWebhookMetadata_CustomerCreated_Fragment | BasicWebhookMetadata_CustomerDeleted_Fragment | BasicWebhookMetadata_CustomerMetadataUpdated_Fragment | BasicWebhookMetadata_CustomerUpdated_Fragment | BasicWebhookMetadata_DraftOrderCreated_Fragment | BasicWebhookMetadata_DraftOrderDeleted_Fragment | BasicWebhookMetadata_DraftOrderUpdated_Fragment | BasicWebhookMetadata_FulfillmentApproved_Fragment | BasicWebhookMetadata_FulfillmentCanceled_Fragment | BasicWebhookMetadata_FulfillmentCreated_Fragment | BasicWebhookMetadata_FulfillmentMetadataUpdated_Fragment | BasicWebhookMetadata_FulfillmentTrackingNumberUpdated_Fragment | BasicWebhookMetadata_GiftCardCreated_Fragment | BasicWebhookMetadata_GiftCardDeleted_Fragment | BasicWebhookMetadata_GiftCardExportCompleted_Fragment | BasicWebhookMetadata_GiftCardMetadataUpdated_Fragment | BasicWebhookMetadata_GiftCardSent_Fragment | BasicWebhookMetadata_GiftCardStatusChanged_Fragment | BasicWebhookMetadata_GiftCardUpdated_Fragment | BasicWebhookMetadata_InvoiceDeleted_Fragment | BasicWebhookMetadata_InvoiceRequested_Fragment | BasicWebhookMetadata_InvoiceSent_Fragment | BasicWebhookMetadata_ListStoredPaymentMethods_Fragment | BasicWebhookMetadata_MenuCreated_Fragment | BasicWebhookMetadata_MenuDeleted_Fragment | BasicWebhookMetadata_MenuItemCreated_Fragment | BasicWebhookMetadata_MenuItemDeleted_Fragment | BasicWebhookMetadata_MenuItemUpdated_Fragment | BasicWebhookMetadata_MenuUpdated_Fragment | BasicWebhookMetadata_OrderBulkCreated_Fragment | BasicWebhookMetadata_OrderCancelled_Fragment | BasicWebhookMetadata_OrderConfirmed_Fragment | BasicWebhookMetadata_OrderCreated_Fragment | BasicWebhookMetadata_OrderExpired_Fragment | BasicWebhookMetadata_OrderFilterShippingMethods_Fragment | BasicWebhookMetadata_OrderFulfilled_Fragment | BasicWebhookMetadata_OrderFullyPaid_Fragment | BasicWebhookMetadata_OrderFullyRefunded_Fragment | BasicWebhookMetadata_OrderMetadataUpdated_Fragment | BasicWebhookMetadata_OrderPaid_Fragment | BasicWebhookMetadata_OrderRefunded_Fragment | BasicWebhookMetadata_OrderUpdated_Fragment | BasicWebhookMetadata_PageCreated_Fragment | BasicWebhookMetadata_PageDeleted_Fragment | BasicWebhookMetadata_PageTypeCreated_Fragment | BasicWebhookMetadata_PageTypeDeleted_Fragment | BasicWebhookMetadata_PageTypeUpdated_Fragment | BasicWebhookMetadata_PageUpdated_Fragment | BasicWebhookMetadata_PaymentAuthorize_Fragment | BasicWebhookMetadata_PaymentCaptureEvent_Fragment | BasicWebhookMetadata_PaymentConfirmEvent_Fragment | BasicWebhookMetadata_PaymentGatewayInitializeSession_Fragment | BasicWebhookMetadata_PaymentGatewayInitializeTokenizationSession_Fragment | BasicWebhookMetadata_PaymentListGateways_Fragment | BasicWebhookMetadata_PaymentMethodInitializeTokenizationSession_Fragment | BasicWebhookMetadata_PaymentMethodProcessTokenizationSession_Fragment | BasicWebhookMetadata_PaymentProcessEvent_Fragment | BasicWebhookMetadata_PaymentRefundEvent_Fragment | BasicWebhookMetadata_PaymentVoidEvent_Fragment | BasicWebhookMetadata_PermissionGroupCreated_Fragment | BasicWebhookMetadata_PermissionGroupDeleted_Fragment | BasicWebhookMetadata_PermissionGroupUpdated_Fragment | BasicWebhookMetadata_ProductCreated_Fragment | BasicWebhookMetadata_ProductDeleted_Fragment | BasicWebhookMetadata_ProductExportCompleted_Fragment | BasicWebhookMetadata_ProductMediaCreated_Fragment | BasicWebhookMetadata_ProductMediaDeleted_Fragment | BasicWebhookMetadata_ProductMediaUpdated_Fragment | BasicWebhookMetadata_ProductMetadataUpdated_Fragment | BasicWebhookMetadata_ProductUpdated_Fragment | BasicWebhookMetadata_ProductVariantBackInStock_Fragment | BasicWebhookMetadata_ProductVariantBackInStockForClickAndCollect_Fragment | BasicWebhookMetadata_ProductVariantBackInStockInChannel_Fragment | BasicWebhookMetadata_ProductVariantCreated_Fragment | BasicWebhookMetadata_ProductVariantDeleted_Fragment | BasicWebhookMetadata_ProductVariantDiscountedPriceUpdated_Fragment | BasicWebhookMetadata_ProductVariantMetadataUpdated_Fragment | BasicWebhookMetadata_ProductVariantOutOfStock_Fragment | BasicWebhookMetadata_ProductVariantOutOfStockForClickAndCollect_Fragment | BasicWebhookMetadata_ProductVariantOutOfStockInChannel_Fragment | BasicWebhookMetadata_ProductVariantStockUpdated_Fragment | BasicWebhookMetadata_ProductVariantUpdated_Fragment | BasicWebhookMetadata_PromotionCreated_Fragment | BasicWebhookMetadata_PromotionDeleted_Fragment | BasicWebhookMetadata_PromotionEnded_Fragment | BasicWebhookMetadata_PromotionRuleCreated_Fragment | BasicWebhookMetadata_PromotionRuleDeleted_Fragment | BasicWebhookMetadata_PromotionRuleUpdated_Fragment | BasicWebhookMetadata_PromotionStarted_Fragment | BasicWebhookMetadata_PromotionUpdated_Fragment | BasicWebhookMetadata_SaleCreated_Fragment | BasicWebhookMetadata_SaleDeleted_Fragment | BasicWebhookMetadata_SaleToggle_Fragment | BasicWebhookMetadata_SaleUpdated_Fragment | BasicWebhookMetadata_ShippingListMethodsForCheckout_Fragment | BasicWebhookMetadata_ShippingPriceCreated_Fragment | BasicWebhookMetadata_ShippingPriceDeleted_Fragment | BasicWebhookMetadata_ShippingPriceUpdated_Fragment | BasicWebhookMetadata_ShippingZoneCreated_Fragment | BasicWebhookMetadata_ShippingZoneDeleted_Fragment | BasicWebhookMetadata_ShippingZoneMetadataUpdated_Fragment | BasicWebhookMetadata_ShippingZoneUpdated_Fragment | BasicWebhookMetadata_ShopMetadataUpdated_Fragment | BasicWebhookMetadata_StaffCreated_Fragment | BasicWebhookMetadata_StaffDeleted_Fragment | BasicWebhookMetadata_StaffSetPasswordRequested_Fragment | BasicWebhookMetadata_StaffUpdated_Fragment | BasicWebhookMetadata_StoredPaymentMethodDeleteRequested_Fragment | BasicWebhookMetadata_ThumbnailCreated_Fragment | BasicWebhookMetadata_TransactionCancelationRequested_Fragment | BasicWebhookMetadata_TransactionChargeRequested_Fragment | BasicWebhookMetadata_TransactionInitializeSession_Fragment | BasicWebhookMetadata_TransactionItemMetadataUpdated_Fragment | BasicWebhookMetadata_TransactionProcessSession_Fragment | BasicWebhookMetadata_TransactionRefundRequested_Fragment | BasicWebhookMetadata_TranslationCreated_Fragment | BasicWebhookMetadata_TranslationUpdated_Fragment | BasicWebhookMetadata_VoucherCodeExportCompleted_Fragment | BasicWebhookMetadata_VoucherCodesCreated_Fragment | BasicWebhookMetadata_VoucherCodesDeleted_Fragment | BasicWebhookMetadata_VoucherCreated_Fragment | BasicWebhookMetadata_VoucherDeleted_Fragment | BasicWebhookMetadata_VoucherMetadataUpdated_Fragment | BasicWebhookMetadata_VoucherUpdated_Fragment | BasicWebhookMetadata_WarehouseCreated_Fragment | BasicWebhookMetadata_WarehouseDeleted_Fragment | BasicWebhookMetadata_WarehouseMetadataUpdated_Fragment | BasicWebhookMetadata_WarehouseUpdated_Fragment;
 
 export type MoneyFragment = { __typename?: 'Money', amount: number, currency: string };
 
@@ -33454,6 +33695,19 @@ export type InitializeTransactionMutationVariables = Exact<{
 
 export type InitializeTransactionMutation = { __typename?: 'Mutation', transactionInitialize?: { __typename?: 'TransactionInitialize', errors: Array<{ __typename?: 'TransactionInitializeError', code: TransactionInitializeErrorCode, field?: string | null, message?: string | null }>, transaction?: { __typename?: 'TransactionItem', id: string, pspReference: string } | null, transactionEvent?: { __typename?: 'TransactionEvent', id: string, pspReference: string, message: string, externalUrl: string, type?: TransactionEventTypeEnum | null, idempotencyKey?: string | null, amount: { __typename?: 'Money', currency: string, amount: number } } | null } | null };
 
+export type TransactionCreateMutationVariables = Exact<{
+  id: Scalars['ID'];
+  name?: InputMaybe<Scalars['String']>;
+  message?: InputMaybe<Scalars['String']>;
+  pspReference?: InputMaybe<Scalars['String']>;
+  availableActions?: InputMaybe<Array<TransactionActionEnum> | TransactionActionEnum>;
+  externalUrl?: InputMaybe<Scalars['String']>;
+  paymentMethodDetails?: InputMaybe<PaymentMethodDetailsInput>;
+}>;
+
+
+export type TransactionCreateMutation = { __typename?: 'Mutation', transactionCreate?: { __typename?: 'TransactionCreate', transaction?: { __typename?: 'TransactionItem', id: string, pspReference: string } | null, errors: Array<{ __typename?: 'TransactionCreateError', field?: string | null, message?: string | null, code: TransactionCreateErrorCode }> } | null };
+
 export type TransactionEventReportMutationVariables = Exact<{
   id: Scalars['ID'];
   amount?: InputMaybe<Scalars['PositiveDecimal']>;
@@ -33485,6 +33739,13 @@ export type FetchAppDetailsQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type FetchAppDetailsQuery = { __typename?: 'Query', app?: { __typename?: 'App', id: string, privateMetadata: Array<{ __typename?: 'MetadataItem', key: string, value: string }> } | null };
 
+export type OrderDetailsQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type OrderDetailsQuery = { __typename?: 'Query', order?: { __typename?: 'Order', id: string, number: string, total: { __typename?: 'TaxedMoney', gross: { __typename?: 'Money', amount: number, currency: string } }, transactions: Array<{ __typename?: 'TransactionItem', id: string, pspReference: string, createdAt: any, message: string, name: string, authorizedAmount: { __typename?: 'Money', amount: number, currency: string }, authorizePendingAmount: { __typename?: 'Money', amount: number, currency: string }, refundedAmount: { __typename?: 'Money', amount: number, currency: string }, refundPendingAmount: { __typename?: 'Money', amount: number, currency: string }, canceledAmount: { __typename?: 'Money', amount: number, currency: string }, cancelPendingAmount: { __typename?: 'Money', amount: number, currency: string }, chargedAmount: { __typename?: 'Money', amount: number, currency: string }, chargePendingAmount: { __typename?: 'Money', amount: number, currency: string }, events: Array<{ __typename?: 'TransactionEvent', id: string, createdAt: any, pspReference: string, message: string, type?: TransactionEventTypeEnum | null, amount: { __typename?: 'Money', amount: number, currency: string } }>, order?: { __typename?: 'Order', id: string } | null }> } | null };
+
 export type ProductListQueryVariables = Exact<{
   channelSlug: Scalars['String'];
 }>;
@@ -33509,32 +33770,32 @@ export type TransactionDetailsViaPspQuery = { __typename?: 'Query', orders?: { _
 export type PaymentGatewayInitializeSessionSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
-export type PaymentGatewayInitializeSessionSubscription = { __typename?: 'Subscription', event?: { __typename?: 'AccountChangeEmailRequested' } | { __typename?: 'AccountConfirmationRequested' } | { __typename?: 'AccountConfirmed' } | { __typename?: 'AccountDeleteRequested' } | { __typename?: 'AccountDeleted' } | { __typename?: 'AccountEmailChanged' } | { __typename?: 'AccountSetPasswordRequested' } | { __typename?: 'AddressCreated' } | { __typename?: 'AddressDeleted' } | { __typename?: 'AddressUpdated' } | { __typename?: 'AppDeleted' } | { __typename?: 'AppInstalled' } | { __typename?: 'AppStatusChanged' } | { __typename?: 'AppUpdated' } | { __typename?: 'AttributeCreated' } | { __typename?: 'AttributeDeleted' } | { __typename?: 'AttributeUpdated' } | { __typename?: 'AttributeValueCreated' } | { __typename?: 'AttributeValueDeleted' } | { __typename?: 'AttributeValueUpdated' } | { __typename?: 'CalculateTaxes' } | { __typename?: 'CategoryCreated' } | { __typename?: 'CategoryDeleted' } | { __typename?: 'CategoryUpdated' } | { __typename?: 'ChannelCreated' } | { __typename?: 'ChannelDeleted' } | { __typename?: 'ChannelMetadataUpdated' } | { __typename?: 'ChannelStatusChanged' } | { __typename?: 'ChannelUpdated' } | { __typename?: 'CheckoutCreated' } | { __typename?: 'CheckoutFilterShippingMethods' } | { __typename?: 'CheckoutFullyAuthorized' } | { __typename?: 'CheckoutFullyPaid' } | { __typename?: 'CheckoutMetadataUpdated' } | { __typename?: 'CheckoutUpdated' } | { __typename?: 'CollectionCreated' } | { __typename?: 'CollectionDeleted' } | { __typename?: 'CollectionMetadataUpdated' } | { __typename?: 'CollectionUpdated' } | { __typename?: 'CustomerCreated' } | { __typename?: 'CustomerMetadataUpdated' } | { __typename?: 'CustomerUpdated' } | { __typename?: 'DraftOrderCreated' } | { __typename?: 'DraftOrderDeleted' } | { __typename?: 'DraftOrderUpdated' } | { __typename?: 'FulfillmentApproved' } | { __typename?: 'FulfillmentCanceled' } | { __typename?: 'FulfillmentCreated' } | { __typename?: 'FulfillmentMetadataUpdated' } | { __typename?: 'FulfillmentTrackingNumberUpdated' } | { __typename?: 'GiftCardCreated' } | { __typename?: 'GiftCardDeleted' } | { __typename?: 'GiftCardExportCompleted' } | { __typename?: 'GiftCardMetadataUpdated' } | { __typename?: 'GiftCardSent' } | { __typename?: 'GiftCardStatusChanged' } | { __typename?: 'GiftCardUpdated' } | { __typename?: 'InvoiceDeleted' } | { __typename?: 'InvoiceRequested' } | { __typename?: 'InvoiceSent' } | { __typename?: 'ListStoredPaymentMethods' } | { __typename?: 'MenuCreated' } | { __typename?: 'MenuDeleted' } | { __typename?: 'MenuItemCreated' } | { __typename?: 'MenuItemDeleted' } | { __typename?: 'MenuItemUpdated' } | { __typename?: 'MenuUpdated' } | { __typename?: 'OrderBulkCreated' } | { __typename?: 'OrderCancelled' } | { __typename?: 'OrderConfirmed' } | { __typename?: 'OrderCreated' } | { __typename?: 'OrderExpired' } | { __typename?: 'OrderFilterShippingMethods' } | { __typename?: 'OrderFulfilled' } | { __typename?: 'OrderFullyPaid' } | { __typename?: 'OrderFullyRefunded' } | { __typename?: 'OrderMetadataUpdated' } | { __typename?: 'OrderPaid' } | { __typename?: 'OrderRefunded' } | { __typename?: 'OrderUpdated' } | { __typename?: 'PageCreated' } | { __typename?: 'PageDeleted' } | { __typename?: 'PageTypeCreated' } | { __typename?: 'PageTypeDeleted' } | { __typename?: 'PageTypeUpdated' } | { __typename?: 'PageUpdated' } | { __typename?: 'PaymentAuthorize' } | { __typename?: 'PaymentCaptureEvent' } | { __typename?: 'PaymentConfirmEvent' } | { __typename: 'PaymentGatewayInitializeSession', data?: any | null, amount?: any | null, issuedAt?: any | null, version?: string | null, recipient?: { __typename?: 'App', id: string, privateMetadata: Array<{ __typename?: 'MetadataItem', key: string, value: string }>, metadata: Array<{ __typename?: 'MetadataItem', key: string, value: string }> } | null, issuingPrincipal?: { __typename?: 'App', id: string } | { __typename?: 'User', id: string } | null } | { __typename?: 'PaymentGatewayInitializeTokenizationSession' } | { __typename?: 'PaymentListGateways' } | { __typename?: 'PaymentMethodInitializeTokenizationSession' } | { __typename?: 'PaymentMethodProcessTokenizationSession' } | { __typename?: 'PaymentProcessEvent' } | { __typename?: 'PaymentRefundEvent' } | { __typename?: 'PaymentVoidEvent' } | { __typename?: 'PermissionGroupCreated' } | { __typename?: 'PermissionGroupDeleted' } | { __typename?: 'PermissionGroupUpdated' } | { __typename?: 'ProductCreated' } | { __typename?: 'ProductDeleted' } | { __typename?: 'ProductExportCompleted' } | { __typename?: 'ProductMediaCreated' } | { __typename?: 'ProductMediaDeleted' } | { __typename?: 'ProductMediaUpdated' } | { __typename?: 'ProductMetadataUpdated' } | { __typename?: 'ProductUpdated' } | { __typename?: 'ProductVariantBackInStock' } | { __typename?: 'ProductVariantCreated' } | { __typename?: 'ProductVariantDeleted' } | { __typename?: 'ProductVariantMetadataUpdated' } | { __typename?: 'ProductVariantOutOfStock' } | { __typename?: 'ProductVariantStockUpdated' } | { __typename?: 'ProductVariantUpdated' } | { __typename?: 'PromotionCreated' } | { __typename?: 'PromotionDeleted' } | { __typename?: 'PromotionEnded' } | { __typename?: 'PromotionRuleCreated' } | { __typename?: 'PromotionRuleDeleted' } | { __typename?: 'PromotionRuleUpdated' } | { __typename?: 'PromotionStarted' } | { __typename?: 'PromotionUpdated' } | { __typename?: 'SaleCreated' } | { __typename?: 'SaleDeleted' } | { __typename?: 'SaleToggle' } | { __typename?: 'SaleUpdated' } | { __typename?: 'ShippingListMethodsForCheckout' } | { __typename?: 'ShippingPriceCreated' } | { __typename?: 'ShippingPriceDeleted' } | { __typename?: 'ShippingPriceUpdated' } | { __typename?: 'ShippingZoneCreated' } | { __typename?: 'ShippingZoneDeleted' } | { __typename?: 'ShippingZoneMetadataUpdated' } | { __typename?: 'ShippingZoneUpdated' } | { __typename?: 'ShopMetadataUpdated' } | { __typename?: 'StaffCreated' } | { __typename?: 'StaffDeleted' } | { __typename?: 'StaffSetPasswordRequested' } | { __typename?: 'StaffUpdated' } | { __typename?: 'StoredPaymentMethodDeleteRequested' } | { __typename?: 'ThumbnailCreated' } | { __typename?: 'TransactionCancelationRequested' } | { __typename?: 'TransactionChargeRequested' } | { __typename?: 'TransactionInitializeSession' } | { __typename?: 'TransactionItemMetadataUpdated' } | { __typename?: 'TransactionProcessSession' } | { __typename?: 'TransactionRefundRequested' } | { __typename?: 'TranslationCreated' } | { __typename?: 'TranslationUpdated' } | { __typename?: 'VoucherCodeExportCompleted' } | { __typename?: 'VoucherCodesCreated' } | { __typename?: 'VoucherCodesDeleted' } | { __typename?: 'VoucherCreated' } | { __typename?: 'VoucherDeleted' } | { __typename?: 'VoucherMetadataUpdated' } | { __typename?: 'VoucherUpdated' } | { __typename?: 'WarehouseCreated' } | { __typename?: 'WarehouseDeleted' } | { __typename?: 'WarehouseMetadataUpdated' } | { __typename?: 'WarehouseUpdated' } | null };
+export type PaymentGatewayInitializeSessionSubscription = { __typename?: 'Subscription', event?: { __typename?: 'AccountChangeEmailRequested' } | { __typename?: 'AccountConfirmationRequested' } | { __typename?: 'AccountConfirmed' } | { __typename?: 'AccountDeleteRequested' } | { __typename?: 'AccountDeleted' } | { __typename?: 'AccountEmailChanged' } | { __typename?: 'AccountSetPasswordRequested' } | { __typename?: 'AddressCreated' } | { __typename?: 'AddressDeleted' } | { __typename?: 'AddressUpdated' } | { __typename?: 'AppDeleted' } | { __typename?: 'AppInstalled' } | { __typename?: 'AppStatusChanged' } | { __typename?: 'AppUpdated' } | { __typename?: 'AttributeCreated' } | { __typename?: 'AttributeDeleted' } | { __typename?: 'AttributeUpdated' } | { __typename?: 'AttributeValueCreated' } | { __typename?: 'AttributeValueDeleted' } | { __typename?: 'AttributeValueUpdated' } | { __typename?: 'CalculateTaxes' } | { __typename?: 'CategoryCreated' } | { __typename?: 'CategoryDeleted' } | { __typename?: 'CategoryUpdated' } | { __typename?: 'ChannelCreated' } | { __typename?: 'ChannelDeleted' } | { __typename?: 'ChannelMetadataUpdated' } | { __typename?: 'ChannelStatusChanged' } | { __typename?: 'ChannelUpdated' } | { __typename?: 'CheckoutCreated' } | { __typename?: 'CheckoutFilterShippingMethods' } | { __typename?: 'CheckoutFullyAuthorized' } | { __typename?: 'CheckoutFullyPaid' } | { __typename?: 'CheckoutMetadataUpdated' } | { __typename?: 'CheckoutUpdated' } | { __typename?: 'CollectionCreated' } | { __typename?: 'CollectionDeleted' } | { __typename?: 'CollectionMetadataUpdated' } | { __typename?: 'CollectionUpdated' } | { __typename?: 'CustomerCreated' } | { __typename?: 'CustomerDeleted' } | { __typename?: 'CustomerMetadataUpdated' } | { __typename?: 'CustomerUpdated' } | { __typename?: 'DraftOrderCreated' } | { __typename?: 'DraftOrderDeleted' } | { __typename?: 'DraftOrderUpdated' } | { __typename?: 'FulfillmentApproved' } | { __typename?: 'FulfillmentCanceled' } | { __typename?: 'FulfillmentCreated' } | { __typename?: 'FulfillmentMetadataUpdated' } | { __typename?: 'FulfillmentTrackingNumberUpdated' } | { __typename?: 'GiftCardCreated' } | { __typename?: 'GiftCardDeleted' } | { __typename?: 'GiftCardExportCompleted' } | { __typename?: 'GiftCardMetadataUpdated' } | { __typename?: 'GiftCardSent' } | { __typename?: 'GiftCardStatusChanged' } | { __typename?: 'GiftCardUpdated' } | { __typename?: 'InvoiceDeleted' } | { __typename?: 'InvoiceRequested' } | { __typename?: 'InvoiceSent' } | { __typename?: 'ListStoredPaymentMethods' } | { __typename?: 'MenuCreated' } | { __typename?: 'MenuDeleted' } | { __typename?: 'MenuItemCreated' } | { __typename?: 'MenuItemDeleted' } | { __typename?: 'MenuItemUpdated' } | { __typename?: 'MenuUpdated' } | { __typename?: 'OrderBulkCreated' } | { __typename?: 'OrderCancelled' } | { __typename?: 'OrderConfirmed' } | { __typename?: 'OrderCreated' } | { __typename?: 'OrderExpired' } | { __typename?: 'OrderFilterShippingMethods' } | { __typename?: 'OrderFulfilled' } | { __typename?: 'OrderFullyPaid' } | { __typename?: 'OrderFullyRefunded' } | { __typename?: 'OrderMetadataUpdated' } | { __typename?: 'OrderPaid' } | { __typename?: 'OrderRefunded' } | { __typename?: 'OrderUpdated' } | { __typename?: 'PageCreated' } | { __typename?: 'PageDeleted' } | { __typename?: 'PageTypeCreated' } | { __typename?: 'PageTypeDeleted' } | { __typename?: 'PageTypeUpdated' } | { __typename?: 'PageUpdated' } | { __typename?: 'PaymentAuthorize' } | { __typename?: 'PaymentCaptureEvent' } | { __typename?: 'PaymentConfirmEvent' } | { __typename: 'PaymentGatewayInitializeSession', data?: any | null, amount?: any | null, issuedAt?: any | null, version?: string | null, recipient?: { __typename?: 'App', id: string, privateMetadata: Array<{ __typename?: 'MetadataItem', key: string, value: string }>, metadata: Array<{ __typename?: 'MetadataItem', key: string, value: string }> } | null, issuingPrincipal?: { __typename?: 'App', id: string } | { __typename?: 'User', id: string } | null } | { __typename?: 'PaymentGatewayInitializeTokenizationSession' } | { __typename?: 'PaymentListGateways' } | { __typename?: 'PaymentMethodInitializeTokenizationSession' } | { __typename?: 'PaymentMethodProcessTokenizationSession' } | { __typename?: 'PaymentProcessEvent' } | { __typename?: 'PaymentRefundEvent' } | { __typename?: 'PaymentVoidEvent' } | { __typename?: 'PermissionGroupCreated' } | { __typename?: 'PermissionGroupDeleted' } | { __typename?: 'PermissionGroupUpdated' } | { __typename?: 'ProductCreated' } | { __typename?: 'ProductDeleted' } | { __typename?: 'ProductExportCompleted' } | { __typename?: 'ProductMediaCreated' } | { __typename?: 'ProductMediaDeleted' } | { __typename?: 'ProductMediaUpdated' } | { __typename?: 'ProductMetadataUpdated' } | { __typename?: 'ProductUpdated' } | { __typename?: 'ProductVariantBackInStock' } | { __typename?: 'ProductVariantBackInStockForClickAndCollect' } | { __typename?: 'ProductVariantBackInStockInChannel' } | { __typename?: 'ProductVariantCreated' } | { __typename?: 'ProductVariantDeleted' } | { __typename?: 'ProductVariantDiscountedPriceUpdated' } | { __typename?: 'ProductVariantMetadataUpdated' } | { __typename?: 'ProductVariantOutOfStock' } | { __typename?: 'ProductVariantOutOfStockForClickAndCollect' } | { __typename?: 'ProductVariantOutOfStockInChannel' } | { __typename?: 'ProductVariantStockUpdated' } | { __typename?: 'ProductVariantUpdated' } | { __typename?: 'PromotionCreated' } | { __typename?: 'PromotionDeleted' } | { __typename?: 'PromotionEnded' } | { __typename?: 'PromotionRuleCreated' } | { __typename?: 'PromotionRuleDeleted' } | { __typename?: 'PromotionRuleUpdated' } | { __typename?: 'PromotionStarted' } | { __typename?: 'PromotionUpdated' } | { __typename?: 'SaleCreated' } | { __typename?: 'SaleDeleted' } | { __typename?: 'SaleToggle' } | { __typename?: 'SaleUpdated' } | { __typename?: 'ShippingListMethodsForCheckout' } | { __typename?: 'ShippingPriceCreated' } | { __typename?: 'ShippingPriceDeleted' } | { __typename?: 'ShippingPriceUpdated' } | { __typename?: 'ShippingZoneCreated' } | { __typename?: 'ShippingZoneDeleted' } | { __typename?: 'ShippingZoneMetadataUpdated' } | { __typename?: 'ShippingZoneUpdated' } | { __typename?: 'ShopMetadataUpdated' } | { __typename?: 'StaffCreated' } | { __typename?: 'StaffDeleted' } | { __typename?: 'StaffSetPasswordRequested' } | { __typename?: 'StaffUpdated' } | { __typename?: 'StoredPaymentMethodDeleteRequested' } | { __typename?: 'ThumbnailCreated' } | { __typename?: 'TransactionCancelationRequested' } | { __typename?: 'TransactionChargeRequested' } | { __typename?: 'TransactionInitializeSession' } | { __typename?: 'TransactionItemMetadataUpdated' } | { __typename?: 'TransactionProcessSession' } | { __typename?: 'TransactionRefundRequested' } | { __typename?: 'TranslationCreated' } | { __typename?: 'TranslationUpdated' } | { __typename?: 'VoucherCodeExportCompleted' } | { __typename?: 'VoucherCodesCreated' } | { __typename?: 'VoucherCodesDeleted' } | { __typename?: 'VoucherCreated' } | { __typename?: 'VoucherDeleted' } | { __typename?: 'VoucherMetadataUpdated' } | { __typename?: 'VoucherUpdated' } | { __typename?: 'WarehouseCreated' } | { __typename?: 'WarehouseDeleted' } | { __typename?: 'WarehouseMetadataUpdated' } | { __typename?: 'WarehouseUpdated' } | null };
 
 export type TransactionCancelRequestedSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
-export type TransactionCancelRequestedSubscription = { __typename?: 'Subscription', event?: { __typename?: 'AccountChangeEmailRequested' } | { __typename?: 'AccountConfirmationRequested' } | { __typename?: 'AccountConfirmed' } | { __typename?: 'AccountDeleteRequested' } | { __typename?: 'AccountDeleted' } | { __typename?: 'AccountEmailChanged' } | { __typename?: 'AccountSetPasswordRequested' } | { __typename?: 'AddressCreated' } | { __typename?: 'AddressDeleted' } | { __typename?: 'AddressUpdated' } | { __typename?: 'AppDeleted' } | { __typename?: 'AppInstalled' } | { __typename?: 'AppStatusChanged' } | { __typename?: 'AppUpdated' } | { __typename?: 'AttributeCreated' } | { __typename?: 'AttributeDeleted' } | { __typename?: 'AttributeUpdated' } | { __typename?: 'AttributeValueCreated' } | { __typename?: 'AttributeValueDeleted' } | { __typename?: 'AttributeValueUpdated' } | { __typename?: 'CalculateTaxes' } | { __typename?: 'CategoryCreated' } | { __typename?: 'CategoryDeleted' } | { __typename?: 'CategoryUpdated' } | { __typename?: 'ChannelCreated' } | { __typename?: 'ChannelDeleted' } | { __typename?: 'ChannelMetadataUpdated' } | { __typename?: 'ChannelStatusChanged' } | { __typename?: 'ChannelUpdated' } | { __typename?: 'CheckoutCreated' } | { __typename?: 'CheckoutFilterShippingMethods' } | { __typename?: 'CheckoutFullyAuthorized' } | { __typename?: 'CheckoutFullyPaid' } | { __typename?: 'CheckoutMetadataUpdated' } | { __typename?: 'CheckoutUpdated' } | { __typename?: 'CollectionCreated' } | { __typename?: 'CollectionDeleted' } | { __typename?: 'CollectionMetadataUpdated' } | { __typename?: 'CollectionUpdated' } | { __typename?: 'CustomerCreated' } | { __typename?: 'CustomerMetadataUpdated' } | { __typename?: 'CustomerUpdated' } | { __typename?: 'DraftOrderCreated' } | { __typename?: 'DraftOrderDeleted' } | { __typename?: 'DraftOrderUpdated' } | { __typename?: 'FulfillmentApproved' } | { __typename?: 'FulfillmentCanceled' } | { __typename?: 'FulfillmentCreated' } | { __typename?: 'FulfillmentMetadataUpdated' } | { __typename?: 'FulfillmentTrackingNumberUpdated' } | { __typename?: 'GiftCardCreated' } | { __typename?: 'GiftCardDeleted' } | { __typename?: 'GiftCardExportCompleted' } | { __typename?: 'GiftCardMetadataUpdated' } | { __typename?: 'GiftCardSent' } | { __typename?: 'GiftCardStatusChanged' } | { __typename?: 'GiftCardUpdated' } | { __typename?: 'InvoiceDeleted' } | { __typename?: 'InvoiceRequested' } | { __typename?: 'InvoiceSent' } | { __typename?: 'ListStoredPaymentMethods' } | { __typename?: 'MenuCreated' } | { __typename?: 'MenuDeleted' } | { __typename?: 'MenuItemCreated' } | { __typename?: 'MenuItemDeleted' } | { __typename?: 'MenuItemUpdated' } | { __typename?: 'MenuUpdated' } | { __typename?: 'OrderBulkCreated' } | { __typename?: 'OrderCancelled' } | { __typename?: 'OrderConfirmed' } | { __typename?: 'OrderCreated' } | { __typename?: 'OrderExpired' } | { __typename?: 'OrderFilterShippingMethods' } | { __typename?: 'OrderFulfilled' } | { __typename?: 'OrderFullyPaid' } | { __typename?: 'OrderFullyRefunded' } | { __typename?: 'OrderMetadataUpdated' } | { __typename?: 'OrderPaid' } | { __typename?: 'OrderRefunded' } | { __typename?: 'OrderUpdated' } | { __typename?: 'PageCreated' } | { __typename?: 'PageDeleted' } | { __typename?: 'PageTypeCreated' } | { __typename?: 'PageTypeDeleted' } | { __typename?: 'PageTypeUpdated' } | { __typename?: 'PageUpdated' } | { __typename?: 'PaymentAuthorize' } | { __typename?: 'PaymentCaptureEvent' } | { __typename?: 'PaymentConfirmEvent' } | { __typename?: 'PaymentGatewayInitializeSession' } | { __typename?: 'PaymentGatewayInitializeTokenizationSession' } | { __typename?: 'PaymentListGateways' } | { __typename?: 'PaymentMethodInitializeTokenizationSession' } | { __typename?: 'PaymentMethodProcessTokenizationSession' } | { __typename?: 'PaymentProcessEvent' } | { __typename?: 'PaymentRefundEvent' } | { __typename?: 'PaymentVoidEvent' } | { __typename?: 'PermissionGroupCreated' } | { __typename?: 'PermissionGroupDeleted' } | { __typename?: 'PermissionGroupUpdated' } | { __typename?: 'ProductCreated' } | { __typename?: 'ProductDeleted' } | { __typename?: 'ProductExportCompleted' } | { __typename?: 'ProductMediaCreated' } | { __typename?: 'ProductMediaDeleted' } | { __typename?: 'ProductMediaUpdated' } | { __typename?: 'ProductMetadataUpdated' } | { __typename?: 'ProductUpdated' } | { __typename?: 'ProductVariantBackInStock' } | { __typename?: 'ProductVariantCreated' } | { __typename?: 'ProductVariantDeleted' } | { __typename?: 'ProductVariantMetadataUpdated' } | { __typename?: 'ProductVariantOutOfStock' } | { __typename?: 'ProductVariantStockUpdated' } | { __typename?: 'ProductVariantUpdated' } | { __typename?: 'PromotionCreated' } | { __typename?: 'PromotionDeleted' } | { __typename?: 'PromotionEnded' } | { __typename?: 'PromotionRuleCreated' } | { __typename?: 'PromotionRuleDeleted' } | { __typename?: 'PromotionRuleUpdated' } | { __typename?: 'PromotionStarted' } | { __typename?: 'PromotionUpdated' } | { __typename?: 'SaleCreated' } | { __typename?: 'SaleDeleted' } | { __typename?: 'SaleToggle' } | { __typename?: 'SaleUpdated' } | { __typename?: 'ShippingListMethodsForCheckout' } | { __typename?: 'ShippingPriceCreated' } | { __typename?: 'ShippingPriceDeleted' } | { __typename?: 'ShippingPriceUpdated' } | { __typename?: 'ShippingZoneCreated' } | { __typename?: 'ShippingZoneDeleted' } | { __typename?: 'ShippingZoneMetadataUpdated' } | { __typename?: 'ShippingZoneUpdated' } | { __typename?: 'ShopMetadataUpdated' } | { __typename?: 'StaffCreated' } | { __typename?: 'StaffDeleted' } | { __typename?: 'StaffSetPasswordRequested' } | { __typename?: 'StaffUpdated' } | { __typename?: 'StoredPaymentMethodDeleteRequested' } | { __typename?: 'ThumbnailCreated' } | { __typename: 'TransactionCancelationRequested', issuedAt?: any | null, version?: string | null, recipient?: { __typename?: 'App', id: string, privateMetadata: Array<{ __typename?: 'MetadataItem', key: string, value: string }>, metadata: Array<{ __typename?: 'MetadataItem', key: string, value: string }> } | null, transaction?: { __typename?: 'TransactionItem', id: string, token: any, pspReference: string, authorizedAmount: { __typename?: 'Money', amount: number, currency: string }, events: Array<{ __typename?: 'TransactionEvent', pspReference: string }> } | null } | { __typename?: 'TransactionChargeRequested' } | { __typename?: 'TransactionInitializeSession' } | { __typename?: 'TransactionItemMetadataUpdated' } | { __typename?: 'TransactionProcessSession' } | { __typename?: 'TransactionRefundRequested' } | { __typename?: 'TranslationCreated' } | { __typename?: 'TranslationUpdated' } | { __typename?: 'VoucherCodeExportCompleted' } | { __typename?: 'VoucherCodesCreated' } | { __typename?: 'VoucherCodesDeleted' } | { __typename?: 'VoucherCreated' } | { __typename?: 'VoucherDeleted' } | { __typename?: 'VoucherMetadataUpdated' } | { __typename?: 'VoucherUpdated' } | { __typename?: 'WarehouseCreated' } | { __typename?: 'WarehouseDeleted' } | { __typename?: 'WarehouseMetadataUpdated' } | { __typename?: 'WarehouseUpdated' } | null };
+export type TransactionCancelRequestedSubscription = { __typename?: 'Subscription', event?: { __typename?: 'AccountChangeEmailRequested' } | { __typename?: 'AccountConfirmationRequested' } | { __typename?: 'AccountConfirmed' } | { __typename?: 'AccountDeleteRequested' } | { __typename?: 'AccountDeleted' } | { __typename?: 'AccountEmailChanged' } | { __typename?: 'AccountSetPasswordRequested' } | { __typename?: 'AddressCreated' } | { __typename?: 'AddressDeleted' } | { __typename?: 'AddressUpdated' } | { __typename?: 'AppDeleted' } | { __typename?: 'AppInstalled' } | { __typename?: 'AppStatusChanged' } | { __typename?: 'AppUpdated' } | { __typename?: 'AttributeCreated' } | { __typename?: 'AttributeDeleted' } | { __typename?: 'AttributeUpdated' } | { __typename?: 'AttributeValueCreated' } | { __typename?: 'AttributeValueDeleted' } | { __typename?: 'AttributeValueUpdated' } | { __typename?: 'CalculateTaxes' } | { __typename?: 'CategoryCreated' } | { __typename?: 'CategoryDeleted' } | { __typename?: 'CategoryUpdated' } | { __typename?: 'ChannelCreated' } | { __typename?: 'ChannelDeleted' } | { __typename?: 'ChannelMetadataUpdated' } | { __typename?: 'ChannelStatusChanged' } | { __typename?: 'ChannelUpdated' } | { __typename?: 'CheckoutCreated' } | { __typename?: 'CheckoutFilterShippingMethods' } | { __typename?: 'CheckoutFullyAuthorized' } | { __typename?: 'CheckoutFullyPaid' } | { __typename?: 'CheckoutMetadataUpdated' } | { __typename?: 'CheckoutUpdated' } | { __typename?: 'CollectionCreated' } | { __typename?: 'CollectionDeleted' } | { __typename?: 'CollectionMetadataUpdated' } | { __typename?: 'CollectionUpdated' } | { __typename?: 'CustomerCreated' } | { __typename?: 'CustomerDeleted' } | { __typename?: 'CustomerMetadataUpdated' } | { __typename?: 'CustomerUpdated' } | { __typename?: 'DraftOrderCreated' } | { __typename?: 'DraftOrderDeleted' } | { __typename?: 'DraftOrderUpdated' } | { __typename?: 'FulfillmentApproved' } | { __typename?: 'FulfillmentCanceled' } | { __typename?: 'FulfillmentCreated' } | { __typename?: 'FulfillmentMetadataUpdated' } | { __typename?: 'FulfillmentTrackingNumberUpdated' } | { __typename?: 'GiftCardCreated' } | { __typename?: 'GiftCardDeleted' } | { __typename?: 'GiftCardExportCompleted' } | { __typename?: 'GiftCardMetadataUpdated' } | { __typename?: 'GiftCardSent' } | { __typename?: 'GiftCardStatusChanged' } | { __typename?: 'GiftCardUpdated' } | { __typename?: 'InvoiceDeleted' } | { __typename?: 'InvoiceRequested' } | { __typename?: 'InvoiceSent' } | { __typename?: 'ListStoredPaymentMethods' } | { __typename?: 'MenuCreated' } | { __typename?: 'MenuDeleted' } | { __typename?: 'MenuItemCreated' } | { __typename?: 'MenuItemDeleted' } | { __typename?: 'MenuItemUpdated' } | { __typename?: 'MenuUpdated' } | { __typename?: 'OrderBulkCreated' } | { __typename?: 'OrderCancelled' } | { __typename?: 'OrderConfirmed' } | { __typename?: 'OrderCreated' } | { __typename?: 'OrderExpired' } | { __typename?: 'OrderFilterShippingMethods' } | { __typename?: 'OrderFulfilled' } | { __typename?: 'OrderFullyPaid' } | { __typename?: 'OrderFullyRefunded' } | { __typename?: 'OrderMetadataUpdated' } | { __typename?: 'OrderPaid' } | { __typename?: 'OrderRefunded' } | { __typename?: 'OrderUpdated' } | { __typename?: 'PageCreated' } | { __typename?: 'PageDeleted' } | { __typename?: 'PageTypeCreated' } | { __typename?: 'PageTypeDeleted' } | { __typename?: 'PageTypeUpdated' } | { __typename?: 'PageUpdated' } | { __typename?: 'PaymentAuthorize' } | { __typename?: 'PaymentCaptureEvent' } | { __typename?: 'PaymentConfirmEvent' } | { __typename?: 'PaymentGatewayInitializeSession' } | { __typename?: 'PaymentGatewayInitializeTokenizationSession' } | { __typename?: 'PaymentListGateways' } | { __typename?: 'PaymentMethodInitializeTokenizationSession' } | { __typename?: 'PaymentMethodProcessTokenizationSession' } | { __typename?: 'PaymentProcessEvent' } | { __typename?: 'PaymentRefundEvent' } | { __typename?: 'PaymentVoidEvent' } | { __typename?: 'PermissionGroupCreated' } | { __typename?: 'PermissionGroupDeleted' } | { __typename?: 'PermissionGroupUpdated' } | { __typename?: 'ProductCreated' } | { __typename?: 'ProductDeleted' } | { __typename?: 'ProductExportCompleted' } | { __typename?: 'ProductMediaCreated' } | { __typename?: 'ProductMediaDeleted' } | { __typename?: 'ProductMediaUpdated' } | { __typename?: 'ProductMetadataUpdated' } | { __typename?: 'ProductUpdated' } | { __typename?: 'ProductVariantBackInStock' } | { __typename?: 'ProductVariantBackInStockForClickAndCollect' } | { __typename?: 'ProductVariantBackInStockInChannel' } | { __typename?: 'ProductVariantCreated' } | { __typename?: 'ProductVariantDeleted' } | { __typename?: 'ProductVariantDiscountedPriceUpdated' } | { __typename?: 'ProductVariantMetadataUpdated' } | { __typename?: 'ProductVariantOutOfStock' } | { __typename?: 'ProductVariantOutOfStockForClickAndCollect' } | { __typename?: 'ProductVariantOutOfStockInChannel' } | { __typename?: 'ProductVariantStockUpdated' } | { __typename?: 'ProductVariantUpdated' } | { __typename?: 'PromotionCreated' } | { __typename?: 'PromotionDeleted' } | { __typename?: 'PromotionEnded' } | { __typename?: 'PromotionRuleCreated' } | { __typename?: 'PromotionRuleDeleted' } | { __typename?: 'PromotionRuleUpdated' } | { __typename?: 'PromotionStarted' } | { __typename?: 'PromotionUpdated' } | { __typename?: 'SaleCreated' } | { __typename?: 'SaleDeleted' } | { __typename?: 'SaleToggle' } | { __typename?: 'SaleUpdated' } | { __typename?: 'ShippingListMethodsForCheckout' } | { __typename?: 'ShippingPriceCreated' } | { __typename?: 'ShippingPriceDeleted' } | { __typename?: 'ShippingPriceUpdated' } | { __typename?: 'ShippingZoneCreated' } | { __typename?: 'ShippingZoneDeleted' } | { __typename?: 'ShippingZoneMetadataUpdated' } | { __typename?: 'ShippingZoneUpdated' } | { __typename?: 'ShopMetadataUpdated' } | { __typename?: 'StaffCreated' } | { __typename?: 'StaffDeleted' } | { __typename?: 'StaffSetPasswordRequested' } | { __typename?: 'StaffUpdated' } | { __typename?: 'StoredPaymentMethodDeleteRequested' } | { __typename?: 'ThumbnailCreated' } | { __typename: 'TransactionCancelationRequested', issuedAt?: any | null, version?: string | null, recipient?: { __typename?: 'App', id: string, privateMetadata: Array<{ __typename?: 'MetadataItem', key: string, value: string }>, metadata: Array<{ __typename?: 'MetadataItem', key: string, value: string }> } | null, transaction?: { __typename?: 'TransactionItem', id: string, token: any, pspReference: string, authorizedAmount: { __typename?: 'Money', amount: number, currency: string }, events: Array<{ __typename?: 'TransactionEvent', pspReference: string }> } | null } | { __typename?: 'TransactionChargeRequested' } | { __typename?: 'TransactionInitializeSession' } | { __typename?: 'TransactionItemMetadataUpdated' } | { __typename?: 'TransactionProcessSession' } | { __typename?: 'TransactionRefundRequested' } | { __typename?: 'TranslationCreated' } | { __typename?: 'TranslationUpdated' } | { __typename?: 'VoucherCodeExportCompleted' } | { __typename?: 'VoucherCodesCreated' } | { __typename?: 'VoucherCodesDeleted' } | { __typename?: 'VoucherCreated' } | { __typename?: 'VoucherDeleted' } | { __typename?: 'VoucherMetadataUpdated' } | { __typename?: 'VoucherUpdated' } | { __typename?: 'WarehouseCreated' } | { __typename?: 'WarehouseDeleted' } | { __typename?: 'WarehouseMetadataUpdated' } | { __typename?: 'WarehouseUpdated' } | null };
 
 export type TransactionChargeRequestedSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
-export type TransactionChargeRequestedSubscription = { __typename?: 'Subscription', event?: { __typename?: 'AccountChangeEmailRequested' } | { __typename?: 'AccountConfirmationRequested' } | { __typename?: 'AccountConfirmed' } | { __typename?: 'AccountDeleteRequested' } | { __typename?: 'AccountDeleted' } | { __typename?: 'AccountEmailChanged' } | { __typename?: 'AccountSetPasswordRequested' } | { __typename?: 'AddressCreated' } | { __typename?: 'AddressDeleted' } | { __typename?: 'AddressUpdated' } | { __typename?: 'AppDeleted' } | { __typename?: 'AppInstalled' } | { __typename?: 'AppStatusChanged' } | { __typename?: 'AppUpdated' } | { __typename?: 'AttributeCreated' } | { __typename?: 'AttributeDeleted' } | { __typename?: 'AttributeUpdated' } | { __typename?: 'AttributeValueCreated' } | { __typename?: 'AttributeValueDeleted' } | { __typename?: 'AttributeValueUpdated' } | { __typename?: 'CalculateTaxes' } | { __typename?: 'CategoryCreated' } | { __typename?: 'CategoryDeleted' } | { __typename?: 'CategoryUpdated' } | { __typename?: 'ChannelCreated' } | { __typename?: 'ChannelDeleted' } | { __typename?: 'ChannelMetadataUpdated' } | { __typename?: 'ChannelStatusChanged' } | { __typename?: 'ChannelUpdated' } | { __typename?: 'CheckoutCreated' } | { __typename?: 'CheckoutFilterShippingMethods' } | { __typename?: 'CheckoutFullyAuthorized' } | { __typename?: 'CheckoutFullyPaid' } | { __typename?: 'CheckoutMetadataUpdated' } | { __typename?: 'CheckoutUpdated' } | { __typename?: 'CollectionCreated' } | { __typename?: 'CollectionDeleted' } | { __typename?: 'CollectionMetadataUpdated' } | { __typename?: 'CollectionUpdated' } | { __typename?: 'CustomerCreated' } | { __typename?: 'CustomerMetadataUpdated' } | { __typename?: 'CustomerUpdated' } | { __typename?: 'DraftOrderCreated' } | { __typename?: 'DraftOrderDeleted' } | { __typename?: 'DraftOrderUpdated' } | { __typename?: 'FulfillmentApproved' } | { __typename?: 'FulfillmentCanceled' } | { __typename?: 'FulfillmentCreated' } | { __typename?: 'FulfillmentMetadataUpdated' } | { __typename?: 'FulfillmentTrackingNumberUpdated' } | { __typename?: 'GiftCardCreated' } | { __typename?: 'GiftCardDeleted' } | { __typename?: 'GiftCardExportCompleted' } | { __typename?: 'GiftCardMetadataUpdated' } | { __typename?: 'GiftCardSent' } | { __typename?: 'GiftCardStatusChanged' } | { __typename?: 'GiftCardUpdated' } | { __typename?: 'InvoiceDeleted' } | { __typename?: 'InvoiceRequested' } | { __typename?: 'InvoiceSent' } | { __typename?: 'ListStoredPaymentMethods' } | { __typename?: 'MenuCreated' } | { __typename?: 'MenuDeleted' } | { __typename?: 'MenuItemCreated' } | { __typename?: 'MenuItemDeleted' } | { __typename?: 'MenuItemUpdated' } | { __typename?: 'MenuUpdated' } | { __typename?: 'OrderBulkCreated' } | { __typename?: 'OrderCancelled' } | { __typename?: 'OrderConfirmed' } | { __typename?: 'OrderCreated' } | { __typename?: 'OrderExpired' } | { __typename?: 'OrderFilterShippingMethods' } | { __typename?: 'OrderFulfilled' } | { __typename?: 'OrderFullyPaid' } | { __typename?: 'OrderFullyRefunded' } | { __typename?: 'OrderMetadataUpdated' } | { __typename?: 'OrderPaid' } | { __typename?: 'OrderRefunded' } | { __typename?: 'OrderUpdated' } | { __typename?: 'PageCreated' } | { __typename?: 'PageDeleted' } | { __typename?: 'PageTypeCreated' } | { __typename?: 'PageTypeDeleted' } | { __typename?: 'PageTypeUpdated' } | { __typename?: 'PageUpdated' } | { __typename?: 'PaymentAuthorize' } | { __typename?: 'PaymentCaptureEvent' } | { __typename?: 'PaymentConfirmEvent' } | { __typename?: 'PaymentGatewayInitializeSession' } | { __typename?: 'PaymentGatewayInitializeTokenizationSession' } | { __typename?: 'PaymentListGateways' } | { __typename?: 'PaymentMethodInitializeTokenizationSession' } | { __typename?: 'PaymentMethodProcessTokenizationSession' } | { __typename?: 'PaymentProcessEvent' } | { __typename?: 'PaymentRefundEvent' } | { __typename?: 'PaymentVoidEvent' } | { __typename?: 'PermissionGroupCreated' } | { __typename?: 'PermissionGroupDeleted' } | { __typename?: 'PermissionGroupUpdated' } | { __typename?: 'ProductCreated' } | { __typename?: 'ProductDeleted' } | { __typename?: 'ProductExportCompleted' } | { __typename?: 'ProductMediaCreated' } | { __typename?: 'ProductMediaDeleted' } | { __typename?: 'ProductMediaUpdated' } | { __typename?: 'ProductMetadataUpdated' } | { __typename?: 'ProductUpdated' } | { __typename?: 'ProductVariantBackInStock' } | { __typename?: 'ProductVariantCreated' } | { __typename?: 'ProductVariantDeleted' } | { __typename?: 'ProductVariantMetadataUpdated' } | { __typename?: 'ProductVariantOutOfStock' } | { __typename?: 'ProductVariantStockUpdated' } | { __typename?: 'ProductVariantUpdated' } | { __typename?: 'PromotionCreated' } | { __typename?: 'PromotionDeleted' } | { __typename?: 'PromotionEnded' } | { __typename?: 'PromotionRuleCreated' } | { __typename?: 'PromotionRuleDeleted' } | { __typename?: 'PromotionRuleUpdated' } | { __typename?: 'PromotionStarted' } | { __typename?: 'PromotionUpdated' } | { __typename?: 'SaleCreated' } | { __typename?: 'SaleDeleted' } | { __typename?: 'SaleToggle' } | { __typename?: 'SaleUpdated' } | { __typename?: 'ShippingListMethodsForCheckout' } | { __typename?: 'ShippingPriceCreated' } | { __typename?: 'ShippingPriceDeleted' } | { __typename?: 'ShippingPriceUpdated' } | { __typename?: 'ShippingZoneCreated' } | { __typename?: 'ShippingZoneDeleted' } | { __typename?: 'ShippingZoneMetadataUpdated' } | { __typename?: 'ShippingZoneUpdated' } | { __typename?: 'ShopMetadataUpdated' } | { __typename?: 'StaffCreated' } | { __typename?: 'StaffDeleted' } | { __typename?: 'StaffSetPasswordRequested' } | { __typename?: 'StaffUpdated' } | { __typename?: 'StoredPaymentMethodDeleteRequested' } | { __typename?: 'ThumbnailCreated' } | { __typename?: 'TransactionCancelationRequested' } | { __typename: 'TransactionChargeRequested', issuedAt?: any | null, version?: string | null, recipient?: { __typename?: 'App', id: string, privateMetadata: Array<{ __typename?: 'MetadataItem', key: string, value: string }>, metadata: Array<{ __typename?: 'MetadataItem', key: string, value: string }> } | null, action: { __typename?: 'TransactionAction', amount: any, actionType: TransactionActionEnum }, transaction?: { __typename?: 'TransactionItem', id: string, token: any, pspReference: string, authorizedAmount: { __typename?: 'Money', amount: number, currency: string }, events: Array<{ __typename?: 'TransactionEvent', pspReference: string }> } | null } | { __typename?: 'TransactionInitializeSession' } | { __typename?: 'TransactionItemMetadataUpdated' } | { __typename?: 'TransactionProcessSession' } | { __typename?: 'TransactionRefundRequested' } | { __typename?: 'TranslationCreated' } | { __typename?: 'TranslationUpdated' } | { __typename?: 'VoucherCodeExportCompleted' } | { __typename?: 'VoucherCodesCreated' } | { __typename?: 'VoucherCodesDeleted' } | { __typename?: 'VoucherCreated' } | { __typename?: 'VoucherDeleted' } | { __typename?: 'VoucherMetadataUpdated' } | { __typename?: 'VoucherUpdated' } | { __typename?: 'WarehouseCreated' } | { __typename?: 'WarehouseDeleted' } | { __typename?: 'WarehouseMetadataUpdated' } | { __typename?: 'WarehouseUpdated' } | null };
+export type TransactionChargeRequestedSubscription = { __typename?: 'Subscription', event?: { __typename?: 'AccountChangeEmailRequested' } | { __typename?: 'AccountConfirmationRequested' } | { __typename?: 'AccountConfirmed' } | { __typename?: 'AccountDeleteRequested' } | { __typename?: 'AccountDeleted' } | { __typename?: 'AccountEmailChanged' } | { __typename?: 'AccountSetPasswordRequested' } | { __typename?: 'AddressCreated' } | { __typename?: 'AddressDeleted' } | { __typename?: 'AddressUpdated' } | { __typename?: 'AppDeleted' } | { __typename?: 'AppInstalled' } | { __typename?: 'AppStatusChanged' } | { __typename?: 'AppUpdated' } | { __typename?: 'AttributeCreated' } | { __typename?: 'AttributeDeleted' } | { __typename?: 'AttributeUpdated' } | { __typename?: 'AttributeValueCreated' } | { __typename?: 'AttributeValueDeleted' } | { __typename?: 'AttributeValueUpdated' } | { __typename?: 'CalculateTaxes' } | { __typename?: 'CategoryCreated' } | { __typename?: 'CategoryDeleted' } | { __typename?: 'CategoryUpdated' } | { __typename?: 'ChannelCreated' } | { __typename?: 'ChannelDeleted' } | { __typename?: 'ChannelMetadataUpdated' } | { __typename?: 'ChannelStatusChanged' } | { __typename?: 'ChannelUpdated' } | { __typename?: 'CheckoutCreated' } | { __typename?: 'CheckoutFilterShippingMethods' } | { __typename?: 'CheckoutFullyAuthorized' } | { __typename?: 'CheckoutFullyPaid' } | { __typename?: 'CheckoutMetadataUpdated' } | { __typename?: 'CheckoutUpdated' } | { __typename?: 'CollectionCreated' } | { __typename?: 'CollectionDeleted' } | { __typename?: 'CollectionMetadataUpdated' } | { __typename?: 'CollectionUpdated' } | { __typename?: 'CustomerCreated' } | { __typename?: 'CustomerDeleted' } | { __typename?: 'CustomerMetadataUpdated' } | { __typename?: 'CustomerUpdated' } | { __typename?: 'DraftOrderCreated' } | { __typename?: 'DraftOrderDeleted' } | { __typename?: 'DraftOrderUpdated' } | { __typename?: 'FulfillmentApproved' } | { __typename?: 'FulfillmentCanceled' } | { __typename?: 'FulfillmentCreated' } | { __typename?: 'FulfillmentMetadataUpdated' } | { __typename?: 'FulfillmentTrackingNumberUpdated' } | { __typename?: 'GiftCardCreated' } | { __typename?: 'GiftCardDeleted' } | { __typename?: 'GiftCardExportCompleted' } | { __typename?: 'GiftCardMetadataUpdated' } | { __typename?: 'GiftCardSent' } | { __typename?: 'GiftCardStatusChanged' } | { __typename?: 'GiftCardUpdated' } | { __typename?: 'InvoiceDeleted' } | { __typename?: 'InvoiceRequested' } | { __typename?: 'InvoiceSent' } | { __typename?: 'ListStoredPaymentMethods' } | { __typename?: 'MenuCreated' } | { __typename?: 'MenuDeleted' } | { __typename?: 'MenuItemCreated' } | { __typename?: 'MenuItemDeleted' } | { __typename?: 'MenuItemUpdated' } | { __typename?: 'MenuUpdated' } | { __typename?: 'OrderBulkCreated' } | { __typename?: 'OrderCancelled' } | { __typename?: 'OrderConfirmed' } | { __typename?: 'OrderCreated' } | { __typename?: 'OrderExpired' } | { __typename?: 'OrderFilterShippingMethods' } | { __typename?: 'OrderFulfilled' } | { __typename?: 'OrderFullyPaid' } | { __typename?: 'OrderFullyRefunded' } | { __typename?: 'OrderMetadataUpdated' } | { __typename?: 'OrderPaid' } | { __typename?: 'OrderRefunded' } | { __typename?: 'OrderUpdated' } | { __typename?: 'PageCreated' } | { __typename?: 'PageDeleted' } | { __typename?: 'PageTypeCreated' } | { __typename?: 'PageTypeDeleted' } | { __typename?: 'PageTypeUpdated' } | { __typename?: 'PageUpdated' } | { __typename?: 'PaymentAuthorize' } | { __typename?: 'PaymentCaptureEvent' } | { __typename?: 'PaymentConfirmEvent' } | { __typename?: 'PaymentGatewayInitializeSession' } | { __typename?: 'PaymentGatewayInitializeTokenizationSession' } | { __typename?: 'PaymentListGateways' } | { __typename?: 'PaymentMethodInitializeTokenizationSession' } | { __typename?: 'PaymentMethodProcessTokenizationSession' } | { __typename?: 'PaymentProcessEvent' } | { __typename?: 'PaymentRefundEvent' } | { __typename?: 'PaymentVoidEvent' } | { __typename?: 'PermissionGroupCreated' } | { __typename?: 'PermissionGroupDeleted' } | { __typename?: 'PermissionGroupUpdated' } | { __typename?: 'ProductCreated' } | { __typename?: 'ProductDeleted' } | { __typename?: 'ProductExportCompleted' } | { __typename?: 'ProductMediaCreated' } | { __typename?: 'ProductMediaDeleted' } | { __typename?: 'ProductMediaUpdated' } | { __typename?: 'ProductMetadataUpdated' } | { __typename?: 'ProductUpdated' } | { __typename?: 'ProductVariantBackInStock' } | { __typename?: 'ProductVariantBackInStockForClickAndCollect' } | { __typename?: 'ProductVariantBackInStockInChannel' } | { __typename?: 'ProductVariantCreated' } | { __typename?: 'ProductVariantDeleted' } | { __typename?: 'ProductVariantDiscountedPriceUpdated' } | { __typename?: 'ProductVariantMetadataUpdated' } | { __typename?: 'ProductVariantOutOfStock' } | { __typename?: 'ProductVariantOutOfStockForClickAndCollect' } | { __typename?: 'ProductVariantOutOfStockInChannel' } | { __typename?: 'ProductVariantStockUpdated' } | { __typename?: 'ProductVariantUpdated' } | { __typename?: 'PromotionCreated' } | { __typename?: 'PromotionDeleted' } | { __typename?: 'PromotionEnded' } | { __typename?: 'PromotionRuleCreated' } | { __typename?: 'PromotionRuleDeleted' } | { __typename?: 'PromotionRuleUpdated' } | { __typename?: 'PromotionStarted' } | { __typename?: 'PromotionUpdated' } | { __typename?: 'SaleCreated' } | { __typename?: 'SaleDeleted' } | { __typename?: 'SaleToggle' } | { __typename?: 'SaleUpdated' } | { __typename?: 'ShippingListMethodsForCheckout' } | { __typename?: 'ShippingPriceCreated' } | { __typename?: 'ShippingPriceDeleted' } | { __typename?: 'ShippingPriceUpdated' } | { __typename?: 'ShippingZoneCreated' } | { __typename?: 'ShippingZoneDeleted' } | { __typename?: 'ShippingZoneMetadataUpdated' } | { __typename?: 'ShippingZoneUpdated' } | { __typename?: 'ShopMetadataUpdated' } | { __typename?: 'StaffCreated' } | { __typename?: 'StaffDeleted' } | { __typename?: 'StaffSetPasswordRequested' } | { __typename?: 'StaffUpdated' } | { __typename?: 'StoredPaymentMethodDeleteRequested' } | { __typename?: 'ThumbnailCreated' } | { __typename?: 'TransactionCancelationRequested' } | { __typename: 'TransactionChargeRequested', issuedAt?: any | null, version?: string | null, recipient?: { __typename?: 'App', id: string, privateMetadata: Array<{ __typename?: 'MetadataItem', key: string, value: string }>, metadata: Array<{ __typename?: 'MetadataItem', key: string, value: string }> } | null, action: { __typename?: 'TransactionAction', amount: any, actionType: TransactionActionEnum }, transaction?: { __typename?: 'TransactionItem', id: string, token: any, pspReference: string, authorizedAmount: { __typename?: 'Money', amount: number, currency: string }, events: Array<{ __typename?: 'TransactionEvent', pspReference: string }> } | null } | { __typename?: 'TransactionInitializeSession' } | { __typename?: 'TransactionItemMetadataUpdated' } | { __typename?: 'TransactionProcessSession' } | { __typename?: 'TransactionRefundRequested' } | { __typename?: 'TranslationCreated' } | { __typename?: 'TranslationUpdated' } | { __typename?: 'VoucherCodeExportCompleted' } | { __typename?: 'VoucherCodesCreated' } | { __typename?: 'VoucherCodesDeleted' } | { __typename?: 'VoucherCreated' } | { __typename?: 'VoucherDeleted' } | { __typename?: 'VoucherMetadataUpdated' } | { __typename?: 'VoucherUpdated' } | { __typename?: 'WarehouseCreated' } | { __typename?: 'WarehouseDeleted' } | { __typename?: 'WarehouseMetadataUpdated' } | { __typename?: 'WarehouseUpdated' } | null };
 
 export type TransactionInitializeSessionSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
-export type TransactionInitializeSessionSubscription = { __typename?: 'Subscription', event?: { __typename?: 'AccountChangeEmailRequested' } | { __typename?: 'AccountConfirmationRequested' } | { __typename?: 'AccountConfirmed' } | { __typename?: 'AccountDeleteRequested' } | { __typename?: 'AccountDeleted' } | { __typename?: 'AccountEmailChanged' } | { __typename?: 'AccountSetPasswordRequested' } | { __typename?: 'AddressCreated' } | { __typename?: 'AddressDeleted' } | { __typename?: 'AddressUpdated' } | { __typename?: 'AppDeleted' } | { __typename?: 'AppInstalled' } | { __typename?: 'AppStatusChanged' } | { __typename?: 'AppUpdated' } | { __typename?: 'AttributeCreated' } | { __typename?: 'AttributeDeleted' } | { __typename?: 'AttributeUpdated' } | { __typename?: 'AttributeValueCreated' } | { __typename?: 'AttributeValueDeleted' } | { __typename?: 'AttributeValueUpdated' } | { __typename?: 'CalculateTaxes' } | { __typename?: 'CategoryCreated' } | { __typename?: 'CategoryDeleted' } | { __typename?: 'CategoryUpdated' } | { __typename?: 'ChannelCreated' } | { __typename?: 'ChannelDeleted' } | { __typename?: 'ChannelMetadataUpdated' } | { __typename?: 'ChannelStatusChanged' } | { __typename?: 'ChannelUpdated' } | { __typename?: 'CheckoutCreated' } | { __typename?: 'CheckoutFilterShippingMethods' } | { __typename?: 'CheckoutFullyAuthorized' } | { __typename?: 'CheckoutFullyPaid' } | { __typename?: 'CheckoutMetadataUpdated' } | { __typename?: 'CheckoutUpdated' } | { __typename?: 'CollectionCreated' } | { __typename?: 'CollectionDeleted' } | { __typename?: 'CollectionMetadataUpdated' } | { __typename?: 'CollectionUpdated' } | { __typename?: 'CustomerCreated' } | { __typename?: 'CustomerMetadataUpdated' } | { __typename?: 'CustomerUpdated' } | { __typename?: 'DraftOrderCreated' } | { __typename?: 'DraftOrderDeleted' } | { __typename?: 'DraftOrderUpdated' } | { __typename?: 'FulfillmentApproved' } | { __typename?: 'FulfillmentCanceled' } | { __typename?: 'FulfillmentCreated' } | { __typename?: 'FulfillmentMetadataUpdated' } | { __typename?: 'FulfillmentTrackingNumberUpdated' } | { __typename?: 'GiftCardCreated' } | { __typename?: 'GiftCardDeleted' } | { __typename?: 'GiftCardExportCompleted' } | { __typename?: 'GiftCardMetadataUpdated' } | { __typename?: 'GiftCardSent' } | { __typename?: 'GiftCardStatusChanged' } | { __typename?: 'GiftCardUpdated' } | { __typename?: 'InvoiceDeleted' } | { __typename?: 'InvoiceRequested' } | { __typename?: 'InvoiceSent' } | { __typename?: 'ListStoredPaymentMethods' } | { __typename?: 'MenuCreated' } | { __typename?: 'MenuDeleted' } | { __typename?: 'MenuItemCreated' } | { __typename?: 'MenuItemDeleted' } | { __typename?: 'MenuItemUpdated' } | { __typename?: 'MenuUpdated' } | { __typename?: 'OrderBulkCreated' } | { __typename?: 'OrderCancelled' } | { __typename?: 'OrderConfirmed' } | { __typename?: 'OrderCreated' } | { __typename?: 'OrderExpired' } | { __typename?: 'OrderFilterShippingMethods' } | { __typename?: 'OrderFulfilled' } | { __typename?: 'OrderFullyPaid' } | { __typename?: 'OrderFullyRefunded' } | { __typename?: 'OrderMetadataUpdated' } | { __typename?: 'OrderPaid' } | { __typename?: 'OrderRefunded' } | { __typename?: 'OrderUpdated' } | { __typename?: 'PageCreated' } | { __typename?: 'PageDeleted' } | { __typename?: 'PageTypeCreated' } | { __typename?: 'PageTypeDeleted' } | { __typename?: 'PageTypeUpdated' } | { __typename?: 'PageUpdated' } | { __typename?: 'PaymentAuthorize' } | { __typename?: 'PaymentCaptureEvent' } | { __typename?: 'PaymentConfirmEvent' } | { __typename?: 'PaymentGatewayInitializeSession' } | { __typename?: 'PaymentGatewayInitializeTokenizationSession' } | { __typename?: 'PaymentListGateways' } | { __typename?: 'PaymentMethodInitializeTokenizationSession' } | { __typename?: 'PaymentMethodProcessTokenizationSession' } | { __typename?: 'PaymentProcessEvent' } | { __typename?: 'PaymentRefundEvent' } | { __typename?: 'PaymentVoidEvent' } | { __typename?: 'PermissionGroupCreated' } | { __typename?: 'PermissionGroupDeleted' } | { __typename?: 'PermissionGroupUpdated' } | { __typename?: 'ProductCreated' } | { __typename?: 'ProductDeleted' } | { __typename?: 'ProductExportCompleted' } | { __typename?: 'ProductMediaCreated' } | { __typename?: 'ProductMediaDeleted' } | { __typename?: 'ProductMediaUpdated' } | { __typename?: 'ProductMetadataUpdated' } | { __typename?: 'ProductUpdated' } | { __typename?: 'ProductVariantBackInStock' } | { __typename?: 'ProductVariantCreated' } | { __typename?: 'ProductVariantDeleted' } | { __typename?: 'ProductVariantMetadataUpdated' } | { __typename?: 'ProductVariantOutOfStock' } | { __typename?: 'ProductVariantStockUpdated' } | { __typename?: 'ProductVariantUpdated' } | { __typename?: 'PromotionCreated' } | { __typename?: 'PromotionDeleted' } | { __typename?: 'PromotionEnded' } | { __typename?: 'PromotionRuleCreated' } | { __typename?: 'PromotionRuleDeleted' } | { __typename?: 'PromotionRuleUpdated' } | { __typename?: 'PromotionStarted' } | { __typename?: 'PromotionUpdated' } | { __typename?: 'SaleCreated' } | { __typename?: 'SaleDeleted' } | { __typename?: 'SaleToggle' } | { __typename?: 'SaleUpdated' } | { __typename?: 'ShippingListMethodsForCheckout' } | { __typename?: 'ShippingPriceCreated' } | { __typename?: 'ShippingPriceDeleted' } | { __typename?: 'ShippingPriceUpdated' } | { __typename?: 'ShippingZoneCreated' } | { __typename?: 'ShippingZoneDeleted' } | { __typename?: 'ShippingZoneMetadataUpdated' } | { __typename?: 'ShippingZoneUpdated' } | { __typename?: 'ShopMetadataUpdated' } | { __typename?: 'StaffCreated' } | { __typename?: 'StaffDeleted' } | { __typename?: 'StaffSetPasswordRequested' } | { __typename?: 'StaffUpdated' } | { __typename?: 'StoredPaymentMethodDeleteRequested' } | { __typename?: 'ThumbnailCreated' } | { __typename?: 'TransactionCancelationRequested' } | { __typename?: 'TransactionChargeRequested' } | { __typename: 'TransactionInitializeSession', idempotencyKey: string, data?: any | null, merchantReference: string, issuedAt?: any | null, version?: string | null, recipient?: { __typename?: 'App', id: string, privateMetadata: Array<{ __typename?: 'MetadataItem', key: string, value: string }>, metadata: Array<{ __typename?: 'MetadataItem', key: string, value: string }> } | null, action: { __typename?: 'TransactionProcessAction', amount: any, currency: string, actionType: TransactionFlowStrategyEnum }, issuingPrincipal?: { __typename?: 'App', id: string } | { __typename?: 'User', id: string } | null, transaction: { __typename?: 'TransactionItem', id: string, token: any, pspReference: string, events: Array<{ __typename?: 'TransactionEvent', pspReference: string }> } } | { __typename?: 'TransactionItemMetadataUpdated' } | { __typename?: 'TransactionProcessSession' } | { __typename?: 'TransactionRefundRequested' } | { __typename?: 'TranslationCreated' } | { __typename?: 'TranslationUpdated' } | { __typename?: 'VoucherCodeExportCompleted' } | { __typename?: 'VoucherCodesCreated' } | { __typename?: 'VoucherCodesDeleted' } | { __typename?: 'VoucherCreated' } | { __typename?: 'VoucherDeleted' } | { __typename?: 'VoucherMetadataUpdated' } | { __typename?: 'VoucherUpdated' } | { __typename?: 'WarehouseCreated' } | { __typename?: 'WarehouseDeleted' } | { __typename?: 'WarehouseMetadataUpdated' } | { __typename?: 'WarehouseUpdated' } | null };
+export type TransactionInitializeSessionSubscription = { __typename?: 'Subscription', event?: { __typename?: 'AccountChangeEmailRequested' } | { __typename?: 'AccountConfirmationRequested' } | { __typename?: 'AccountConfirmed' } | { __typename?: 'AccountDeleteRequested' } | { __typename?: 'AccountDeleted' } | { __typename?: 'AccountEmailChanged' } | { __typename?: 'AccountSetPasswordRequested' } | { __typename?: 'AddressCreated' } | { __typename?: 'AddressDeleted' } | { __typename?: 'AddressUpdated' } | { __typename?: 'AppDeleted' } | { __typename?: 'AppInstalled' } | { __typename?: 'AppStatusChanged' } | { __typename?: 'AppUpdated' } | { __typename?: 'AttributeCreated' } | { __typename?: 'AttributeDeleted' } | { __typename?: 'AttributeUpdated' } | { __typename?: 'AttributeValueCreated' } | { __typename?: 'AttributeValueDeleted' } | { __typename?: 'AttributeValueUpdated' } | { __typename?: 'CalculateTaxes' } | { __typename?: 'CategoryCreated' } | { __typename?: 'CategoryDeleted' } | { __typename?: 'CategoryUpdated' } | { __typename?: 'ChannelCreated' } | { __typename?: 'ChannelDeleted' } | { __typename?: 'ChannelMetadataUpdated' } | { __typename?: 'ChannelStatusChanged' } | { __typename?: 'ChannelUpdated' } | { __typename?: 'CheckoutCreated' } | { __typename?: 'CheckoutFilterShippingMethods' } | { __typename?: 'CheckoutFullyAuthorized' } | { __typename?: 'CheckoutFullyPaid' } | { __typename?: 'CheckoutMetadataUpdated' } | { __typename?: 'CheckoutUpdated' } | { __typename?: 'CollectionCreated' } | { __typename?: 'CollectionDeleted' } | { __typename?: 'CollectionMetadataUpdated' } | { __typename?: 'CollectionUpdated' } | { __typename?: 'CustomerCreated' } | { __typename?: 'CustomerDeleted' } | { __typename?: 'CustomerMetadataUpdated' } | { __typename?: 'CustomerUpdated' } | { __typename?: 'DraftOrderCreated' } | { __typename?: 'DraftOrderDeleted' } | { __typename?: 'DraftOrderUpdated' } | { __typename?: 'FulfillmentApproved' } | { __typename?: 'FulfillmentCanceled' } | { __typename?: 'FulfillmentCreated' } | { __typename?: 'FulfillmentMetadataUpdated' } | { __typename?: 'FulfillmentTrackingNumberUpdated' } | { __typename?: 'GiftCardCreated' } | { __typename?: 'GiftCardDeleted' } | { __typename?: 'GiftCardExportCompleted' } | { __typename?: 'GiftCardMetadataUpdated' } | { __typename?: 'GiftCardSent' } | { __typename?: 'GiftCardStatusChanged' } | { __typename?: 'GiftCardUpdated' } | { __typename?: 'InvoiceDeleted' } | { __typename?: 'InvoiceRequested' } | { __typename?: 'InvoiceSent' } | { __typename?: 'ListStoredPaymentMethods' } | { __typename?: 'MenuCreated' } | { __typename?: 'MenuDeleted' } | { __typename?: 'MenuItemCreated' } | { __typename?: 'MenuItemDeleted' } | { __typename?: 'MenuItemUpdated' } | { __typename?: 'MenuUpdated' } | { __typename?: 'OrderBulkCreated' } | { __typename?: 'OrderCancelled' } | { __typename?: 'OrderConfirmed' } | { __typename?: 'OrderCreated' } | { __typename?: 'OrderExpired' } | { __typename?: 'OrderFilterShippingMethods' } | { __typename?: 'OrderFulfilled' } | { __typename?: 'OrderFullyPaid' } | { __typename?: 'OrderFullyRefunded' } | { __typename?: 'OrderMetadataUpdated' } | { __typename?: 'OrderPaid' } | { __typename?: 'OrderRefunded' } | { __typename?: 'OrderUpdated' } | { __typename?: 'PageCreated' } | { __typename?: 'PageDeleted' } | { __typename?: 'PageTypeCreated' } | { __typename?: 'PageTypeDeleted' } | { __typename?: 'PageTypeUpdated' } | { __typename?: 'PageUpdated' } | { __typename?: 'PaymentAuthorize' } | { __typename?: 'PaymentCaptureEvent' } | { __typename?: 'PaymentConfirmEvent' } | { __typename?: 'PaymentGatewayInitializeSession' } | { __typename?: 'PaymentGatewayInitializeTokenizationSession' } | { __typename?: 'PaymentListGateways' } | { __typename?: 'PaymentMethodInitializeTokenizationSession' } | { __typename?: 'PaymentMethodProcessTokenizationSession' } | { __typename?: 'PaymentProcessEvent' } | { __typename?: 'PaymentRefundEvent' } | { __typename?: 'PaymentVoidEvent' } | { __typename?: 'PermissionGroupCreated' } | { __typename?: 'PermissionGroupDeleted' } | { __typename?: 'PermissionGroupUpdated' } | { __typename?: 'ProductCreated' } | { __typename?: 'ProductDeleted' } | { __typename?: 'ProductExportCompleted' } | { __typename?: 'ProductMediaCreated' } | { __typename?: 'ProductMediaDeleted' } | { __typename?: 'ProductMediaUpdated' } | { __typename?: 'ProductMetadataUpdated' } | { __typename?: 'ProductUpdated' } | { __typename?: 'ProductVariantBackInStock' } | { __typename?: 'ProductVariantBackInStockForClickAndCollect' } | { __typename?: 'ProductVariantBackInStockInChannel' } | { __typename?: 'ProductVariantCreated' } | { __typename?: 'ProductVariantDeleted' } | { __typename?: 'ProductVariantDiscountedPriceUpdated' } | { __typename?: 'ProductVariantMetadataUpdated' } | { __typename?: 'ProductVariantOutOfStock' } | { __typename?: 'ProductVariantOutOfStockForClickAndCollect' } | { __typename?: 'ProductVariantOutOfStockInChannel' } | { __typename?: 'ProductVariantStockUpdated' } | { __typename?: 'ProductVariantUpdated' } | { __typename?: 'PromotionCreated' } | { __typename?: 'PromotionDeleted' } | { __typename?: 'PromotionEnded' } | { __typename?: 'PromotionRuleCreated' } | { __typename?: 'PromotionRuleDeleted' } | { __typename?: 'PromotionRuleUpdated' } | { __typename?: 'PromotionStarted' } | { __typename?: 'PromotionUpdated' } | { __typename?: 'SaleCreated' } | { __typename?: 'SaleDeleted' } | { __typename?: 'SaleToggle' } | { __typename?: 'SaleUpdated' } | { __typename?: 'ShippingListMethodsForCheckout' } | { __typename?: 'ShippingPriceCreated' } | { __typename?: 'ShippingPriceDeleted' } | { __typename?: 'ShippingPriceUpdated' } | { __typename?: 'ShippingZoneCreated' } | { __typename?: 'ShippingZoneDeleted' } | { __typename?: 'ShippingZoneMetadataUpdated' } | { __typename?: 'ShippingZoneUpdated' } | { __typename?: 'ShopMetadataUpdated' } | { __typename?: 'StaffCreated' } | { __typename?: 'StaffDeleted' } | { __typename?: 'StaffSetPasswordRequested' } | { __typename?: 'StaffUpdated' } | { __typename?: 'StoredPaymentMethodDeleteRequested' } | { __typename?: 'ThumbnailCreated' } | { __typename?: 'TransactionCancelationRequested' } | { __typename?: 'TransactionChargeRequested' } | { __typename: 'TransactionInitializeSession', idempotencyKey: string, data?: any | null, merchantReference: string, issuedAt?: any | null, version?: string | null, recipient?: { __typename?: 'App', id: string, privateMetadata: Array<{ __typename?: 'MetadataItem', key: string, value: string }>, metadata: Array<{ __typename?: 'MetadataItem', key: string, value: string }> } | null, action: { __typename?: 'TransactionProcessAction', amount: any, currency: string, actionType: TransactionFlowStrategyEnum }, issuingPrincipal?: { __typename?: 'App', id: string } | { __typename?: 'User', id: string } | null, transaction: { __typename?: 'TransactionItem', id: string, token: any, pspReference: string, events: Array<{ __typename?: 'TransactionEvent', pspReference: string }> } } | { __typename?: 'TransactionItemMetadataUpdated' } | { __typename?: 'TransactionProcessSession' } | { __typename?: 'TransactionRefundRequested' } | { __typename?: 'TranslationCreated' } | { __typename?: 'TranslationUpdated' } | { __typename?: 'VoucherCodeExportCompleted' } | { __typename?: 'VoucherCodesCreated' } | { __typename?: 'VoucherCodesDeleted' } | { __typename?: 'VoucherCreated' } | { __typename?: 'VoucherDeleted' } | { __typename?: 'VoucherMetadataUpdated' } | { __typename?: 'VoucherUpdated' } | { __typename?: 'WarehouseCreated' } | { __typename?: 'WarehouseDeleted' } | { __typename?: 'WarehouseMetadataUpdated' } | { __typename?: 'WarehouseUpdated' } | null };
 
 export type TransactionProcessSessionSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
-export type TransactionProcessSessionSubscription = { __typename?: 'Subscription', event?: { __typename?: 'AccountChangeEmailRequested' } | { __typename?: 'AccountConfirmationRequested' } | { __typename?: 'AccountConfirmed' } | { __typename?: 'AccountDeleteRequested' } | { __typename?: 'AccountDeleted' } | { __typename?: 'AccountEmailChanged' } | { __typename?: 'AccountSetPasswordRequested' } | { __typename?: 'AddressCreated' } | { __typename?: 'AddressDeleted' } | { __typename?: 'AddressUpdated' } | { __typename?: 'AppDeleted' } | { __typename?: 'AppInstalled' } | { __typename?: 'AppStatusChanged' } | { __typename?: 'AppUpdated' } | { __typename?: 'AttributeCreated' } | { __typename?: 'AttributeDeleted' } | { __typename?: 'AttributeUpdated' } | { __typename?: 'AttributeValueCreated' } | { __typename?: 'AttributeValueDeleted' } | { __typename?: 'AttributeValueUpdated' } | { __typename?: 'CalculateTaxes' } | { __typename?: 'CategoryCreated' } | { __typename?: 'CategoryDeleted' } | { __typename?: 'CategoryUpdated' } | { __typename?: 'ChannelCreated' } | { __typename?: 'ChannelDeleted' } | { __typename?: 'ChannelMetadataUpdated' } | { __typename?: 'ChannelStatusChanged' } | { __typename?: 'ChannelUpdated' } | { __typename?: 'CheckoutCreated' } | { __typename?: 'CheckoutFilterShippingMethods' } | { __typename?: 'CheckoutFullyAuthorized' } | { __typename?: 'CheckoutFullyPaid' } | { __typename?: 'CheckoutMetadataUpdated' } | { __typename?: 'CheckoutUpdated' } | { __typename?: 'CollectionCreated' } | { __typename?: 'CollectionDeleted' } | { __typename?: 'CollectionMetadataUpdated' } | { __typename?: 'CollectionUpdated' } | { __typename?: 'CustomerCreated' } | { __typename?: 'CustomerMetadataUpdated' } | { __typename?: 'CustomerUpdated' } | { __typename?: 'DraftOrderCreated' } | { __typename?: 'DraftOrderDeleted' } | { __typename?: 'DraftOrderUpdated' } | { __typename?: 'FulfillmentApproved' } | { __typename?: 'FulfillmentCanceled' } | { __typename?: 'FulfillmentCreated' } | { __typename?: 'FulfillmentMetadataUpdated' } | { __typename?: 'FulfillmentTrackingNumberUpdated' } | { __typename?: 'GiftCardCreated' } | { __typename?: 'GiftCardDeleted' } | { __typename?: 'GiftCardExportCompleted' } | { __typename?: 'GiftCardMetadataUpdated' } | { __typename?: 'GiftCardSent' } | { __typename?: 'GiftCardStatusChanged' } | { __typename?: 'GiftCardUpdated' } | { __typename?: 'InvoiceDeleted' } | { __typename?: 'InvoiceRequested' } | { __typename?: 'InvoiceSent' } | { __typename?: 'ListStoredPaymentMethods' } | { __typename?: 'MenuCreated' } | { __typename?: 'MenuDeleted' } | { __typename?: 'MenuItemCreated' } | { __typename?: 'MenuItemDeleted' } | { __typename?: 'MenuItemUpdated' } | { __typename?: 'MenuUpdated' } | { __typename?: 'OrderBulkCreated' } | { __typename?: 'OrderCancelled' } | { __typename?: 'OrderConfirmed' } | { __typename?: 'OrderCreated' } | { __typename?: 'OrderExpired' } | { __typename?: 'OrderFilterShippingMethods' } | { __typename?: 'OrderFulfilled' } | { __typename?: 'OrderFullyPaid' } | { __typename?: 'OrderFullyRefunded' } | { __typename?: 'OrderMetadataUpdated' } | { __typename?: 'OrderPaid' } | { __typename?: 'OrderRefunded' } | { __typename?: 'OrderUpdated' } | { __typename?: 'PageCreated' } | { __typename?: 'PageDeleted' } | { __typename?: 'PageTypeCreated' } | { __typename?: 'PageTypeDeleted' } | { __typename?: 'PageTypeUpdated' } | { __typename?: 'PageUpdated' } | { __typename?: 'PaymentAuthorize' } | { __typename?: 'PaymentCaptureEvent' } | { __typename?: 'PaymentConfirmEvent' } | { __typename?: 'PaymentGatewayInitializeSession' } | { __typename?: 'PaymentGatewayInitializeTokenizationSession' } | { __typename?: 'PaymentListGateways' } | { __typename?: 'PaymentMethodInitializeTokenizationSession' } | { __typename?: 'PaymentMethodProcessTokenizationSession' } | { __typename?: 'PaymentProcessEvent' } | { __typename?: 'PaymentRefundEvent' } | { __typename?: 'PaymentVoidEvent' } | { __typename?: 'PermissionGroupCreated' } | { __typename?: 'PermissionGroupDeleted' } | { __typename?: 'PermissionGroupUpdated' } | { __typename?: 'ProductCreated' } | { __typename?: 'ProductDeleted' } | { __typename?: 'ProductExportCompleted' } | { __typename?: 'ProductMediaCreated' } | { __typename?: 'ProductMediaDeleted' } | { __typename?: 'ProductMediaUpdated' } | { __typename?: 'ProductMetadataUpdated' } | { __typename?: 'ProductUpdated' } | { __typename?: 'ProductVariantBackInStock' } | { __typename?: 'ProductVariantCreated' } | { __typename?: 'ProductVariantDeleted' } | { __typename?: 'ProductVariantMetadataUpdated' } | { __typename?: 'ProductVariantOutOfStock' } | { __typename?: 'ProductVariantStockUpdated' } | { __typename?: 'ProductVariantUpdated' } | { __typename?: 'PromotionCreated' } | { __typename?: 'PromotionDeleted' } | { __typename?: 'PromotionEnded' } | { __typename?: 'PromotionRuleCreated' } | { __typename?: 'PromotionRuleDeleted' } | { __typename?: 'PromotionRuleUpdated' } | { __typename?: 'PromotionStarted' } | { __typename?: 'PromotionUpdated' } | { __typename?: 'SaleCreated' } | { __typename?: 'SaleDeleted' } | { __typename?: 'SaleToggle' } | { __typename?: 'SaleUpdated' } | { __typename?: 'ShippingListMethodsForCheckout' } | { __typename?: 'ShippingPriceCreated' } | { __typename?: 'ShippingPriceDeleted' } | { __typename?: 'ShippingPriceUpdated' } | { __typename?: 'ShippingZoneCreated' } | { __typename?: 'ShippingZoneDeleted' } | { __typename?: 'ShippingZoneMetadataUpdated' } | { __typename?: 'ShippingZoneUpdated' } | { __typename?: 'ShopMetadataUpdated' } | { __typename?: 'StaffCreated' } | { __typename?: 'StaffDeleted' } | { __typename?: 'StaffSetPasswordRequested' } | { __typename?: 'StaffUpdated' } | { __typename?: 'StoredPaymentMethodDeleteRequested' } | { __typename?: 'ThumbnailCreated' } | { __typename?: 'TransactionCancelationRequested' } | { __typename?: 'TransactionChargeRequested' } | { __typename?: 'TransactionInitializeSession' } | { __typename?: 'TransactionItemMetadataUpdated' } | { __typename: 'TransactionProcessSession', data?: any | null, merchantReference: string, issuedAt?: any | null, version?: string | null, recipient?: { __typename?: 'App', id: string, privateMetadata: Array<{ __typename?: 'MetadataItem', key: string, value: string }>, metadata: Array<{ __typename?: 'MetadataItem', key: string, value: string }> } | null, action: { __typename?: 'TransactionProcessAction', amount: any, currency: string, actionType: TransactionFlowStrategyEnum }, transaction: { __typename?: 'TransactionItem', id: string, token: any, pspReference: string, events: Array<{ __typename?: 'TransactionEvent', pspReference: string }> } } | { __typename?: 'TransactionRefundRequested' } | { __typename?: 'TranslationCreated' } | { __typename?: 'TranslationUpdated' } | { __typename?: 'VoucherCodeExportCompleted' } | { __typename?: 'VoucherCodesCreated' } | { __typename?: 'VoucherCodesDeleted' } | { __typename?: 'VoucherCreated' } | { __typename?: 'VoucherDeleted' } | { __typename?: 'VoucherMetadataUpdated' } | { __typename?: 'VoucherUpdated' } | { __typename?: 'WarehouseCreated' } | { __typename?: 'WarehouseDeleted' } | { __typename?: 'WarehouseMetadataUpdated' } | { __typename?: 'WarehouseUpdated' } | null };
+export type TransactionProcessSessionSubscription = { __typename?: 'Subscription', event?: { __typename?: 'AccountChangeEmailRequested' } | { __typename?: 'AccountConfirmationRequested' } | { __typename?: 'AccountConfirmed' } | { __typename?: 'AccountDeleteRequested' } | { __typename?: 'AccountDeleted' } | { __typename?: 'AccountEmailChanged' } | { __typename?: 'AccountSetPasswordRequested' } | { __typename?: 'AddressCreated' } | { __typename?: 'AddressDeleted' } | { __typename?: 'AddressUpdated' } | { __typename?: 'AppDeleted' } | { __typename?: 'AppInstalled' } | { __typename?: 'AppStatusChanged' } | { __typename?: 'AppUpdated' } | { __typename?: 'AttributeCreated' } | { __typename?: 'AttributeDeleted' } | { __typename?: 'AttributeUpdated' } | { __typename?: 'AttributeValueCreated' } | { __typename?: 'AttributeValueDeleted' } | { __typename?: 'AttributeValueUpdated' } | { __typename?: 'CalculateTaxes' } | { __typename?: 'CategoryCreated' } | { __typename?: 'CategoryDeleted' } | { __typename?: 'CategoryUpdated' } | { __typename?: 'ChannelCreated' } | { __typename?: 'ChannelDeleted' } | { __typename?: 'ChannelMetadataUpdated' } | { __typename?: 'ChannelStatusChanged' } | { __typename?: 'ChannelUpdated' } | { __typename?: 'CheckoutCreated' } | { __typename?: 'CheckoutFilterShippingMethods' } | { __typename?: 'CheckoutFullyAuthorized' } | { __typename?: 'CheckoutFullyPaid' } | { __typename?: 'CheckoutMetadataUpdated' } | { __typename?: 'CheckoutUpdated' } | { __typename?: 'CollectionCreated' } | { __typename?: 'CollectionDeleted' } | { __typename?: 'CollectionMetadataUpdated' } | { __typename?: 'CollectionUpdated' } | { __typename?: 'CustomerCreated' } | { __typename?: 'CustomerDeleted' } | { __typename?: 'CustomerMetadataUpdated' } | { __typename?: 'CustomerUpdated' } | { __typename?: 'DraftOrderCreated' } | { __typename?: 'DraftOrderDeleted' } | { __typename?: 'DraftOrderUpdated' } | { __typename?: 'FulfillmentApproved' } | { __typename?: 'FulfillmentCanceled' } | { __typename?: 'FulfillmentCreated' } | { __typename?: 'FulfillmentMetadataUpdated' } | { __typename?: 'FulfillmentTrackingNumberUpdated' } | { __typename?: 'GiftCardCreated' } | { __typename?: 'GiftCardDeleted' } | { __typename?: 'GiftCardExportCompleted' } | { __typename?: 'GiftCardMetadataUpdated' } | { __typename?: 'GiftCardSent' } | { __typename?: 'GiftCardStatusChanged' } | { __typename?: 'GiftCardUpdated' } | { __typename?: 'InvoiceDeleted' } | { __typename?: 'InvoiceRequested' } | { __typename?: 'InvoiceSent' } | { __typename?: 'ListStoredPaymentMethods' } | { __typename?: 'MenuCreated' } | { __typename?: 'MenuDeleted' } | { __typename?: 'MenuItemCreated' } | { __typename?: 'MenuItemDeleted' } | { __typename?: 'MenuItemUpdated' } | { __typename?: 'MenuUpdated' } | { __typename?: 'OrderBulkCreated' } | { __typename?: 'OrderCancelled' } | { __typename?: 'OrderConfirmed' } | { __typename?: 'OrderCreated' } | { __typename?: 'OrderExpired' } | { __typename?: 'OrderFilterShippingMethods' } | { __typename?: 'OrderFulfilled' } | { __typename?: 'OrderFullyPaid' } | { __typename?: 'OrderFullyRefunded' } | { __typename?: 'OrderMetadataUpdated' } | { __typename?: 'OrderPaid' } | { __typename?: 'OrderRefunded' } | { __typename?: 'OrderUpdated' } | { __typename?: 'PageCreated' } | { __typename?: 'PageDeleted' } | { __typename?: 'PageTypeCreated' } | { __typename?: 'PageTypeDeleted' } | { __typename?: 'PageTypeUpdated' } | { __typename?: 'PageUpdated' } | { __typename?: 'PaymentAuthorize' } | { __typename?: 'PaymentCaptureEvent' } | { __typename?: 'PaymentConfirmEvent' } | { __typename?: 'PaymentGatewayInitializeSession' } | { __typename?: 'PaymentGatewayInitializeTokenizationSession' } | { __typename?: 'PaymentListGateways' } | { __typename?: 'PaymentMethodInitializeTokenizationSession' } | { __typename?: 'PaymentMethodProcessTokenizationSession' } | { __typename?: 'PaymentProcessEvent' } | { __typename?: 'PaymentRefundEvent' } | { __typename?: 'PaymentVoidEvent' } | { __typename?: 'PermissionGroupCreated' } | { __typename?: 'PermissionGroupDeleted' } | { __typename?: 'PermissionGroupUpdated' } | { __typename?: 'ProductCreated' } | { __typename?: 'ProductDeleted' } | { __typename?: 'ProductExportCompleted' } | { __typename?: 'ProductMediaCreated' } | { __typename?: 'ProductMediaDeleted' } | { __typename?: 'ProductMediaUpdated' } | { __typename?: 'ProductMetadataUpdated' } | { __typename?: 'ProductUpdated' } | { __typename?: 'ProductVariantBackInStock' } | { __typename?: 'ProductVariantBackInStockForClickAndCollect' } | { __typename?: 'ProductVariantBackInStockInChannel' } | { __typename?: 'ProductVariantCreated' } | { __typename?: 'ProductVariantDeleted' } | { __typename?: 'ProductVariantDiscountedPriceUpdated' } | { __typename?: 'ProductVariantMetadataUpdated' } | { __typename?: 'ProductVariantOutOfStock' } | { __typename?: 'ProductVariantOutOfStockForClickAndCollect' } | { __typename?: 'ProductVariantOutOfStockInChannel' } | { __typename?: 'ProductVariantStockUpdated' } | { __typename?: 'ProductVariantUpdated' } | { __typename?: 'PromotionCreated' } | { __typename?: 'PromotionDeleted' } | { __typename?: 'PromotionEnded' } | { __typename?: 'PromotionRuleCreated' } | { __typename?: 'PromotionRuleDeleted' } | { __typename?: 'PromotionRuleUpdated' } | { __typename?: 'PromotionStarted' } | { __typename?: 'PromotionUpdated' } | { __typename?: 'SaleCreated' } | { __typename?: 'SaleDeleted' } | { __typename?: 'SaleToggle' } | { __typename?: 'SaleUpdated' } | { __typename?: 'ShippingListMethodsForCheckout' } | { __typename?: 'ShippingPriceCreated' } | { __typename?: 'ShippingPriceDeleted' } | { __typename?: 'ShippingPriceUpdated' } | { __typename?: 'ShippingZoneCreated' } | { __typename?: 'ShippingZoneDeleted' } | { __typename?: 'ShippingZoneMetadataUpdated' } | { __typename?: 'ShippingZoneUpdated' } | { __typename?: 'ShopMetadataUpdated' } | { __typename?: 'StaffCreated' } | { __typename?: 'StaffDeleted' } | { __typename?: 'StaffSetPasswordRequested' } | { __typename?: 'StaffUpdated' } | { __typename?: 'StoredPaymentMethodDeleteRequested' } | { __typename?: 'ThumbnailCreated' } | { __typename?: 'TransactionCancelationRequested' } | { __typename?: 'TransactionChargeRequested' } | { __typename?: 'TransactionInitializeSession' } | { __typename?: 'TransactionItemMetadataUpdated' } | { __typename: 'TransactionProcessSession', data?: any | null, merchantReference: string, issuedAt?: any | null, version?: string | null, recipient?: { __typename?: 'App', id: string, privateMetadata: Array<{ __typename?: 'MetadataItem', key: string, value: string }>, metadata: Array<{ __typename?: 'MetadataItem', key: string, value: string }> } | null, action: { __typename?: 'TransactionProcessAction', amount: any, currency: string, actionType: TransactionFlowStrategyEnum }, transaction: { __typename?: 'TransactionItem', id: string, token: any, pspReference: string, events: Array<{ __typename?: 'TransactionEvent', pspReference: string }> } } | { __typename?: 'TransactionRefundRequested' } | { __typename?: 'TranslationCreated' } | { __typename?: 'TranslationUpdated' } | { __typename?: 'VoucherCodeExportCompleted' } | { __typename?: 'VoucherCodesCreated' } | { __typename?: 'VoucherCodesDeleted' } | { __typename?: 'VoucherCreated' } | { __typename?: 'VoucherDeleted' } | { __typename?: 'VoucherMetadataUpdated' } | { __typename?: 'VoucherUpdated' } | { __typename?: 'WarehouseCreated' } | { __typename?: 'WarehouseDeleted' } | { __typename?: 'WarehouseMetadataUpdated' } | { __typename?: 'WarehouseUpdated' } | null };
 
 export type TransactionRefundRequestedSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
-export type TransactionRefundRequestedSubscription = { __typename?: 'Subscription', event?: { __typename?: 'AccountChangeEmailRequested' } | { __typename?: 'AccountConfirmationRequested' } | { __typename?: 'AccountConfirmed' } | { __typename?: 'AccountDeleteRequested' } | { __typename?: 'AccountDeleted' } | { __typename?: 'AccountEmailChanged' } | { __typename?: 'AccountSetPasswordRequested' } | { __typename?: 'AddressCreated' } | { __typename?: 'AddressDeleted' } | { __typename?: 'AddressUpdated' } | { __typename?: 'AppDeleted' } | { __typename?: 'AppInstalled' } | { __typename?: 'AppStatusChanged' } | { __typename?: 'AppUpdated' } | { __typename?: 'AttributeCreated' } | { __typename?: 'AttributeDeleted' } | { __typename?: 'AttributeUpdated' } | { __typename?: 'AttributeValueCreated' } | { __typename?: 'AttributeValueDeleted' } | { __typename?: 'AttributeValueUpdated' } | { __typename?: 'CalculateTaxes' } | { __typename?: 'CategoryCreated' } | { __typename?: 'CategoryDeleted' } | { __typename?: 'CategoryUpdated' } | { __typename?: 'ChannelCreated' } | { __typename?: 'ChannelDeleted' } | { __typename?: 'ChannelMetadataUpdated' } | { __typename?: 'ChannelStatusChanged' } | { __typename?: 'ChannelUpdated' } | { __typename?: 'CheckoutCreated' } | { __typename?: 'CheckoutFilterShippingMethods' } | { __typename?: 'CheckoutFullyAuthorized' } | { __typename?: 'CheckoutFullyPaid' } | { __typename?: 'CheckoutMetadataUpdated' } | { __typename?: 'CheckoutUpdated' } | { __typename?: 'CollectionCreated' } | { __typename?: 'CollectionDeleted' } | { __typename?: 'CollectionMetadataUpdated' } | { __typename?: 'CollectionUpdated' } | { __typename?: 'CustomerCreated' } | { __typename?: 'CustomerMetadataUpdated' } | { __typename?: 'CustomerUpdated' } | { __typename?: 'DraftOrderCreated' } | { __typename?: 'DraftOrderDeleted' } | { __typename?: 'DraftOrderUpdated' } | { __typename?: 'FulfillmentApproved' } | { __typename?: 'FulfillmentCanceled' } | { __typename?: 'FulfillmentCreated' } | { __typename?: 'FulfillmentMetadataUpdated' } | { __typename?: 'FulfillmentTrackingNumberUpdated' } | { __typename?: 'GiftCardCreated' } | { __typename?: 'GiftCardDeleted' } | { __typename?: 'GiftCardExportCompleted' } | { __typename?: 'GiftCardMetadataUpdated' } | { __typename?: 'GiftCardSent' } | { __typename?: 'GiftCardStatusChanged' } | { __typename?: 'GiftCardUpdated' } | { __typename?: 'InvoiceDeleted' } | { __typename?: 'InvoiceRequested' } | { __typename?: 'InvoiceSent' } | { __typename?: 'ListStoredPaymentMethods' } | { __typename?: 'MenuCreated' } | { __typename?: 'MenuDeleted' } | { __typename?: 'MenuItemCreated' } | { __typename?: 'MenuItemDeleted' } | { __typename?: 'MenuItemUpdated' } | { __typename?: 'MenuUpdated' } | { __typename?: 'OrderBulkCreated' } | { __typename?: 'OrderCancelled' } | { __typename?: 'OrderConfirmed' } | { __typename?: 'OrderCreated' } | { __typename?: 'OrderExpired' } | { __typename?: 'OrderFilterShippingMethods' } | { __typename?: 'OrderFulfilled' } | { __typename?: 'OrderFullyPaid' } | { __typename?: 'OrderFullyRefunded' } | { __typename?: 'OrderMetadataUpdated' } | { __typename?: 'OrderPaid' } | { __typename?: 'OrderRefunded' } | { __typename?: 'OrderUpdated' } | { __typename?: 'PageCreated' } | { __typename?: 'PageDeleted' } | { __typename?: 'PageTypeCreated' } | { __typename?: 'PageTypeDeleted' } | { __typename?: 'PageTypeUpdated' } | { __typename?: 'PageUpdated' } | { __typename?: 'PaymentAuthorize' } | { __typename?: 'PaymentCaptureEvent' } | { __typename?: 'PaymentConfirmEvent' } | { __typename?: 'PaymentGatewayInitializeSession' } | { __typename?: 'PaymentGatewayInitializeTokenizationSession' } | { __typename?: 'PaymentListGateways' } | { __typename?: 'PaymentMethodInitializeTokenizationSession' } | { __typename?: 'PaymentMethodProcessTokenizationSession' } | { __typename?: 'PaymentProcessEvent' } | { __typename?: 'PaymentRefundEvent' } | { __typename?: 'PaymentVoidEvent' } | { __typename?: 'PermissionGroupCreated' } | { __typename?: 'PermissionGroupDeleted' } | { __typename?: 'PermissionGroupUpdated' } | { __typename?: 'ProductCreated' } | { __typename?: 'ProductDeleted' } | { __typename?: 'ProductExportCompleted' } | { __typename?: 'ProductMediaCreated' } | { __typename?: 'ProductMediaDeleted' } | { __typename?: 'ProductMediaUpdated' } | { __typename?: 'ProductMetadataUpdated' } | { __typename?: 'ProductUpdated' } | { __typename?: 'ProductVariantBackInStock' } | { __typename?: 'ProductVariantCreated' } | { __typename?: 'ProductVariantDeleted' } | { __typename?: 'ProductVariantMetadataUpdated' } | { __typename?: 'ProductVariantOutOfStock' } | { __typename?: 'ProductVariantStockUpdated' } | { __typename?: 'ProductVariantUpdated' } | { __typename?: 'PromotionCreated' } | { __typename?: 'PromotionDeleted' } | { __typename?: 'PromotionEnded' } | { __typename?: 'PromotionRuleCreated' } | { __typename?: 'PromotionRuleDeleted' } | { __typename?: 'PromotionRuleUpdated' } | { __typename?: 'PromotionStarted' } | { __typename?: 'PromotionUpdated' } | { __typename?: 'SaleCreated' } | { __typename?: 'SaleDeleted' } | { __typename?: 'SaleToggle' } | { __typename?: 'SaleUpdated' } | { __typename?: 'ShippingListMethodsForCheckout' } | { __typename?: 'ShippingPriceCreated' } | { __typename?: 'ShippingPriceDeleted' } | { __typename?: 'ShippingPriceUpdated' } | { __typename?: 'ShippingZoneCreated' } | { __typename?: 'ShippingZoneDeleted' } | { __typename?: 'ShippingZoneMetadataUpdated' } | { __typename?: 'ShippingZoneUpdated' } | { __typename?: 'ShopMetadataUpdated' } | { __typename?: 'StaffCreated' } | { __typename?: 'StaffDeleted' } | { __typename?: 'StaffSetPasswordRequested' } | { __typename?: 'StaffUpdated' } | { __typename?: 'StoredPaymentMethodDeleteRequested' } | { __typename?: 'ThumbnailCreated' } | { __typename?: 'TransactionCancelationRequested' } | { __typename?: 'TransactionChargeRequested' } | { __typename?: 'TransactionInitializeSession' } | { __typename?: 'TransactionItemMetadataUpdated' } | { __typename?: 'TransactionProcessSession' } | { __typename: 'TransactionRefundRequested', issuedAt?: any | null, version?: string | null, recipient?: { __typename?: 'App', id: string, privateMetadata: Array<{ __typename?: 'MetadataItem', key: string, value: string }>, metadata: Array<{ __typename?: 'MetadataItem', key: string, value: string }> } | null, action: { __typename?: 'TransactionAction', amount: any, actionType: TransactionActionEnum }, transaction?: { __typename?: 'TransactionItem', id: string, token: any, pspReference: string, chargedAmount: { __typename?: 'Money', amount: number, currency: string }, events: Array<{ __typename?: 'TransactionEvent', pspReference: string }> } | null } | { __typename?: 'TranslationCreated' } | { __typename?: 'TranslationUpdated' } | { __typename?: 'VoucherCodeExportCompleted' } | { __typename?: 'VoucherCodesCreated' } | { __typename?: 'VoucherCodesDeleted' } | { __typename?: 'VoucherCreated' } | { __typename?: 'VoucherDeleted' } | { __typename?: 'VoucherMetadataUpdated' } | { __typename?: 'VoucherUpdated' } | { __typename?: 'WarehouseCreated' } | { __typename?: 'WarehouseDeleted' } | { __typename?: 'WarehouseMetadataUpdated' } | { __typename?: 'WarehouseUpdated' } | null };
+export type TransactionRefundRequestedSubscription = { __typename?: 'Subscription', event?: { __typename?: 'AccountChangeEmailRequested' } | { __typename?: 'AccountConfirmationRequested' } | { __typename?: 'AccountConfirmed' } | { __typename?: 'AccountDeleteRequested' } | { __typename?: 'AccountDeleted' } | { __typename?: 'AccountEmailChanged' } | { __typename?: 'AccountSetPasswordRequested' } | { __typename?: 'AddressCreated' } | { __typename?: 'AddressDeleted' } | { __typename?: 'AddressUpdated' } | { __typename?: 'AppDeleted' } | { __typename?: 'AppInstalled' } | { __typename?: 'AppStatusChanged' } | { __typename?: 'AppUpdated' } | { __typename?: 'AttributeCreated' } | { __typename?: 'AttributeDeleted' } | { __typename?: 'AttributeUpdated' } | { __typename?: 'AttributeValueCreated' } | { __typename?: 'AttributeValueDeleted' } | { __typename?: 'AttributeValueUpdated' } | { __typename?: 'CalculateTaxes' } | { __typename?: 'CategoryCreated' } | { __typename?: 'CategoryDeleted' } | { __typename?: 'CategoryUpdated' } | { __typename?: 'ChannelCreated' } | { __typename?: 'ChannelDeleted' } | { __typename?: 'ChannelMetadataUpdated' } | { __typename?: 'ChannelStatusChanged' } | { __typename?: 'ChannelUpdated' } | { __typename?: 'CheckoutCreated' } | { __typename?: 'CheckoutFilterShippingMethods' } | { __typename?: 'CheckoutFullyAuthorized' } | { __typename?: 'CheckoutFullyPaid' } | { __typename?: 'CheckoutMetadataUpdated' } | { __typename?: 'CheckoutUpdated' } | { __typename?: 'CollectionCreated' } | { __typename?: 'CollectionDeleted' } | { __typename?: 'CollectionMetadataUpdated' } | { __typename?: 'CollectionUpdated' } | { __typename?: 'CustomerCreated' } | { __typename?: 'CustomerDeleted' } | { __typename?: 'CustomerMetadataUpdated' } | { __typename?: 'CustomerUpdated' } | { __typename?: 'DraftOrderCreated' } | { __typename?: 'DraftOrderDeleted' } | { __typename?: 'DraftOrderUpdated' } | { __typename?: 'FulfillmentApproved' } | { __typename?: 'FulfillmentCanceled' } | { __typename?: 'FulfillmentCreated' } | { __typename?: 'FulfillmentMetadataUpdated' } | { __typename?: 'FulfillmentTrackingNumberUpdated' } | { __typename?: 'GiftCardCreated' } | { __typename?: 'GiftCardDeleted' } | { __typename?: 'GiftCardExportCompleted' } | { __typename?: 'GiftCardMetadataUpdated' } | { __typename?: 'GiftCardSent' } | { __typename?: 'GiftCardStatusChanged' } | { __typename?: 'GiftCardUpdated' } | { __typename?: 'InvoiceDeleted' } | { __typename?: 'InvoiceRequested' } | { __typename?: 'InvoiceSent' } | { __typename?: 'ListStoredPaymentMethods' } | { __typename?: 'MenuCreated' } | { __typename?: 'MenuDeleted' } | { __typename?: 'MenuItemCreated' } | { __typename?: 'MenuItemDeleted' } | { __typename?: 'MenuItemUpdated' } | { __typename?: 'MenuUpdated' } | { __typename?: 'OrderBulkCreated' } | { __typename?: 'OrderCancelled' } | { __typename?: 'OrderConfirmed' } | { __typename?: 'OrderCreated' } | { __typename?: 'OrderExpired' } | { __typename?: 'OrderFilterShippingMethods' } | { __typename?: 'OrderFulfilled' } | { __typename?: 'OrderFullyPaid' } | { __typename?: 'OrderFullyRefunded' } | { __typename?: 'OrderMetadataUpdated' } | { __typename?: 'OrderPaid' } | { __typename?: 'OrderRefunded' } | { __typename?: 'OrderUpdated' } | { __typename?: 'PageCreated' } | { __typename?: 'PageDeleted' } | { __typename?: 'PageTypeCreated' } | { __typename?: 'PageTypeDeleted' } | { __typename?: 'PageTypeUpdated' } | { __typename?: 'PageUpdated' } | { __typename?: 'PaymentAuthorize' } | { __typename?: 'PaymentCaptureEvent' } | { __typename?: 'PaymentConfirmEvent' } | { __typename?: 'PaymentGatewayInitializeSession' } | { __typename?: 'PaymentGatewayInitializeTokenizationSession' } | { __typename?: 'PaymentListGateways' } | { __typename?: 'PaymentMethodInitializeTokenizationSession' } | { __typename?: 'PaymentMethodProcessTokenizationSession' } | { __typename?: 'PaymentProcessEvent' } | { __typename?: 'PaymentRefundEvent' } | { __typename?: 'PaymentVoidEvent' } | { __typename?: 'PermissionGroupCreated' } | { __typename?: 'PermissionGroupDeleted' } | { __typename?: 'PermissionGroupUpdated' } | { __typename?: 'ProductCreated' } | { __typename?: 'ProductDeleted' } | { __typename?: 'ProductExportCompleted' } | { __typename?: 'ProductMediaCreated' } | { __typename?: 'ProductMediaDeleted' } | { __typename?: 'ProductMediaUpdated' } | { __typename?: 'ProductMetadataUpdated' } | { __typename?: 'ProductUpdated' } | { __typename?: 'ProductVariantBackInStock' } | { __typename?: 'ProductVariantBackInStockForClickAndCollect' } | { __typename?: 'ProductVariantBackInStockInChannel' } | { __typename?: 'ProductVariantCreated' } | { __typename?: 'ProductVariantDeleted' } | { __typename?: 'ProductVariantDiscountedPriceUpdated' } | { __typename?: 'ProductVariantMetadataUpdated' } | { __typename?: 'ProductVariantOutOfStock' } | { __typename?: 'ProductVariantOutOfStockForClickAndCollect' } | { __typename?: 'ProductVariantOutOfStockInChannel' } | { __typename?: 'ProductVariantStockUpdated' } | { __typename?: 'ProductVariantUpdated' } | { __typename?: 'PromotionCreated' } | { __typename?: 'PromotionDeleted' } | { __typename?: 'PromotionEnded' } | { __typename?: 'PromotionRuleCreated' } | { __typename?: 'PromotionRuleDeleted' } | { __typename?: 'PromotionRuleUpdated' } | { __typename?: 'PromotionStarted' } | { __typename?: 'PromotionUpdated' } | { __typename?: 'SaleCreated' } | { __typename?: 'SaleDeleted' } | { __typename?: 'SaleToggle' } | { __typename?: 'SaleUpdated' } | { __typename?: 'ShippingListMethodsForCheckout' } | { __typename?: 'ShippingPriceCreated' } | { __typename?: 'ShippingPriceDeleted' } | { __typename?: 'ShippingPriceUpdated' } | { __typename?: 'ShippingZoneCreated' } | { __typename?: 'ShippingZoneDeleted' } | { __typename?: 'ShippingZoneMetadataUpdated' } | { __typename?: 'ShippingZoneUpdated' } | { __typename?: 'ShopMetadataUpdated' } | { __typename?: 'StaffCreated' } | { __typename?: 'StaffDeleted' } | { __typename?: 'StaffSetPasswordRequested' } | { __typename?: 'StaffUpdated' } | { __typename?: 'StoredPaymentMethodDeleteRequested' } | { __typename?: 'ThumbnailCreated' } | { __typename?: 'TransactionCancelationRequested' } | { __typename?: 'TransactionChargeRequested' } | { __typename?: 'TransactionInitializeSession' } | { __typename?: 'TransactionItemMetadataUpdated' } | { __typename?: 'TransactionProcessSession' } | { __typename: 'TransactionRefundRequested', issuedAt?: any | null, version?: string | null, recipient?: { __typename?: 'App', id: string, privateMetadata: Array<{ __typename?: 'MetadataItem', key: string, value: string }>, metadata: Array<{ __typename?: 'MetadataItem', key: string, value: string }> } | null, action: { __typename?: 'TransactionAction', amount: any, actionType: TransactionActionEnum }, transaction?: { __typename?: 'TransactionItem', id: string, token: any, pspReference: string, chargedAmount: { __typename?: 'Money', amount: number, currency: string }, events: Array<{ __typename?: 'TransactionEvent', pspReference: string }> } | null } | { __typename?: 'TranslationCreated' } | { __typename?: 'TranslationUpdated' } | { __typename?: 'VoucherCodeExportCompleted' } | { __typename?: 'VoucherCodesCreated' } | { __typename?: 'VoucherCodesDeleted' } | { __typename?: 'VoucherCreated' } | { __typename?: 'VoucherDeleted' } | { __typename?: 'VoucherMetadataUpdated' } | { __typename?: 'VoucherUpdated' } | { __typename?: 'WarehouseCreated' } | { __typename?: 'WarehouseDeleted' } | { __typename?: 'WarehouseMetadataUpdated' } | { __typename?: 'WarehouseUpdated' } | null };
 
 export type LastOrderQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -36580,17 +36841,6 @@ export default {
             "args": []
           },
           {
-            "name": "mount",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          },
-          {
             "name": "mountName",
             "type": {
               "kind": "NON_NULL",
@@ -36598,15 +36848,6 @@ export default {
                 "kind": "SCALAR",
                 "name": "Any"
               }
-            },
-            "args": []
-          },
-          {
-            "name": "options",
-            "type": {
-              "kind": "UNION",
-              "name": "AppExtensionPossibleOptions",
-              "ofType": null
             },
             "args": []
           },
@@ -36630,17 +36871,6 @@ export default {
           },
           {
             "name": "settings",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "target",
             "type": {
               "kind": "NON_NULL",
               "ofType": {
@@ -36754,52 +36984,6 @@ export default {
           }
         ],
         "interfaces": []
-      },
-      {
-        "kind": "OBJECT",
-        "name": "AppExtensionOptionsNewTab",
-        "fields": [
-          {
-            "name": "newTabTarget",
-            "type": {
-              "kind": "OBJECT",
-              "name": "NewTabTargetOptions",
-              "ofType": null
-            },
-            "args": []
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "OBJECT",
-        "name": "AppExtensionOptionsWidget",
-        "fields": [
-          {
-            "name": "widgetTarget",
-            "type": {
-              "kind": "OBJECT",
-              "name": "WidgetTargetOptions",
-              "ofType": null
-            },
-            "args": []
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "UNION",
-        "name": "AppExtensionPossibleOptions",
-        "possibleTypes": [
-          {
-            "kind": "OBJECT",
-            "name": "AppExtensionOptionsNewTab"
-          },
-          {
-            "kind": "OBJECT",
-            "name": "AppExtensionOptionsWidget"
-          }
-        ]
       },
       {
         "kind": "OBJECT",
@@ -37127,17 +37311,6 @@ export default {
             "args": []
           },
           {
-            "name": "mount",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          },
-          {
             "name": "mountName",
             "type": {
               "kind": "NON_NULL",
@@ -37168,17 +37341,6 @@ export default {
           },
           {
             "name": "settings",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "target",
             "type": {
               "kind": "NON_NULL",
               "ofType": {
@@ -39293,8 +39455,11 @@ export default {
           {
             "name": "name",
             "type": {
-              "kind": "SCALAR",
-              "name": "Any"
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
             },
             "args": []
           },
@@ -39465,8 +39630,11 @@ export default {
           {
             "name": "slug",
             "type": {
-              "kind": "SCALAR",
-              "name": "Any"
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
             },
             "args": []
           },
@@ -39504,8 +39672,11 @@ export default {
           {
             "name": "type",
             "type": {
-              "kind": "SCALAR",
-              "name": "Any"
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
             },
             "args": []
           },
@@ -44096,6 +44267,15 @@ export default {
             "args": []
           },
           {
+            "name": "delivery",
+            "type": {
+              "kind": "OBJECT",
+              "name": "Delivery",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
             "name": "deliveryMethod",
             "type": {
               "kind": "UNION",
@@ -45241,6 +45421,65 @@ export default {
       },
       {
         "kind": "OBJECT",
+        "name": "CheckoutDelete",
+        "fields": [
+          {
+            "name": "errors",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "LIST",
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "CheckoutDeleteError",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "CheckoutDeleteError",
+        "fields": [
+          {
+            "name": "code",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "field",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "message",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
         "name": "CheckoutDeliveryMethodUpdate",
         "fields": [
           {
@@ -46359,8 +46598,54 @@ export default {
           {
             "kind": "OBJECT",
             "name": "CheckoutLineProblemVariantNotAvailable"
+          },
+          {
+            "kind": "OBJECT",
+            "name": "CheckoutProblemDeliveryMethodInvalid"
+          },
+          {
+            "kind": "OBJECT",
+            "name": "CheckoutProblemDeliveryMethodStale"
           }
         ]
+      },
+      {
+        "kind": "OBJECT",
+        "name": "CheckoutProblemDeliveryMethodInvalid",
+        "fields": [
+          {
+            "name": "delivery",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "Delivery",
+                "ofType": null
+              }
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
+        "kind": "OBJECT",
+        "name": "CheckoutProblemDeliveryMethodStale",
+        "fields": [
+          {
+            "name": "delivery",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "Delivery",
+                "ofType": null
+              }
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
       },
       {
         "kind": "OBJECT",
@@ -46418,6 +46703,17 @@ export default {
         "kind": "OBJECT",
         "name": "CheckoutSettings",
         "fields": [
+          {
+            "name": "allowLegacyGiftCardUse",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
           {
             "name": "automaticCompletionCutOffDate",
             "type": {
@@ -48810,6 +49106,61 @@ export default {
       },
       {
         "kind": "OBJECT",
+        "name": "CustomerDeleted",
+        "fields": [
+          {
+            "name": "issuedAt",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "issuingPrincipal",
+            "type": {
+              "kind": "UNION",
+              "name": "IssuingPrincipal",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "recipient",
+            "type": {
+              "kind": "OBJECT",
+              "name": "App",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "user",
+            "type": {
+              "kind": "OBJECT",
+              "name": "User",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "version",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          }
+        ],
+        "interfaces": [
+          {
+            "kind": "INTERFACE",
+            "name": "Event"
+          }
+        ]
+      },
+      {
+        "kind": "OBJECT",
         "name": "CustomerEvent",
         "fields": [
           {
@@ -48861,15 +49212,6 @@ export default {
             "type": {
               "kind": "OBJECT",
               "name": "Order",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "orderLine",
-            "type": {
-              "kind": "OBJECT",
-              "name": "OrderLine",
               "ofType": null
             },
             "args": []
@@ -49209,6 +49551,33 @@ export default {
         "interfaces": []
       },
       {
+        "kind": "OBJECT",
+        "name": "Delivery",
+        "fields": [
+          {
+            "name": "id",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "shippingMethod",
+            "type": {
+              "kind": "OBJECT",
+              "name": "ShippingMethod",
+              "ofType": null
+            },
+            "args": []
+          }
+        ],
+        "interfaces": []
+      },
+      {
         "kind": "UNION",
         "name": "DeliveryMethod",
         "possibleTypes": [
@@ -49224,51 +49593,10 @@ export default {
       },
       {
         "kind": "OBJECT",
-        "name": "DigitalContent",
+        "name": "DeliveryOptionsCalculate",
         "fields": [
           {
-            "name": "automaticFulfillment",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "contentFile",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "id",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "maxDownloads",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "metadata",
+            "name": "deliveries",
             "type": {
               "kind": "NON_NULL",
               "ofType": {
@@ -49277,257 +49605,11 @@ export default {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "OBJECT",
-                    "name": "MetadataItem",
+                    "name": "Delivery",
                     "ofType": null
                   }
                 }
               }
-            },
-            "args": []
-          },
-          {
-            "name": "metafield",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": [
-              {
-                "name": "key",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "Any"
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "metafields",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": [
-              {
-                "name": "keys",
-                "type": {
-                  "kind": "LIST",
-                  "ofType": {
-                    "kind": "NON_NULL",
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Any"
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "privateMetadata",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "LIST",
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "OBJECT",
-                    "name": "MetadataItem",
-                    "ofType": null
-                  }
-                }
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "privateMetafield",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": [
-              {
-                "name": "key",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "Any"
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "privateMetafields",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": [
-              {
-                "name": "keys",
-                "type": {
-                  "kind": "LIST",
-                  "ofType": {
-                    "kind": "NON_NULL",
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "Any"
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "productVariant",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "ProductVariant",
-                "ofType": null
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "urlValidDays",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "urls",
-            "type": {
-              "kind": "LIST",
-              "ofType": {
-                "kind": "NON_NULL",
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "DigitalContentUrl",
-                  "ofType": null
-                }
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "useDefaultSettings",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          }
-        ],
-        "interfaces": [
-          {
-            "kind": "INTERFACE",
-            "name": "Node"
-          },
-          {
-            "kind": "INTERFACE",
-            "name": "ObjectWithMetadata"
-          }
-        ]
-      },
-      {
-        "kind": "OBJECT",
-        "name": "DigitalContentCountableConnection",
-        "fields": [
-          {
-            "name": "edges",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "LIST",
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "OBJECT",
-                    "name": "DigitalContentCountableEdge",
-                    "ofType": null
-                  }
-                }
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "pageInfo",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "PageInfo",
-                "ofType": null
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "totalCount",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "OBJECT",
-        "name": "DigitalContentCountableEdge",
-        "fields": [
-          {
-            "name": "cursor",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "node",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "DigitalContent",
-                "ofType": null
-              }
-            },
-            "args": []
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "OBJECT",
-        "name": "DigitalContentCreate",
-        "fields": [
-          {
-            "name": "content",
-            "type": {
-              "kind": "OBJECT",
-              "name": "DigitalContent",
-              "ofType": null
             },
             "args": []
           },
@@ -49541,38 +49623,11 @@ export default {
                   "kind": "NON_NULL",
                   "ofType": {
                     "kind": "OBJECT",
-                    "name": "ProductError",
+                    "name": "DeliveryOptionsCalculateError",
                     "ofType": null
                   }
                 }
               }
-            },
-            "args": []
-          },
-          {
-            "name": "productErrors",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "LIST",
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "OBJECT",
-                    "name": "ProductError",
-                    "ofType": null
-                  }
-                }
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "variant",
-            "type": {
-              "kind": "OBJECT",
-              "name": "ProductVariant",
-              "ofType": null
             },
             "args": []
           }
@@ -49581,135 +49636,10 @@ export default {
       },
       {
         "kind": "OBJECT",
-        "name": "DigitalContentDelete",
+        "name": "DeliveryOptionsCalculateError",
         "fields": [
           {
-            "name": "errors",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "LIST",
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "OBJECT",
-                    "name": "ProductError",
-                    "ofType": null
-                  }
-                }
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "productErrors",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "LIST",
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "OBJECT",
-                    "name": "ProductError",
-                    "ofType": null
-                  }
-                }
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "variant",
-            "type": {
-              "kind": "OBJECT",
-              "name": "ProductVariant",
-              "ofType": null
-            },
-            "args": []
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "OBJECT",
-        "name": "DigitalContentUpdate",
-        "fields": [
-          {
-            "name": "content",
-            "type": {
-              "kind": "OBJECT",
-              "name": "DigitalContent",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "errors",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "LIST",
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "OBJECT",
-                    "name": "ProductError",
-                    "ofType": null
-                  }
-                }
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "productErrors",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "LIST",
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "OBJECT",
-                    "name": "ProductError",
-                    "ofType": null
-                  }
-                }
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "variant",
-            "type": {
-              "kind": "OBJECT",
-              "name": "ProductVariant",
-              "ofType": null
-            },
-            "args": []
-          }
-        ],
-        "interfaces": []
-      },
-      {
-        "kind": "OBJECT",
-        "name": "DigitalContentUrl",
-        "fields": [
-          {
-            "name": "content",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "DigitalContent",
-                "ofType": null
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "created",
+            "name": "code",
             "type": {
               "kind": "NON_NULL",
               "ofType": {
@@ -49720,100 +49650,18 @@ export default {
             "args": []
           },
           {
-            "name": "downloadNum",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "id",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "token",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "url",
+            "name": "field",
             "type": {
               "kind": "SCALAR",
               "name": "Any"
             },
             "args": []
-          }
-        ],
-        "interfaces": [
-          {
-            "kind": "INTERFACE",
-            "name": "Node"
-          }
-        ]
-      },
-      {
-        "kind": "OBJECT",
-        "name": "DigitalContentUrlCreate",
-        "fields": [
-          {
-            "name": "digitalContentUrl",
-            "type": {
-              "kind": "OBJECT",
-              "name": "DigitalContentUrl",
-              "ofType": null
-            },
-            "args": []
           },
           {
-            "name": "errors",
+            "name": "message",
             "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "LIST",
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "OBJECT",
-                    "name": "ProductError",
-                    "ofType": null
-                  }
-                }
-              }
-            },
-            "args": []
-          },
-          {
-            "name": "productErrors",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "LIST",
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "OBJECT",
-                    "name": "ProductError",
-                    "ofType": null
-                  }
-                }
-              }
+              "kind": "SCALAR",
+              "name": "Any"
             },
             "args": []
           }
@@ -50620,6 +50468,10 @@ export default {
           },
           {
             "kind": "OBJECT",
+            "name": "CustomerDeleted"
+          },
+          {
+            "kind": "OBJECT",
             "name": "CustomerMetadataUpdated"
           },
           {
@@ -50896,6 +50748,14 @@ export default {
           },
           {
             "kind": "OBJECT",
+            "name": "ProductVariantBackInStockForClickAndCollect"
+          },
+          {
+            "kind": "OBJECT",
+            "name": "ProductVariantBackInStockInChannel"
+          },
+          {
+            "kind": "OBJECT",
             "name": "ProductVariantCreated"
           },
           {
@@ -50904,11 +50764,23 @@ export default {
           },
           {
             "kind": "OBJECT",
+            "name": "ProductVariantDiscountedPriceUpdated"
+          },
+          {
+            "kind": "OBJECT",
             "name": "ProductVariantMetadataUpdated"
           },
           {
             "kind": "OBJECT",
             "name": "ProductVariantOutOfStock"
+          },
+          {
+            "kind": "OBJECT",
+            "name": "ProductVariantOutOfStockForClickAndCollect"
+          },
+          {
+            "kind": "OBJECT",
+            "name": "ProductVariantOutOfStockInChannel"
           },
           {
             "kind": "OBJECT",
@@ -54673,6 +54545,56 @@ export default {
           {
             "kind": "INTERFACE",
             "name": "Event"
+          }
+        ]
+      },
+      {
+        "kind": "OBJECT",
+        "name": "GiftCardPaymentMethodDetails",
+        "fields": [
+          {
+            "name": "brand",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "isSaleorGiftcard",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "lastChars",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "name",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          }
+        ],
+        "interfaces": [
+          {
+            "kind": "INTERFACE",
+            "name": "PaymentMethodDetails"
           }
         ]
       },
@@ -60079,6 +60001,26 @@ export default {
             ]
           },
           {
+            "name": "checkoutDelete",
+            "type": {
+              "kind": "OBJECT",
+              "name": "CheckoutDelete",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "id",
+                "type": {
+                  "kind": "NON_NULL",
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "Any"
+                  }
+                }
+              }
+            ]
+          },
+          {
             "name": "checkoutDeliveryMethodUpdate",
             "type": {
               "kind": "OBJECT",
@@ -60983,95 +60925,15 @@ export default {
             ]
           },
           {
-            "name": "digitalContentCreate",
+            "name": "deliveryOptionsCalculate",
             "type": {
               "kind": "OBJECT",
-              "name": "DigitalContentCreate",
+              "name": "DeliveryOptionsCalculate",
               "ofType": null
             },
             "args": [
               {
-                "name": "input",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "Any"
-                  }
-                }
-              },
-              {
-                "name": "variantId",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "Any"
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "digitalContentDelete",
-            "type": {
-              "kind": "OBJECT",
-              "name": "DigitalContentDelete",
-              "ofType": null
-            },
-            "args": [
-              {
-                "name": "variantId",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "Any"
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "digitalContentUpdate",
-            "type": {
-              "kind": "OBJECT",
-              "name": "DigitalContentUpdate",
-              "ofType": null
-            },
-            "args": [
-              {
-                "name": "input",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "Any"
-                  }
-                }
-              },
-              {
-                "name": "variantId",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "Any"
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "digitalContentUrlCreate",
-            "type": {
-              "kind": "OBJECT",
-              "name": "DigitalContentUrlCreate",
-              "ofType": null
-            },
-            "args": [
-              {
-                "name": "input",
+                "name": "id",
                 "type": {
                   "kind": "NON_NULL",
                   "ofType": {
@@ -67803,24 +67665,6 @@ export default {
         "interfaces": []
       },
       {
-        "kind": "OBJECT",
-        "name": "NewTabTargetOptions",
-        "fields": [
-          {
-            "name": "method",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          }
-        ],
-        "interfaces": []
-      },
-      {
         "kind": "INTERFACE",
         "name": "Node",
         "fields": [
@@ -67933,14 +67777,6 @@ export default {
           {
             "kind": "OBJECT",
             "name": "CustomerEvent"
-          },
-          {
-            "kind": "OBJECT",
-            "name": "DigitalContent"
-          },
-          {
-            "kind": "OBJECT",
-            "name": "DigitalContentUrl"
           },
           {
             "kind": "OBJECT",
@@ -68459,10 +68295,6 @@ export default {
           {
             "kind": "OBJECT",
             "name": "Collection"
-          },
-          {
-            "kind": "OBJECT",
-            "name": "DigitalContent"
           },
           {
             "kind": "OBJECT",
@@ -72027,15 +71859,6 @@ export default {
                   "ofType": null
                 }
               }
-            },
-            "args": []
-          },
-          {
-            "name": "digitalContentUrl",
-            "type": {
-              "kind": "OBJECT",
-              "name": "DigitalContentUrl",
-              "ofType": null
             },
             "args": []
           },
@@ -76184,17 +76007,6 @@ export default {
             "args": []
           },
           {
-            "name": "partial",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          },
-          {
             "name": "paymentMethodType",
             "type": {
               "kind": "NON_NULL",
@@ -77318,6 +77130,10 @@ export default {
           {
             "kind": "OBJECT",
             "name": "CardPaymentMethodDetails"
+          },
+          {
+            "kind": "OBJECT",
+            "name": "GiftCardPaymentMethodDetails"
           },
           {
             "kind": "OBJECT",
@@ -79087,15 +78903,7 @@ export default {
               "kind": "SCALAR",
               "name": "Any"
             },
-            "args": [
-              {
-                "name": "address",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              }
-            ]
+            "args": []
           },
           {
             "name": "isAvailableForPurchase",
@@ -82963,15 +82771,6 @@ export default {
             "args": []
           },
           {
-            "name": "digitalContent",
-            "type": {
-              "kind": "OBJECT",
-              "name": "DigitalContent",
-              "ofType": null
-            },
-            "args": []
-          },
-          {
             "name": "externalReference",
             "type": {
               "kind": "SCALAR",
@@ -83201,15 +83000,7 @@ export default {
               "kind": "SCALAR",
               "name": "Any"
             },
-            "args": [
-              {
-                "name": "address",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              }
-            ]
+            "args": []
           },
           {
             "name": "quantityLimitPerCustomer",
@@ -83265,15 +83056,7 @@ export default {
                 }
               }
             },
-            "args": [
-              {
-                "name": "address",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              }
-            ]
+            "args": []
           },
           {
             "name": "trackInventory",
@@ -83403,6 +83186,146 @@ export default {
               "kind": "OBJECT",
               "name": "Warehouse",
               "ofType": null
+            },
+            "args": []
+          }
+        ],
+        "interfaces": [
+          {
+            "kind": "INTERFACE",
+            "name": "Event"
+          }
+        ]
+      },
+      {
+        "kind": "OBJECT",
+        "name": "ProductVariantBackInStockForClickAndCollect",
+        "fields": [
+          {
+            "name": "channel",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "Channel",
+                "ofType": null
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "issuedAt",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "issuingPrincipal",
+            "type": {
+              "kind": "UNION",
+              "name": "IssuingPrincipal",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "productVariant",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "ProductVariant",
+                "ofType": null
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "recipient",
+            "type": {
+              "kind": "OBJECT",
+              "name": "App",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "version",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          }
+        ],
+        "interfaces": [
+          {
+            "kind": "INTERFACE",
+            "name": "Event"
+          }
+        ]
+      },
+      {
+        "kind": "OBJECT",
+        "name": "ProductVariantBackInStockInChannel",
+        "fields": [
+          {
+            "name": "channel",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "Channel",
+                "ofType": null
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "issuedAt",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "issuingPrincipal",
+            "type": {
+              "kind": "UNION",
+              "name": "IssuingPrincipal",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "productVariant",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "ProductVariant",
+                "ofType": null
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "recipient",
+            "type": {
+              "kind": "OBJECT",
+              "name": "App",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "version",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
             },
             "args": []
           }
@@ -84326,6 +84249,100 @@ export default {
       },
       {
         "kind": "OBJECT",
+        "name": "ProductVariantDiscountedPriceUpdated",
+        "fields": [
+          {
+            "name": "channel",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "Channel",
+                "ofType": null
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "issuedAt",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "issuingPrincipal",
+            "type": {
+              "kind": "UNION",
+              "name": "IssuingPrincipal",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "newPrice",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "Money",
+                "ofType": null
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "previousPrice",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "Money",
+                "ofType": null
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "productVariant",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "ProductVariant",
+                "ofType": null
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "recipient",
+            "type": {
+              "kind": "OBJECT",
+              "name": "App",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "version",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          }
+        ],
+        "interfaces": [
+          {
+            "kind": "INTERFACE",
+            "name": "Event"
+          }
+        ]
+      },
+      {
+        "kind": "OBJECT",
         "name": "ProductVariantMetadataUpdated",
         "fields": [
           {
@@ -84448,6 +84465,146 @@ export default {
               "kind": "OBJECT",
               "name": "Warehouse",
               "ofType": null
+            },
+            "args": []
+          }
+        ],
+        "interfaces": [
+          {
+            "kind": "INTERFACE",
+            "name": "Event"
+          }
+        ]
+      },
+      {
+        "kind": "OBJECT",
+        "name": "ProductVariantOutOfStockForClickAndCollect",
+        "fields": [
+          {
+            "name": "channel",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "Channel",
+                "ofType": null
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "issuedAt",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "issuingPrincipal",
+            "type": {
+              "kind": "UNION",
+              "name": "IssuingPrincipal",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "productVariant",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "ProductVariant",
+                "ofType": null
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "recipient",
+            "type": {
+              "kind": "OBJECT",
+              "name": "App",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "version",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          }
+        ],
+        "interfaces": [
+          {
+            "kind": "INTERFACE",
+            "name": "Event"
+          }
+        ]
+      },
+      {
+        "kind": "OBJECT",
+        "name": "ProductVariantOutOfStockInChannel",
+        "fields": [
+          {
+            "name": "channel",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "Channel",
+                "ofType": null
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "issuedAt",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
+            },
+            "args": []
+          },
+          {
+            "name": "issuingPrincipal",
+            "type": {
+              "kind": "UNION",
+              "name": "IssuingPrincipal",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "productVariant",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "ProductVariant",
+                "ofType": null
+              }
+            },
+            "args": []
+          },
+          {
+            "name": "recipient",
+            "type": {
+              "kind": "OBJECT",
+              "name": "App",
+              "ofType": null
+            },
+            "args": []
+          },
+          {
+            "name": "version",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Any"
             },
             "args": []
           }
@@ -87601,10 +87758,16 @@ export default {
               {
                 "name": "representations",
                 "type": {
-                  "kind": "LIST",
+                  "kind": "NON_NULL",
                   "ofType": {
-                    "kind": "SCALAR",
-                    "name": "Any"
+                    "kind": "LIST",
+                    "ofType": {
+                      "kind": "NON_NULL",
+                      "ofType": {
+                        "kind": "SCALAR",
+                        "name": "Any"
+                      }
+                    }
                   }
                 }
               }
@@ -88335,64 +88498,6 @@ export default {
               },
               {
                 "name": "where",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              }
-            ]
-          },
-          {
-            "name": "digitalContent",
-            "type": {
-              "kind": "OBJECT",
-              "name": "DigitalContent",
-              "ofType": null
-            },
-            "args": [
-              {
-                "name": "id",
-                "type": {
-                  "kind": "NON_NULL",
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "Any"
-                  }
-                }
-              }
-            ]
-          },
-          {
-            "name": "digitalContents",
-            "type": {
-              "kind": "OBJECT",
-              "name": "DigitalContentCountableConnection",
-              "ofType": null
-            },
-            "args": [
-              {
-                "name": "after",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "before",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "first",
-                "type": {
-                  "kind": "SCALAR",
-                  "name": "Any"
-                }
-              },
-              {
-                "name": "last",
                 "type": {
                   "kind": "SCALAR",
                   "name": "Any"
@@ -90426,6 +90531,13 @@ export default {
                 }
               },
               {
+                "name": "sortBy",
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Any"
+                }
+              },
+              {
                 "name": "where",
                 "type": {
                   "kind": "SCALAR",
@@ -90995,12 +91107,9 @@ export default {
           {
             "name": "refundSettings",
             "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "OBJECT",
-                "name": "RefundSettings",
-                "ofType": null
-              }
+              "kind": "OBJECT",
+              "name": "RefundSettings",
+              "ofType": null
             },
             "args": []
           },
@@ -95165,14 +95274,6 @@ export default {
             "args": []
           },
           {
-            "name": "automaticFulfillmentDigitalProducts",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
             "name": "availableExternalAuthentications",
             "type": {
               "kind": "NON_NULL",
@@ -95344,22 +95445,6 @@ export default {
               "kind": "OBJECT",
               "name": "CountryDisplay",
               "ofType": null
-            },
-            "args": []
-          },
-          {
-            "name": "defaultDigitalMaxDownloads",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
-            },
-            "args": []
-          },
-          {
-            "name": "defaultDigitalUrlValidDays",
-            "type": {
-              "kind": "SCALAR",
-              "name": "Any"
             },
             "args": []
           },
@@ -95587,6 +95672,17 @@ export default {
             "args": []
           },
           {
+            "name": "passwordLoginMode",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
+          },
+          {
             "name": "permissions",
             "type": {
               "kind": "NON_NULL",
@@ -95760,6 +95856,17 @@ export default {
                 }
               }
             ]
+          },
+          {
+            "name": "useLegacyShippingZoneStockAvailability",
+            "type": {
+              "kind": "NON_NULL",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Any"
+              }
+            },
+            "args": []
           },
           {
             "name": "useLegacyUpdateWebhookEmission",
@@ -97935,6 +98042,121 @@ export default {
             "type": {
               "kind": "OBJECT",
               "name": "OrderUpdated",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "channels",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Any"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "productVariantBackInStockForClickAndCollect",
+            "type": {
+              "kind": "OBJECT",
+              "name": "ProductVariantBackInStockForClickAndCollect",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "channels",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Any"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "productVariantBackInStockInChannel",
+            "type": {
+              "kind": "OBJECT",
+              "name": "ProductVariantBackInStockInChannel",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "channels",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Any"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "productVariantDiscountedPriceUpdated",
+            "type": {
+              "kind": "OBJECT",
+              "name": "ProductVariantDiscountedPriceUpdated",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "channels",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Any"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "productVariantOutOfStockForClickAndCollect",
+            "type": {
+              "kind": "OBJECT",
+              "name": "ProductVariantOutOfStockForClickAndCollect",
+              "ofType": null
+            },
+            "args": [
+              {
+                "name": "channels",
+                "type": {
+                  "kind": "LIST",
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "Any"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "productVariantOutOfStockInChannel",
+            "type": {
+              "kind": "OBJECT",
+              "name": "ProductVariantOutOfStockInChannel",
               "ofType": null
             },
             "args": [
@@ -106624,24 +106846,6 @@ export default {
         "interfaces": []
       },
       {
-        "kind": "OBJECT",
-        "name": "WidgetTargetOptions",
-        "fields": [
-          {
-            "name": "method",
-            "type": {
-              "kind": "NON_NULL",
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "Any"
-              }
-            },
-            "args": []
-          }
-        ],
-        "interfaces": []
-      },
-      {
         "kind": "UNION",
         "name": "_Entity",
         "possibleTypes": [
@@ -106996,6 +107200,28 @@ export const UntypedInitializeTransactionDocument = gql`
 export function useInitializeTransactionMutation() {
   return Urql.useMutation<InitializeTransactionMutation, InitializeTransactionMutationVariables>(UntypedInitializeTransactionDocument);
 };
+export const UntypedTransactionCreateDocument = gql`
+    mutation TransactionCreate($id: ID!, $name: String, $message: String, $pspReference: String, $availableActions: [TransactionActionEnum!], $externalUrl: String, $paymentMethodDetails: PaymentMethodDetailsInput) {
+  transactionCreate(
+    id: $id
+    transaction: {name: $name, message: $message, pspReference: $pspReference, availableActions: $availableActions, externalUrl: $externalUrl, paymentMethodDetails: $paymentMethodDetails}
+  ) {
+    transaction {
+      id
+      pspReference
+    }
+    errors {
+      field
+      message
+      code
+    }
+  }
+}
+    `;
+
+export function useTransactionCreateMutation() {
+  return Urql.useMutation<TransactionCreateMutation, TransactionCreateMutationVariables>(UntypedTransactionCreateDocument);
+};
 export const UntypedTransactionEventReportDocument = gql`
     mutation TransactionEventReport($id: ID!, $amount: PositiveDecimal, $type: TransactionEventTypeEnum!, $pspReference: String!, $availableActions: [TransactionActionEnum!], $message: String, $externalUrl: String) {
   transactionEventReport(
@@ -107068,6 +107294,27 @@ export const UntypedFetchAppDetailsDocument = gql`
 
 export function useFetchAppDetailsQuery(options?: Omit<Urql.UseQueryArgs<FetchAppDetailsQueryVariables>, 'query'>) {
   return Urql.useQuery<FetchAppDetailsQuery, FetchAppDetailsQueryVariables>({ query: UntypedFetchAppDetailsDocument, ...options });
+};
+export const UntypedOrderDetailsDocument = gql`
+    query OrderDetails($id: ID!) {
+  order(id: $id) {
+    id
+    number
+    total {
+      gross {
+        ...Money
+      }
+    }
+    transactions {
+      ...Transaction
+    }
+  }
+}
+    ${UntypedMoneyFragmentDoc}
+${UntypedTransactionFragmentDoc}`;
+
+export function useOrderDetailsQuery(options: Omit<Urql.UseQueryArgs<OrderDetailsQueryVariables>, 'query'>) {
+  return Urql.useQuery<OrderDetailsQuery, OrderDetailsQueryVariables>({ query: UntypedOrderDetailsDocument, ...options });
 };
 export const UntypedProductListDocument = gql`
     query ProductList($channelSlug: String!) {
@@ -107276,10 +107523,12 @@ export const TransactionRefundRequestedEventFragmentDoc = {"kind":"Document","de
 export const CompleteCheckoutDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CompleteCheckout"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"checkoutComplete"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"errors"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"field"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}},{"kind":"Field","name":{"kind":"Name","value":"order"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"number"}},{"kind":"Field","name":{"kind":"Name","value":"paymentStatus"}}]}}]}}]}}]} as unknown as DocumentNode<CompleteCheckoutMutation, CompleteCheckoutMutationVariables>;
 export const CreateCheckoutDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateCheckout"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"channelSlug"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"variants"}},"type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CheckoutLineInput"}}}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"checkoutCreate"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"channel"},"value":{"kind":"Variable","name":{"kind":"Name","value":"channelSlug"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"lines"},"value":{"kind":"Variable","name":{"kind":"Name","value":"variants"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"languageCode"},"value":{"kind":"EnumValue","value":"EN_US"}},{"kind":"ObjectField","name":{"kind":"Name","value":"email"},"value":{"kind":"StringValue","value":"demo@saleor.io","block":false}},{"kind":"ObjectField","name":{"kind":"Name","value":"billingAddress"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"firstName"},"value":{"kind":"StringValue","value":"John","block":false}},{"kind":"ObjectField","name":{"kind":"Name","value":"lastName"},"value":{"kind":"StringValue","value":"Doe","block":false}},{"kind":"ObjectField","name":{"kind":"Name","value":"streetAddress1"},"value":{"kind":"StringValue","value":"813 Howard Street","block":false}},{"kind":"ObjectField","name":{"kind":"Name","value":"city"},"value":{"kind":"StringValue","value":"Oswego","block":false}},{"kind":"ObjectField","name":{"kind":"Name","value":"countryArea"},"value":{"kind":"StringValue","value":"NY","block":false}},{"kind":"ObjectField","name":{"kind":"Name","value":"postalCode"},"value":{"kind":"StringValue","value":"13126","block":false}},{"kind":"ObjectField","name":{"kind":"Name","value":"country"},"value":{"kind":"EnumValue","value":"US"}}]}},{"kind":"ObjectField","name":{"kind":"Name","value":"shippingAddress"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"firstName"},"value":{"kind":"StringValue","value":"John","block":false}},{"kind":"ObjectField","name":{"kind":"Name","value":"lastName"},"value":{"kind":"StringValue","value":"Doe","block":false}},{"kind":"ObjectField","name":{"kind":"Name","value":"streetAddress1"},"value":{"kind":"StringValue","value":"813 Howard Street","block":false}},{"kind":"ObjectField","name":{"kind":"Name","value":"city"},"value":{"kind":"StringValue","value":"Oswego","block":false}},{"kind":"ObjectField","name":{"kind":"Name","value":"countryArea"},"value":{"kind":"StringValue","value":"NY","block":false}},{"kind":"ObjectField","name":{"kind":"Name","value":"postalCode"},"value":{"kind":"StringValue","value":"13126","block":false}},{"kind":"ObjectField","name":{"kind":"Name","value":"country"},"value":{"kind":"EnumValue","value":"US"}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"errors"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"field"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}},{"kind":"Field","name":{"kind":"Name","value":"checkout"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"availablePaymentGateways"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"shippingMethods"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"price"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"currency"}},{"kind":"Field","name":{"kind":"Name","value":"amount"}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<CreateCheckoutMutation, CreateCheckoutMutationVariables>;
 export const InitializeTransactionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"InitializeTransaction"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"data"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"JSON"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"transactionInitialize"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}},{"kind":"Argument","name":{"kind":"Name","value":"paymentGateway"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"id"},"value":{"kind":"StringValue","value":"saleor.io.dummy-payment-app","block":false}},{"kind":"ObjectField","name":{"kind":"Name","value":"data"},"value":{"kind":"Variable","name":{"kind":"Name","value":"data"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"errors"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"field"}},{"kind":"Field","name":{"kind":"Name","value":"message"}}]}},{"kind":"Field","name":{"kind":"Name","value":"transaction"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"pspReference"}}]}},{"kind":"Field","name":{"kind":"Name","value":"transactionEvent"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"pspReference"}},{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"externalUrl"}},{"kind":"Field","name":{"kind":"Name","value":"amount"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"currency"}},{"kind":"Field","name":{"kind":"Name","value":"amount"}}]}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"idempotencyKey"}}]}}]}}]}}]} as unknown as DocumentNode<InitializeTransactionMutation, InitializeTransactionMutationVariables>;
+export const TransactionCreateDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"TransactionCreate"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"name"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"message"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"pspReference"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"availableActions"}},"type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"TransactionActionEnum"}}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"externalUrl"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"paymentMethodDetails"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"PaymentMethodDetailsInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"transactionCreate"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}},{"kind":"Argument","name":{"kind":"Name","value":"transaction"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"name"},"value":{"kind":"Variable","name":{"kind":"Name","value":"name"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"message"},"value":{"kind":"Variable","name":{"kind":"Name","value":"message"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"pspReference"},"value":{"kind":"Variable","name":{"kind":"Name","value":"pspReference"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"availableActions"},"value":{"kind":"Variable","name":{"kind":"Name","value":"availableActions"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"externalUrl"},"value":{"kind":"Variable","name":{"kind":"Name","value":"externalUrl"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"paymentMethodDetails"},"value":{"kind":"Variable","name":{"kind":"Name","value":"paymentMethodDetails"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"transaction"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"pspReference"}}]}},{"kind":"Field","name":{"kind":"Name","value":"errors"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"field"}},{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"code"}}]}}]}}]}}]} as unknown as DocumentNode<TransactionCreateMutation, TransactionCreateMutationVariables>;
 export const TransactionEventReportDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"TransactionEventReport"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"amount"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"PositiveDecimal"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"type"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"TransactionEventTypeEnum"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"pspReference"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"availableActions"}},"type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"TransactionActionEnum"}}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"message"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"externalUrl"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"transactionEventReport"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}},{"kind":"Argument","name":{"kind":"Name","value":"amount"},"value":{"kind":"Variable","name":{"kind":"Name","value":"amount"}}},{"kind":"Argument","name":{"kind":"Name","value":"type"},"value":{"kind":"Variable","name":{"kind":"Name","value":"type"}}},{"kind":"Argument","name":{"kind":"Name","value":"message"},"value":{"kind":"Variable","name":{"kind":"Name","value":"message"}}},{"kind":"Argument","name":{"kind":"Name","value":"pspReference"},"value":{"kind":"Variable","name":{"kind":"Name","value":"pspReference"}}},{"kind":"Argument","name":{"kind":"Name","value":"availableActions"},"value":{"kind":"Variable","name":{"kind":"Name","value":"availableActions"}}},{"kind":"Argument","name":{"kind":"Name","value":"externalUrl"},"value":{"kind":"Variable","name":{"kind":"Name","value":"externalUrl"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"alreadyProcessed"}},{"kind":"Field","name":{"kind":"Name","value":"transactionEvent"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}},{"kind":"Field","name":{"kind":"Name","value":"errors"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"field"}},{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"code"}}]}}]}}]}}]} as unknown as DocumentNode<TransactionEventReportMutation, TransactionEventReportMutationVariables>;
 export const UpdateDeliveryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateDelivery"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"methodId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"checkoutDeliveryMethodUpdate"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}},{"kind":"Argument","name":{"kind":"Name","value":"deliveryMethodId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"methodId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"checkout"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"deliveryMethod"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ShippingMethod"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<UpdateDeliveryMutation, UpdateDeliveryMutationVariables>;
 export const ChannelsListDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"ChannelsList"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"channels"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}}]}}]}}]} as unknown as DocumentNode<ChannelsListQuery, ChannelsListQueryVariables>;
 export const FetchAppDetailsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"FetchAppDetails"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"app"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"privateMetadata"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"key"}},{"kind":"Field","name":{"kind":"Name","value":"value"}}]}}]}}]}}]} as unknown as DocumentNode<FetchAppDetailsQuery, FetchAppDetailsQueryVariables>;
+export const OrderDetailsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"OrderDetails"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"order"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"number"}},{"kind":"Field","name":{"kind":"Name","value":"total"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"gross"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Money"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"transactions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Transaction"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Money"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Money"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"amount"}},{"kind":"Field","name":{"kind":"Name","value":"currency"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Transaction"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"TransactionItem"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"pspReference"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"authorizedAmount"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Money"}}]}},{"kind":"Field","name":{"kind":"Name","value":"authorizePendingAmount"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Money"}}]}},{"kind":"Field","name":{"kind":"Name","value":"refundedAmount"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Money"}}]}},{"kind":"Field","name":{"kind":"Name","value":"refundPendingAmount"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Money"}}]}},{"kind":"Field","name":{"kind":"Name","value":"canceledAmount"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Money"}}]}},{"kind":"Field","name":{"kind":"Name","value":"cancelPendingAmount"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Money"}}]}},{"kind":"Field","name":{"kind":"Name","value":"chargedAmount"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Money"}}]}},{"kind":"Field","name":{"kind":"Name","value":"chargePendingAmount"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Money"}}]}},{"kind":"Field","name":{"kind":"Name","value":"events"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"pspReference"}},{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"amount"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Money"}}]}},{"kind":"Field","name":{"kind":"Name","value":"type"}}]}},{"kind":"Field","name":{"kind":"Name","value":"order"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<OrderDetailsQuery, OrderDetailsQueryVariables>;
 export const ProductListDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"ProductList"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"channelSlug"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"products"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"first"},"value":{"kind":"IntValue","value":"10"}},{"kind":"Argument","name":{"kind":"Name","value":"channel"},"value":{"kind":"Variable","name":{"kind":"Name","value":"channelSlug"}}},{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"isAvailable"},"value":{"kind":"BooleanValue","value":true}},{"kind":"ObjectField","name":{"kind":"Name","value":"isPublished"},"value":{"kind":"BooleanValue","value":true}},{"kind":"ObjectField","name":{"kind":"Name","value":"giftCard"},"value":{"kind":"BooleanValue","value":false}},{"kind":"ObjectField","name":{"kind":"Name","value":"isVisibleInListing"},"value":{"kind":"BooleanValue","value":true}}]}},{"kind":"Argument","name":{"kind":"Name","value":"sortBy"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"field"},"value":{"kind":"EnumValue","value":"PRICE"}},{"kind":"ObjectField","name":{"kind":"Name","value":"direction"},"value":{"kind":"EnumValue","value":"DESC"}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"edges"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"node"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"thumbnail"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"size"},"value":{"kind":"IntValue","value":"2048"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"url"}},{"kind":"Field","name":{"kind":"Name","value":"alt"}}]}},{"kind":"Field","name":{"kind":"Name","value":"category"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"defaultVariant"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"pricing"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"price"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"gross"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"amount"}},{"kind":"Field","name":{"kind":"Name","value":"currency"}}]}}]}}]}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<ProductListQuery, ProductListQueryVariables>;
 export const TransactionDetailsViaIdDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"TransactionDetailsViaId"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"transaction"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Transaction"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Money"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Money"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"amount"}},{"kind":"Field","name":{"kind":"Name","value":"currency"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Transaction"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"TransactionItem"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"pspReference"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"authorizedAmount"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Money"}}]}},{"kind":"Field","name":{"kind":"Name","value":"authorizePendingAmount"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Money"}}]}},{"kind":"Field","name":{"kind":"Name","value":"refundedAmount"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Money"}}]}},{"kind":"Field","name":{"kind":"Name","value":"refundPendingAmount"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Money"}}]}},{"kind":"Field","name":{"kind":"Name","value":"canceledAmount"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Money"}}]}},{"kind":"Field","name":{"kind":"Name","value":"cancelPendingAmount"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Money"}}]}},{"kind":"Field","name":{"kind":"Name","value":"chargedAmount"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Money"}}]}},{"kind":"Field","name":{"kind":"Name","value":"chargePendingAmount"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Money"}}]}},{"kind":"Field","name":{"kind":"Name","value":"events"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"pspReference"}},{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"amount"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Money"}}]}},{"kind":"Field","name":{"kind":"Name","value":"type"}}]}},{"kind":"Field","name":{"kind":"Name","value":"order"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<TransactionDetailsViaIdQuery, TransactionDetailsViaIdQueryVariables>;
 export const TransactionDetailsViaPspDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"TransactionDetailsViaPsp"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"pspReference"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"orders"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"first"},"value":{"kind":"IntValue","value":"1"}},{"kind":"Argument","name":{"kind":"Name","value":"filter"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"search"},"value":{"kind":"Variable","name":{"kind":"Name","value":"pspReference"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"edges"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"node"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"number"}},{"kind":"Field","name":{"kind":"Name","value":"transactions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Transaction"}}]}}]}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Money"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Money"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"amount"}},{"kind":"Field","name":{"kind":"Name","value":"currency"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Transaction"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"TransactionItem"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"pspReference"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"authorizedAmount"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Money"}}]}},{"kind":"Field","name":{"kind":"Name","value":"authorizePendingAmount"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Money"}}]}},{"kind":"Field","name":{"kind":"Name","value":"refundedAmount"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Money"}}]}},{"kind":"Field","name":{"kind":"Name","value":"refundPendingAmount"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Money"}}]}},{"kind":"Field","name":{"kind":"Name","value":"canceledAmount"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Money"}}]}},{"kind":"Field","name":{"kind":"Name","value":"cancelPendingAmount"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Money"}}]}},{"kind":"Field","name":{"kind":"Name","value":"chargedAmount"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Money"}}]}},{"kind":"Field","name":{"kind":"Name","value":"chargePendingAmount"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Money"}}]}},{"kind":"Field","name":{"kind":"Name","value":"events"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"pspReference"}},{"kind":"Field","name":{"kind":"Name","value":"message"}},{"kind":"Field","name":{"kind":"Name","value":"amount"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Money"}}]}},{"kind":"Field","name":{"kind":"Name","value":"type"}}]}},{"kind":"Field","name":{"kind":"Name","value":"order"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<TransactionDetailsViaPspQuery, TransactionDetailsViaPspQueryVariables>;
