@@ -104,6 +104,9 @@ const OrderDetailsWidget = () => {
   const onSuccess = (title: string) => {
     notify("success", title);
     refetch({ requestPolicy: "network-only" });
+    // Ask the Dashboard to refresh the order it currently has open so the
+    // transaction we just created/updated shows up without a manual reload.
+    appBridge?.dispatch(actions.RefreshEntity());
   };
 
   const onError = (e: unknown) =>

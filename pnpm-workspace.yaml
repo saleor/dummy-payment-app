@@ -1,5 +1,8 @@
 blockExoticSubdeps: true
 minimumReleaseAge: 1440 # 24h
+minimumReleaseAgeExclude:
+  # Saleor owned package
+  - "@saleor/app-sdk"
 
 onlyBuiltDependencies:
   - '@sentry/cli'
